@@ -1,9 +1,8 @@
-package com.example.ifpitaco;
+package br.edu.ifpb.ifpitaco;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import br.edu.ifpb.ifpitaco.R;
 
 public class MainActivity extends Activity {
 
