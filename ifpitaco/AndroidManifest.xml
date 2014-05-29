@@ -11,11 +11,11 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
+        android:label="@string/ifpitaco"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="br.edu.ifpb.MainActivity"
-            android:label="@string/app_name" >
+            android:name="br.edu.ifpb.SplashScreen"
+            android:label="@string/ifpitaco" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,8 +23,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="br.edu.ifpb.SplashScreen"
-            android:label="@string/title_activity_splash_screen" >
+            android:name="br.edu.ifpb.MainActivity"
+            android:label="@string/ifpitaco" >
         </activity>
     </application>
 
