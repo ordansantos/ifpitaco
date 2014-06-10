@@ -52,5 +52,5 @@ Requisitos Funcionais:
 Requisitos não funcionais:
  * O tempo de desenvolvimento do software não deve ultrapassar o período do ano letivo 2014.1 do IFPB-CG.
  * O software será uma aplicação distribuída, terá uma versão para web, android e desktop (Linux ou Windows).
- * Os usuários só poderão criar um cadastro se estiver com a matrícula regulada no IFPB-CG.
+ * Os usuários alunos só poderão criar um cadastro se estiver com a matrícula regulada no IFPB-CG.
  * O tempo de resposta do sistema não deve ultrapassar 30 segundos.
