@@ -2,5 +2,5 @@
   <h2> <i>Diagrama de caso de Uso</i> </h2>
   </font>
   <br/>
-   <a href="http://i59.tinypic.com/wjt2bt.png"><img  src="http://i59.tinypic.com/wjt2bt.png"/>
+   <a href="http://i61.tinypic.com/28btgcp.pngg"><img  src="http://i61.tinypic.com/28btgcp.png"/>
   </a>
