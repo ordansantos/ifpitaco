@@ -1,0 +1,9 @@
+  <font color="blue">
+  <h2> <i>Diagrama de caso de Uso</i> </h2>
+  </font>
+
+  <br/>
+
+   <a href="http://i58.tinypic.com/dvqxpt.png" target="_blank">
+<img  src="http://i58.tinypic.com/dvqxpt.png"/img>
+  </a>
