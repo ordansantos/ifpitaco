@@ -4,5 +4,5 @@
   </font>
   
  <ul>
-   <li> <a href="http://i58.tinypic.com/dvqxpt.png">Diagrama de Caso de uso</a> </li>
+   <li> <a href="http://i58.tinypic.com/dvqxpt.png" target="_blank">Diagrama de Caso de uso </a> </li>
  </ul>
