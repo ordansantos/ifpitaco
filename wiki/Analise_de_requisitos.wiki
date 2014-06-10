@@ -1,6 +1,6 @@
 = Análise de Requisitos =
 
-<p align="justify" >A análise e o requisitos básicos de um sistema baseados em software devem sempre estar bem definidos. A equipe que analisa e desenvolve o sistema deve estabelecê-los no início, antes das atividades inerentes a codificação do software. Para isso é necessário documentá-los na forma escrita para esclarecer todos os pormenores do sistema. Essa documentação liga as entidades participantes do sistema a suas funcionalidade descrevendo, também, possíveis restrições ou problemas. </p>
+<p align="justify" >A análise e o requisitos básicos de um sistema baseados em software devem sempre estar bem definidos. A equipe que analisa e desenvolve o sistema deve estabelecê-los no início, antes das atividades inerentes a codificação do software. Para isso é necessário documentá-los na forma escrita para esclarecer todos os pormenores do sistema. Essa documentação liga as entidades participantes do sistema a suas funcionalidade descrevendo, também, possíveis restrições ou problemas.
 
 = Análise do _IFPitaco_ = 
 
@@ -9,7 +9,7 @@ ANÁLISE E LEVANTAMENTO DE REQUISITOS
 
 *_1.  INTRODUÇÃO_*
 
-O software tem como objetivo informatizar o transporte das opiniões (reclamações ou elogios), através de avaliações e comentários, acerca da gestão atual do campus. Ou seja, proporcionar ao corpo estudantil, e também a toda comunidade do campus (técnicos e professores), uma melhor e maior acessibilidade ao diretor, no que diz respeito à gerência do campus como um todo. Tendo em vista o objetivo de disponibilizar ao diretor maior comodidade e controle para saber como está sua gestão, sendo esta aplicação uma nova forma de diálogo entre os reivindicadores e o próprio. Categorizando então, as melhores e piores avaliações colocando-as em um ranking para acesso direto do diretor.
+<p align="justify">O software tem como objetivo informatizar o transporte das opiniões (reclamações ou elogios), através de avaliações e comentários, acerca da gestão atual do campus. Ou seja, proporcionar ao corpo estudantil, e também a toda comunidade do campus (técnicos e professores), uma melhor e maior acessibilidade ao diretor, no que diz respeito à gerência do campus como um todo. Tendo em vista o objetivo de disponibilizar ao diretor maior comodidade e controle para saber como está sua gestão, sendo esta aplicação uma nova forma de diálogo entre os reivindicadores e o próprio. Categorizando então, as melhores e piores avaliações colocando-as em um ranking para acesso direto do diretor.
 
 
 
