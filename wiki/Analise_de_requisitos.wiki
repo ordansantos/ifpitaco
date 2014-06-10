@@ -14,7 +14,7 @@ O software tem como objetivo informatizar o transporte das opiniões (reclamaç�
 
 
 *_2. ANÁLISE_*
-	
+
 É importante responder algumas perguntas a fim de esclarecer as características inerentes ao sistema.
 
 *1. Como o processo é feito atualmente?*
