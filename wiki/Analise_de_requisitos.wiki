@@ -1,5 +1,3 @@
-<p align="justify" >
-
 = Análise de Requisitos =
 
 A análise e o requisitos básicos de um sistema baseados em software devem sempre estar bem definidos. A equipe que analisa e desenvolve o sistema deve estabelecê-los no início, antes das atividades inerentes a codificação do software. Para isso é necessário documentá-los na forma escrita para esclarecer todos os pormenores do sistema. Essa documentação liga as entidades participantes do sistema a suas funcionalidade descrevendo, também, possíveis restrições ou problemas.
