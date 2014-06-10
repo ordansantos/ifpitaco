@@ -39,18 +39,18 @@ Onde os estudantes, professores e técnicos terão que avaliar e sugerir, com co
 *_3. LEVANTAMENTO DE REQUISITOS_*
 
 Requisitos Funcionais:	
- * O software deve possuir três tipos distintos de usuários: cliente, gerente e diretor.
- * O usuário cliente pode enviar novas opiniões e fiscalizações para o sistema, como também analisar, comentar e avaliar as opiniões dos demais que estão presentes no banco de dados.
- * O software deve ser capaz de receber mensagens com as respectivas opiniões dos usuários e alocá-las em um ranking de acordo com avaliação dos demais usuários.
- * O usuário gerente deve possuir funções para manter a seriedade do sistema, essas são: banir um cliente, excluir um comentário
- * O usuário diretor pode acessar os dados das opiniões votadas e mandar sua resposta para cada uma dessas.
- * O software deverá mandar semanalmente para o diretor o ranking das três reclamações mais votadas e essas sairão do ranking assim que receberem uma resposta de retorno do diretor.
- * O sistema deve verificar anualmente se os usuários cadastrados ainda têm vínculo com a instituição.
- * O software deve processar todas as avaliações e atualizar o ranking das opiniões diariamente.
+ * <p align="justify">O software deve possuir três tipos distintos de usuários: cliente, gerente e diretor.
+ * <p align="justify">O usuário cliente pode enviar novas opiniões e fiscalizações para o sistema, como também analisar, comentar e avaliar as opiniões dos demais que estão presentes no banco de dados.
+ * <p align="justify">O software deve ser capaz de receber mensagens com as respectivas opiniões dos usuários e alocá-las em um ranking de acordo com avaliação dos demais usuários.
+ * <p align="justify">O usuário gerente deve possuir funções para manter a seriedade do sistema, essas são: banir um cliente, excluir um comentário
+ * <p align="justify">O usuário diretor pode acessar os dados das opiniões votadas e mandar sua resposta para cada uma dessas.
+ * <p align="justify">O software deverá mandar semanalmente para o diretor o ranking das três reclamações mais votadas e essas sairão do ranking assim que receberem uma resposta de retorno do diretor.
+ * <p align="justify">O sistema deve verificar anualmente se os usuários cadastrados ainda têm vínculo com a instituição.
+ * <p align="justify">O software deve processar todas as avaliações e atualizar o ranking das opiniões diariamente.
 
 
 Requisitos não funcionais:
- * O tempo de desenvolvimento do software não deve ultrapassar o período do ano letivo 2014.1 do IFPB-CG.
- * O software será uma aplicação distribuída, terá uma versão para web, android e desktop (Linux ou Windows).
- * Os usuários alunos só poderão criar um cadastro se estiver com a matrícula regulada no IFPB-CG.
- * O tempo de resposta do sistema não deve ultrapassar 30 segundos.
+ * <p>O tempo de desenvolvimento do software não deve ultrapassar o período do ano letivo 2014.1 do IFPB-CG.
+ * <p>O software será uma aplicação distribuída, terá uma versão para web, android e desktop (Linux ou Windows).
+ * <p>Os usuários alunos só poderão criar um cadastro se estiver com a matrícula regulada no IFPB-CG.
+ * <p>O tempo de resposta do sistema não deve ultrapassar 30 segundos.
