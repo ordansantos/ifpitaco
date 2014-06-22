@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="ifpitaco">IFPitaco</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_splash_screen">SplashScreen</string>
+    <string name="title_activity_opinar">Opinar</string>
+    <string name="title_activity_fiscalizar">Fiscalizar</string>
+    <string name="title_activity_avaliar">Avaliar</string>
+
+</resources>
