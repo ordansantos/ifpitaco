@@ -1,5 +1,4 @@
-
-</r>-- -----------------------------------------------------
+<pre/>-- -----------------------------------------------------
 
 -- Schema BD_IFPitaco
 
@@ -102,4 +101,4 @@ CREATE TABLE Opinar (
   CONSTRAINT Cliente_fk_ID_Cliente
   FOREIGN KEY (Cliente_ID)
   REFERENCES Cliente(ID_Cliente));
-</r>
+</pre>
