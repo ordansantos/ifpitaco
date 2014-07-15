@@ -20,6 +20,7 @@ CREATE TABLE Cargo(
   Nome_Cargo VARCHAR(30) NOT NULL,
   PRIMARY KEY (`ID_Cargo`));
 
+
 -- -----------------------------------------------------
 -- Table Item
 -- -----------------------------------------------------
