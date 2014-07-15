@@ -1,0 +1,89 @@
+-- -----------------------------------------------------
+-- Schema BD_IFPitaco
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `BD_IFPitaco` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
+USE `BD_IFPitaco` ;
+
+-- -----------------------------------------------------
+-- Table Cargo
+-- -----------------------------------------------------
+CREATE TABLE Cargo(
+  ID_Cargo INT NOT NULL,
+  Nome_Cargo VARCHAR(30) NOT NULL,
+  PRIMARY KEY (`ID_Cargo`));
+
+-- -----------------------------------------------------
+-- Table Item
+-- -----------------------------------------------------
+CREATE TABLE Item (
+  ID_Item INT NOT NULL PRIMARY KEY,
+  Descricao TEXT NOT NULL);
+
+
+-- -----------------------------------------------------
+-- Table Usuario
+-- -----------------------------------------------------
+CREATE TABLE Usuario (
+  ID_Usuario INT NOT NULL PRIMARY KEY,
+  Nome_Usuario VARCHAR(30) NOT NULL,
+  Login INT NOT NULL,
+  Senha INT NOT NULL,
+  Cargo_ID INT NOT NULL,
+  CONSTRAINT Cargo_ID_Cargo_fk
+  FOREIGN KEY (Cargo_ID)
+  REFERENCES Cargo (ID_Cargo));
+
+-- -----------------------------------------------------
+-- Table Cliente
+-- -----------------------------------------------------
+CREATE TABLE Cliente(
+  ID_Cliente INT NOT NULL PRIMARY KEY,
+  Matricula VARCHAR(45) NULL,
+  Usuario_ID INT NOT NULL,
+  CONSTRAINT Usuario_ID_Usuario_fk
+  FOREIGN KEY (Usuario_ID)
+  REFERENCES Usuario(ID_Usuario));
+
+
+-- -----------------------------------------------------
+-- Table Avaliar
+-- -----------------------------------------------------
+CREATE TABLE Avaliar (
+  ID_Avaliacao INT NOT NULL PRIMARY KEY,
+  Avaliacao VARCHAR(45) NOT NULL,
+  Item_ID INT NOT NULL,
+  Cliente_ID INT NOT NULL,
+  
+  CONSTRAINT Item_ID_Item_fk
+  FOREIGN KEY (Item_ID)
+  REFERENCES Item(ID_Item),
+  
+  CONSTRAINT Cliente_ID_Cliente_fk
+  FOREIGN KEY (Cliente_ID)
+  REFERENCES Cliente (ID_Cliente));
+			
+-- -----------------------------------------------------
+-- Table Propor
+-- -----------------------------------------------------
+CREATE TABLE Propor (
+  ID_Proposta INT NOT NULL PRIMARY KEY,
+  Proposta VARCHAR(60) NOT NULL,
+  Data DATE NOT NULL,
+  Cliente_ID INT NOT NULL,
+  
+  CONSTRAINT fk_Cliente_ID_Cliente
+  FOREIGN KEY (Cliente_ID)
+  REFERENCES Cliente (ID_Cliente));
+  
+-- -----------------------------------------------------
+-- Table Opinar
+-- -----------------------------------------------------
+CREATE TABLE Opinar (
+  ID_Opiniao INT NOT NULL PRIMARY KEY,
+  Data DATE NOT NULL,
+  Opiniao TEXT NOT NULL,
+  Cliente_ID INT NOT NULL,
+  
+  CONSTRAINT Cliente_fk_ID_Cliente
+  FOREIGN KEY (Cliente_ID)
+  REFERENCES Cliente(ID_Cliente));
