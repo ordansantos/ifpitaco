@@ -1,28 +1,17 @@
-<pre>-- -----------------------------------------------------
-
--- Schema BD_IFPitaco
-
+<pre>
 -- -----------------------------------------------------
-
+-- Schema BD_IFPitaco
+-- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `BD_IFPitaco` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
-
 USE `BD_IFPitaco` ;
 
-
 -- -----------------------------------------------------
-
 -- Table Cargo
-
 -- -----------------------------------------------------
-
 CREATE TABLE Cargo(
-
   ID_Cargo INT NOT NULL,
-
   Nome_Cargo VARCHAR(30) NOT NULL,
-
   PRIMARY KEY (`ID_Cargo`));
-
 
 -- -----------------------------------------------------
 -- Table Item
