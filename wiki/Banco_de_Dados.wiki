@@ -15,7 +15,7 @@ USE `BD_IFPitaco` ;
 
 -- -----------------------------------------------------
 
-CREATE TABLE Cargo(                                              
+CREATE TABLE Cargo(   
   ID_Cargo INT NOT NULL,
   Nome_Cargo VARCHAR(30) NOT NULL,
   PRIMARY KEY (`ID_Cargo`));
