@@ -1,0 +1,107 @@
+
+	
+	h1.ifpitaco{
+		color: green;
+		text-align: right;
+		font-variant: small-caps;
+
+	}
+
+	h2.opinar{
+		color: orange;
+		text-align: center;
+		font-variant: small-caps;
+	}
+	
+	h2.fiscalizar{
+		color: green;
+		text-align: center;
+		font-variant: small-caps;
+	}
+
+	h2.avaliar{
+		color: blue;
+		text-align: center;
+		font-variant: small-caps;
+	}
+	
+	.opcao{
+		text-indent: 50px;
+		
+	}
+	
+	p.opiniao{
+		
+		font-size: 20px;
+		text-indent: 30px;
+	}
+	
+	p.pergunta{
+		color:red;
+		font-size: 20px;
+		font-variant: small-caps;
+	}
+	
+	.nome_id{
+		
+		font-size: 16px;
+		text-transform: capitalize;
+		font-weight: 800;
+	}
+	
+	.tabela{
+		
+		width: 100%;
+		padding: 10px; 
+		background-color: rgba(0, 0, 255, 0.2);
+		border-radius:25px;
+	}
+	
+	
+	
+	input[type=radio].css-checkbox {
+							display:none;
+						}
+
+						input[type=radio].css-checkbox + label.css-label {
+							padding-left:39px;
+							height:31px; 
+							display:inline-block;
+							line-height:31px;
+							background-repeat:no-repeat;
+							background-position: 0 0;
+							font-size:31px;
+							vertical-align:middle;
+							cursor:pointer;
+
+						}
+
+						input[type=radio].css-checkbox:checked + label.css-label {
+							background-position: 0 -31px;
+						}
+						label.css-label {
+				background-image:url("radio_image.png");
+				-webkit-touch-callout: none;
+				-webkit-user-select: none;
+				-khtml-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+			}
+			
+	table.notas{
+		color: black;
+		border: 1px solid black;
+		border-radius:25px;
+		margin: 0px auto;
+	}
+	
+	.nota{
+		padding: 25px;
+		font-weight: 800;
+	}
+	
+	
+	input[type=submit] {
+    width: 10em;  height: 3em;
+}
