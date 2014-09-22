@@ -2,6 +2,7 @@ package br.edu.ifpb;
 
 import br.edu.ifpb.ifpitaco_mobile.R;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,11 +20,19 @@ public class LoginActivity extends Activity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		
+		etNome = (EditText) findViewById(R.id.ETNomeUsuario);
+		etSenha = (EditText) findViewById(R.id.ETSenhaUsuario);
+		btEntrar = (Button) findViewById(R.id.BtEntrar);
+		
+		btEntrar.setOnClickListener(this);
+		
+		
 	}
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
+		Intent i = new Intent (this, FuncoesListActivity.class);
+		startActivity(i);
 		
 	}
 
