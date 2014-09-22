@@ -28,7 +28,7 @@ public class FuncoesListActivity extends Activity {
 		
 		myListView = (ListView) findViewById(R.id.myListView);
 		
-		String funcoes[] = new String[]{"Opinar", "Fiscalizar", "Avaliar"};
+		String funcoes[] = new String[]{"Propor", "Fiscalizar", "Avaliar"};
 		
 		ArrayList<String> funcaoList = new ArrayList<String>();
 		
@@ -54,7 +54,7 @@ public class FuncoesListActivity extends Activity {
 	public void startOption (int position){
 		
 		if (position == 0)
-			intent = new Intent (this, OpinarActivity.class);
+			intent = new Intent (this, ProporActivity.class);
 		
 		if (position == 1)
 			intent = new Intent (this, FiscalizarActivity.class);

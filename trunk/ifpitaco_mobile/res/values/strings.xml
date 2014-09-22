@@ -4,9 +4,12 @@
     <string name="ifpitaco">IFPitaco</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_splash_screen">SplashScreen</string>
-    <string name="title_activity_opinar">Opinar</string>
+    <string name="title_activity_propor">Propor</string>
     <string name="title_activity_fiscalizar">Fiscalizar</string>
     <string name="title_activity_avaliar">Avaliar</string>
     <string name="title_activity_login">Login</string>
+    <string name="title_activity_propostas">Propostas</string>
+    <string name="title_activity_fiscalizacoes">Fiscalizações</string>
+    <string name="title_activity_avaliacoes">Avaliações</string>
 
 </resources>

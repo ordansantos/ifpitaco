@@ -36,16 +36,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="br.edu.ifpb.MainActivity"
-            android:label="@string/ifpitaco" >
-        </activity>
-        <activity
             android:name="br.edu.ifpb.FuncoesListActivity"
             android:label="@string/ifpitaco" >
         </activity>
         <activity
-            android:name="br.edu.ifpb.OpinarActivity"
-            android:label="@string/title_activity_opinar" >
+            android:name="br.edu.ifpb.ProporActivity"
+            android:label="@string/title_activity_propor" >
         </activity>
         <activity
             android:name="br.edu.ifpb.FiscalizarActivity"
@@ -58,6 +54,18 @@
         <activity
             android:name="br.edu.ifpb.LoginActivity"
             android:label="@string/title_activity_login" >
+        </activity>
+        <activity 
+            android:name="br.edu.ifpb.AvaliacoesActivity"
+            android:label="@string/title_activity_avaliacoes">
+        </activity>
+        <activity 
+            android:name="br.edu.ifpb.FiscalizacoesActivity"
+            android:label="@string/title_activity_fiscalizacoes">
+        </activity>
+        <activity 
+            android:name="br.edu.ifpb.PropostasActivity"
+            android:label="@string/title_activity_propostas">
         </activity>
     </application>
 
