@@ -7,5 +7,6 @@
     <string name="title_activity_opinar">Opinar</string>
     <string name="title_activity_fiscalizar">Fiscalizar</string>
     <string name="title_activity_avaliar">Avaliar</string>
+    <string name="title_activity_login">Login</string>
 
 </resources>

@@ -7,24 +7,25 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="19" />
-    
-    <!--Permissão para o Broadcast -->
-    
-	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- Permissão para o Broadcast -->
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/ifpitaco"
         android:theme="@style/AppTheme" >
-        
+
         <!-- Definindo o Broadcast e a classe que é disparada pelo receiver -->
 
-		<receiver android:name="br.edu.ifpb.IniciarAppBroadcast">
-		   <intent-filter>
-		      <action android:name="android.intent.action.BOOT_COMPLETED"/>
-		   </intent-filter>
-		</receiver>
-		
+        <receiver android:name="br.edu.ifpb.IniciarAppBroadcast" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name="br.edu.ifpb.SplashScreen"
             android:label="@string/ifpitaco" >
@@ -53,6 +54,10 @@
         <activity
             android:name="br.edu.ifpb.AvaliarActivity"
             android:label="@string/title_activity_avaliar" >
+        </activity>
+        <activity
+            android:name="br.edu.ifpb.LoginActivity"
+            android:label="@string/title_activity_login" >
         </activity>
     </application>
 
