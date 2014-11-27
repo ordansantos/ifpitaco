@@ -11,5 +11,7 @@
     <string name="title_activity_propostas">Propostas</string>
     <string name="title_activity_fiscalizacoes">Fiscalizações</string>
     <string name="title_activity_avaliacoes">Avaliações</string>
+    <string name="title_activity_cadastrar">CadastrarActivity</string>
+    <string name="action_settings">Settings</string>
 
 </resources>

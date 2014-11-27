@@ -2,6 +2,8 @@ package br.edu.ifpb;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -18,12 +20,16 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 public class ProporActivity extends Activity implements OnClickListener {
 
+	private Spinner SpEntidades;
+	private ArrayAdapter<String> listAdapter;
 	private Button BtEnviar;
 	private EditText ETPropor;
 	
@@ -31,9 +37,20 @@ public class ProporActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_propor);
+		SpEntidades = (Spinner) findViewById(R.id.SpEntidadesPropor);
 		BtEnviar = (Button) findViewById(R.id.BtEnvProposta);
 		ETPropor = (EditText) findViewById(R.id.ETPropor1);
 		BtEnviar.setOnClickListener(this);
+		
+		String entidades[] = new String[]{"Infraestrutura", "Ensino", "Gestão"};
+		
+		ArrayList<String> entidadesList = new ArrayList<String>();
+		entidadesList.addAll(Arrays.asList(entidades));
+		
+		listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, entidadesList); 
+		
+		SpEntidades.setAdapter(listAdapter);
+		
 	}
 
 	@Override
@@ -41,7 +58,7 @@ public class ProporActivity extends Activity implements OnClickListener {
 		if (ETPropor.getText().length() == 0){
             Toast.makeText(getBaseContext(), "Preencha os campos!", Toast.LENGTH_SHORT).show();
 		} else
-            new postComentario().execute();
+            new postProposta().execute();
 		
 		Intent i = new Intent(this, PropostasActivity.class);
 		startActivity(i);
@@ -49,19 +66,20 @@ public class ProporActivity extends Activity implements OnClickListener {
 	
 	
 	//Post com AsyncTask
-    private class postComentario extends AsyncTask<Void, Void, Void> {
+    private class postProposta extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
                     
-                    String url = "http://179.180.149.74/WebServer/postComentario";
+                    String url = "http://179.180.4.184/WebService/postProposta";
   
                     
                     JSONObject object = new JSONObject();
                     
                     try {
                             object.put("comentario", ETPropor.getText());
-                            object.put("nome", Usuario.getNome());
+                            object.put("usuario_id", "Teste_Android");
+                            object.put("ramo_id", "ramo_test");
                     } catch (JSONException e) {
                             e.printStackTrace();
                     }

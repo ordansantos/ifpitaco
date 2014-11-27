@@ -1,0 +1,82 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="br.edu.ifpb.ifpitaco_mobile.CadastrarActivity"
+    
+    android:background="@drawable/background01" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/etNomeCadastro"
+        android:layout_alignRight="@+id/textView3"
+        android:text="Nome:"
+        android:textSize="20sp" />
+    
+    <EditText
+        android:id="@+id/etNomeCadastro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView2"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="55dp"
+        android:layout_marginRight="19dp"
+        android:ems="10"
+        android:inputType="textPersonName" >
+
+        <requestFocus />
+    </EditText>
+    
+     <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/etSenhaCadastro"
+        android:layout_alignLeft="@+id/textView3"
+        android:text="E-mail:"
+        android:textSize="20sp" />
+    
+    <EditText
+        android:id="@+id/etEmailCadastro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/etNomeCadastro"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="194dp"
+        android:ems="10"
+        android:inputType="textEmailAddress" />
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btCadastrar"
+        android:layout_marginRight="15dp"
+        android:layout_toLeftOf="@+id/etSenhaCadastro"
+        android:text="Senha"
+        android:textSize="20sp" />
+    
+     <EditText
+        android:id="@+id/etSenhaCadastro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/etEmailCadastro"
+        android:layout_below="@+id/etEmailCadastro"
+        android:layout_marginTop="42dp"
+        android:ems="10"
+        android:inputType="textPassword" />
+     
+    <Button
+        android:id="@+id/btCadastrar"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etSenhaCadastro"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="19dp"
+        android:text="Cadastrar" />
+
+
+</RelativeLayout>
