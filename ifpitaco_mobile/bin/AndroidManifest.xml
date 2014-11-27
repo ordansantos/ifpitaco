@@ -11,6 +11,7 @@
     <!-- Permissão para o Broadcast -->
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -55,17 +56,21 @@
             android:name="br.edu.ifpb.LoginActivity"
             android:label="@string/title_activity_login" >
         </activity>
-        <activity 
+        <activity
             android:name="br.edu.ifpb.AvaliacoesActivity"
-            android:label="@string/title_activity_avaliacoes">
+            android:label="@string/title_activity_avaliacoes" >
         </activity>
-        <activity 
+        <activity
             android:name="br.edu.ifpb.FiscalizacoesActivity"
-            android:label="@string/title_activity_fiscalizacoes">
+            android:label="@string/title_activity_fiscalizacoes" >
         </activity>
-        <activity 
+        <activity
             android:name="br.edu.ifpb.PropostasActivity"
-            android:label="@string/title_activity_propostas">
+            android:label="@string/title_activity_propostas" >
+        </activity>
+         <activity
+            android:name="br.edu.ifpb.CadastrarActivity"
+            android:label="@string/title_activity_cadastrar" >
         </activity>
     </application>
 
