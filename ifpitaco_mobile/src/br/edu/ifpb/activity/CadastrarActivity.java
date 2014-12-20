@@ -1,4 +1,4 @@
-package br.edu.ifpb;
+package br.edu.ifpb.activity;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -13,6 +13,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import br.edu.ifpb.EndereçoServiço;
 import br.edu.ifpb.ifpitaco_mobile.R;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -55,7 +56,7 @@ public class CadastrarActivity extends Activity implements OnClickListener{
 	 @Override
 	 protected String doInBackground(Void... params) {
 	                    
-	           String url = "http://192.168.1.44/WebServer/postUsuario";
+	           String url = EndereçoServiço.getEndereço()+"postUsuario";
 	           String content = null;
 	                    
 	           JSONObject object = new JSONObject();

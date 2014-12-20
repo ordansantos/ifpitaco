@@ -8,21 +8,21 @@
     android:background="@drawable/background01" >
 
     <TextView
-        android:id="@+id/senhaTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/ETSenhaUsuario"
-        android:layout_alignParentLeft="true"
-        android:text="Senha:   "
-        android:textSize="20sp" />
-
-    <TextView
         android:id="@+id/usuarioView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/ETEmailUsuario"
         android:layout_alignRight="@+id/senhaTextView"
         android:text="Usuário:"
+        android:textSize="20sp" />
+    
+    <TextView
+        android:id="@+id/senhaTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/ETSenhaUsuario"
+        android:layout_alignParentLeft="true"
+        android:text="Senha:   "
         android:textSize="20sp" />
 
     <EditText
@@ -33,7 +33,9 @@
         android:layout_alignLeft="@+id/cadastroTextView"
         android:layout_marginBottom="26dp"
         android:ems="10"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress">
+        <requestFocus />
+    </EditText>
 
     <EditText
         android:id="@+id/ETSenhaUsuario"
@@ -46,7 +48,6 @@
         android:ems="10"
         android:inputType="textPassword" >
 
-        <requestFocus />
     </EditText>
 
     <TextView

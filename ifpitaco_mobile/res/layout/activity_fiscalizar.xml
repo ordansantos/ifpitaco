@@ -22,7 +22,7 @@
             android:layout_gravity="left"/>
         
         <Spinner
-            android:id="@+id/SpEntidadesFiscalizar"
+            android:id="@+id/spRamosFiscalizar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         
@@ -35,7 +35,7 @@
             android:layout_gravity="left"/>
 
         <EditText
-            android:id="@+id/editText1"
+            android:id="@+id/etFiscalizar"
             android:layout_width="match_parent"
             android:layout_height="200px"
             android:ems="10" >
