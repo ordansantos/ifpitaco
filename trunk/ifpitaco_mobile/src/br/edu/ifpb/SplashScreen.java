@@ -1,5 +1,6 @@
 package br.edu.ifpb;
 
+import br.edu.ifpb.activity.LoginActivity;
 import br.edu.ifpb.ifpitaco_mobile.R;
 import android.app.Activity;
 import android.content.Intent;

@@ -1,4 +1,4 @@
-package br.edu.ifpb;
+package br.edu.ifpb.activity;
 
 import br.edu.ifpb.ifpitaco_mobile.R;
 import android.app.Activity;

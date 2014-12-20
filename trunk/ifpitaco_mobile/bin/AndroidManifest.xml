@@ -37,39 +37,39 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="br.edu.ifpb.FuncoesListActivity"
+            android:name="br.edu.ifpb.activity.FuncoesListActivity"
             android:label="@string/ifpitaco" >
         </activity>
         <activity
-            android:name="br.edu.ifpb.ProporActivity"
+            android:name="br.edu.ifpb.activity.ProporActivity"
             android:label="@string/title_activity_propor" >
         </activity>
         <activity
-            android:name="br.edu.ifpb.FiscalizarActivity"
+       		android:name="br.edu.ifpb.activity.FiscalizarActivity"
             android:label="@string/title_activity_fiscalizar" >
         </activity>
         <activity
-            android:name="br.edu.ifpb.AvaliarActivity"
+        	android:name="br.edu.ifpb.activity.AvaliarActivity"
             android:label="@string/title_activity_avaliar" >
         </activity>
         <activity
-            android:name="br.edu.ifpb.LoginActivity"
+            android:name="br.edu.ifpb.activity.LoginActivity"
             android:label="@string/title_activity_login" >
         </activity>
         <activity
-            android:name="br.edu.ifpb.AvaliacoesActivity"
+            android:name="br.edu.ifpb.activity.AvaliacoesActivity"
             android:label="@string/title_activity_avaliacoes" >
         </activity>
         <activity
-            android:name="br.edu.ifpb.FiscalizacoesActivity"
+        	android:name="br.edu.ifpb.activity.FiscalizacoesActivity"
             android:label="@string/title_activity_fiscalizacoes" >
         </activity>
         <activity
-            android:name="br.edu.ifpb.PropostasActivity"
+        	android:name="br.edu.ifpb.activity.PropostasActivity"
             android:label="@string/title_activity_propostas" >
         </activity>
          <activity
-            android:name="br.edu.ifpb.CadastrarActivity"
+           	android:name="br.edu.ifpb.activity.CadastrarActivity"
             android:label="@string/title_activity_cadastrar" >
         </activity>
     </application>

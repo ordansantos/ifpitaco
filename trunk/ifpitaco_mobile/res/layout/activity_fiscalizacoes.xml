@@ -7,11 +7,17 @@
     tools:context="br.edu.ifpb.ifpitaco_mobile.LoginActivity"
     android:background="@drawable/background01">
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/title_activity_fiscalizacoes"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+    <LinearLayout 
+    	android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+   		android:orientation="vertical"
+    	android:layout_marginTop="70px"
+    	android:layout_marginBottom="70px">
+    	<ListView
+        	android:id="@+id/listFiscalizacoes"
+        	android:layout_width="match_parent"
+        	android:layout_height="wrap_content" >
+    	</ListView>
+    </LinearLayout>
 
 </LinearLayout>
