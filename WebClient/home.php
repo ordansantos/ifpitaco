@@ -984,10 +984,10 @@ function drawChart(opts, qtd_opts, qtd_opt){
 		<div class="row">
 		 
 		  		<!-- Profile -->
-		  		<div class="col-md-2" id="profile">.
+		  		<div class="col-md-2 text-center" id="profile">.
 		  
-				  	<a class="thumbnail" ><img  src="<?php echo $foto?>"  alt="..." class="img-thumbnail"></a>
-				  	<h2 class=" text-center"><script>document.write(toPlainText('<?php echo $user?>'));</script></h2>
+				  	<img  src="<?php echo $foto?>"  alt="..." class="img-thumbnail">
+				  	<h2><script>document.write(toPlainText('<?php echo $user?>'));</script></h2>
 				</div>
 				  
 				 <!-- Meio -->
