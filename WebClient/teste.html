@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+
+  </head>
+
+		<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+
+		
+ <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+ <script type="text/javascript" >
+ 
+ //Adiciona a publicação
+function buttonClick(){
+	
+	var list = document.createElement("li");
+	list.innerHTML = "<b id='lista'>teste2</b>"
+	list.id = "novo"
+	document.getElementById("comentarios").appendChild(list);
+	
+}
+
+ //adiciona comentário à publicação
+function buttonClick2(){
+	
+	var list = document.createElement("li");
+	list.innerHTML = "<b>aqui</b>"
+	document.getElementById("antigo").appendChild(list);
+	
+}
+
+
+//Adicionando os ramos às propostas
+$.get("../WebService/getRamos", function(data, status){
+	
+	var ramos = JSON.parse(data).ramos;
+	var form = document.getElementById("form_ramos");
+	
+	for (i = 0; i < ramos.length; i++){
+		
+		var t = ramos[i].nm_ramo.split(":");
+		
+		if (i == 0 || (i > 0 && t[0] != ramos[i-1].nm_ramo.split(":")[0])){
+			var optgroup = document.createElement("optgroup");
+			optgroup.label = t[0];
+			form.add(optgroup);
+		}
+		
+		
+		var option = document.createElement("option");
+		option.value = ramos[i].id_ramo;
+		option.text = ramos[i].nm_ramo.split(":")[1];
+		form.add(option);
+	}
+});
+
+
+ $(document).ready(function() {
+	 
+	 
+	 //Enviando a proposta por meio do post
+	 $("#form").submit(function(event) {
+		
+		event.preventDefault();
+		
+		var values = $(this).serialize();
+	
+	    $.ajax({
+	        url: "propor.php",
+	        type: "post",
+	        data: values,
+	        async: false,
+	        success: function(data){
+				document.getElementById("proposta").value = "";
+	        },
+	        error:function(){
+	            alert("error");
+	        }
+	    });
+  	});
+	
+	//Carregando as propostas
+  	var myAjax = setInterval(function () {jsonLoad()}, 100);
+  	
+  	var qtd = 0;
+  	
+	function jsonLoad(){
+		
+	    $.ajax({ 
+        	type: 'GET', 
+        	url: '../WebService/getPropostas', 
+        	data: { get_param: 'value' }, 
+       		dataType:'json',
+			cache: false,
+            success: function (data) { 
+            	 if (qtd != data.propostas.length)
+            	 	$('#proposta_lista').fadeOut(0);
+            	 
+            	 for (i = qtd; i < data.propostas.length; i++){
+           
+               		
+					var div = document.getElementById('proposta_lista');
+					
+					div.innerHTML = div.innerHTML + '<div id="comment"><p><span style="color:red">' + '<span style="font-size=8px">' + data.propostas[i].nm_usuario + '</span>' + data.propostas[i].comentario + '<br/></span></p></div>';
+			
+					var objDiv = document.getElementById("comentarios");
+					
+				}
+				if (qtd != data.propostas.length){
+            	 	$('#proposta_lista').fadeIn(400);
+					qtd = data.propostas.length;
+					objDiv.scrollTop = objDiv.scrollHeight;
+				}
+            }
+        });
+	    
+	}
+	
+ });
+  </script>
+  
+  <body>
+
+	    <form id='form'>
+	    
+	        <input id="proposta"  type="text" name="comentario"/>
+	        <input type="submit" value="Comentar!" />
+	        <select id="form_ramos" name="ramo_id">
+	     
+	        </select>
+       </form>
+       
+  
+       
+       <button onClick="buttonClick()"> aa</button>
+       <button onClick="buttonClick2()">bb</button>
+       
+       <ul id="comentarios">
+       		<li id="antigo">abc</li>
+       </ul>
+       
+        <ul id="proposta_lista">
+       		
+       	</ul>
+       	                           
+                              <div class="panel panel-default">
+                                <div class="panel-thumbnail"><img src="/assets/example/bg_5.jpg" class="img-responsive"></div>
+                                <div class="panel-body">
+                                  <p class="lead">Urbanization</p>
+                                  <p>45 Followers, 13 Posts</p>
+                                  
+                                  <p>
+                                    <img src="https://lh3.googleusercontent.com/uFp_tsTJboUY7kue5XAsGA=s28" width="28px" height="28px">
+                                  </p>
+                                </div>
+                              </div>
+       	
+       	
+       
+  </body>
+</html>

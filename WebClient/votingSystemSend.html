@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+  		<meta charset="utf-8"/>
+		<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+	
+		<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+		<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+		<link rel="stylesheet" type="text/css" href="css/comentario.css">
+		<script src="js/bootbox.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/home.css">
+		<script src="js/jquery-visible.min.js"></script>
+		
+		
+		
+		
+		<link rel="stylesheet" type="text/css"  href="css/enquete_form.css">
+</head>
+
+<script type="text/javascript">
+
+/*SISTEMA DE ENVIO DE UMA NOVA ENQUETE*/
+	$(document).ready(function() {
+		
+	
+		$("#img_input_new_enquete").change(function(){
+		    readURL(this);
+		});
+		
+		resetNewEnquete();
+		$("#img_new_enquete").hide();
+		resetNewEnquete()
+	});
+
+	
+	function readURL(input) {
+	
+	    if (input.files && input.files[0]) {
+	        var reader = new FileReader();
+	
+	        reader.onload = function (e) {
+	     
+	            $('#img_new_enquete').attr('src', e.target.result);
+	            $("#img_new_enquete").fadeIn("slow");
+	        }
+	        reader.readAsDataURL(input.files[0]);
+	    }
+	}
+	
+	function resetNewEnquete(){
+		
+		$("#form_new_enquete")[0].reset();
+		for (i = qtd_opt; i > 1; i--){
+			$('#opt_'+i).remove();
+			$('#l_'+i).remove();
+		}
+		qtd_opt = 1;
+		$("#img_new_enquete").hide();
+		$('#less').hide();
+		$('#more').show();
+	}
+	
+	var qtd_opt = 1;
+	
+	function more(){
+		if (qtd_opt == 1) $('#less').show();
+		qtd_opt++;
+		
+		var form = "<input type='text' class='form-control' name='opt_"+qtd_opt+"' id='opt_"+qtd_opt+"' placeholder='"+qtd_opt+"ª Opção'>"
+		
+		var li = document.createElement ('li');
+		li.id = "l_"+qtd_opt;
+		li.innerHTML = form;
+		document.getElementById('lista').appendChild(li);
+		
+		$('#qtd_opt').val(qtd_opt);
+		
+		if (qtd_opt == 5) $('#more').hide();
+		
+	}
+	
+	function less(){
+		
+		if (qtd_opt == 5)  $('#more').show();
+		
+		$('#opt_'+qtd_opt).remove();
+		$('#l_'+qtd_opt).remove();
+		qtd_opt--;
+		
+		$('#qtd_opt').val(qtd_opt);
+		
+		if (qtd_opt == 1) $('#less').hide();
+	}
+	
+	function newEnqueteClick(){
+
+		if (document.getElementById('titulo').value == ''){
+			bootbox.alert("<h4><strong>Dê um título a sua enquete!</strong></h4>");
+			return;
+		}
+		for ( i = 1; i <= qtd_opt; i++){
+			if (document.getElementById('opt_'+i).value == ''){
+				bootbox.alert("<h4><strong>Preencha todas as opções de voto!</strong></h4>");
+				return;
+			}
+		}
+
+		
+		var formData = new FormData($("#form_new_enquete")[0]);
+		$.ajax({
+			type: "POST",
+			url: "postNewEnquete.php",
+	        contentType: false,
+	        processData: false,
+			data: formData,
+			success: function(data){
+				console.log(data);
+			}, error: function(data){
+				console.log('erro'+data);
+			}
+		});
+		
+		resetNewEnquete();
+
+	}
+
+</script>
+
+<body>
+
+
+	<!-- Button trigger modal -->
+	<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#newEnqueteModal">
+	  Criar Enquete
+	</button>
+	
+    <!-- MODAL CRIAR ENQUETE -->
+	<!-- Modal-->
+	<div class="modal fade" id="newEnqueteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel">Nova Enquete</h4>
+	      </div>
+	      
+	      <div class="modal-body">
+	      	
+	      	 <form id="form_new_enquete" class="form-horizontal fnenquete">
+ 
+				<ul class="list-unstyled" id="lista">
+					<li><h4>Título: </h4></li>
+					<li><input type="text" class="form-control" name="titulo" id="titulo" placeholder="Título"></li>
+					<li><h4 >Sua enquete precisa de imagem?</h4></li>
+					<li><input type="file" name="imagem" id="img_input_new_enquete"></li>
+					<li><img src="" id="img_new_enquete"/></li>
+					<li><h4>Adicione opções de voto: </h4></li>
+					<li><input type="text" class="form-control" name="opt_1" id="opt_1" placeholder="1ª Opção"></li>
+			
+	 			</ul>
+	
+	 			<input type="hidden" id="qtd_opt" name="qtd_opt" value="1"/>
+ 			</form>
+
+
+
+			<button type="button" class = "btn btn-primary " id="more" onClick="more()">Add <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button> 
+			<button type="button" class = "btn btn-danger " id="less" onClick="less()"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span> </button>
+
+				
+	      </div>
+	      
+	      <div class="modal-footer">
+	      	<button type="button" class="btn btn-primary" onClick="newEnqueteClick(); " data-dismiss="modal">Enviar</button>
+	        <button type="button" class="btn btn-default" onClick="resetNewEnquete()" data-dismiss="modal">Fechar</button>
+	      </div>
+	      
+	  </div>
+   </div>
+  </div>
+
+</body>
+</html>
