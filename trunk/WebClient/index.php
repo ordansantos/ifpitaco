@@ -35,7 +35,7 @@
 				var values = $(this).serialize();
 				$.ajax({		
 					type: "POST",
-					url: "login.php",
+					url: "services/login.php",
 					data : values,
 					success: function (data){
 						if ($.trim(data) != '0')
