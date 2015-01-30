@@ -1,6 +1,0 @@
- <font color="blue">
-  <h2> <i>Diagrama de Classes</i> </h2>
-  </font>
-  <br/>
-   <a href="http://i62.tinypic.com/2jcuc02.png"><img  src="http://i62.tinypic.com/2jcuc02.png"/>
-  </a>
