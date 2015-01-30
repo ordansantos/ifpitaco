@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<link rel="stylesheet" type="text/css" href="css/cadastrar.css">
+		<meta charset="utf-8">
+		<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+		<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+		<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>	
+		<!-- Ordem altera o significado-->
+		<link href="jcrop/css/jquery.Jcrop.css" rel="stylesheet" type="text/css" />
+		<script src="jcrop/js/jquery.Jcrop.js"></script>
+	</head>
+
+	
+	<script type="text/javascript">
+	
+	//Não funciona quando não tem src
+	function toCrop(){
+
+		$(function(){
+		
+		    $('#img').Jcrop({
+		    	setSelect: [0,0,100,100],
+		        aspectRatio: 1,
+		        onSelect: updateCoords,
+		        onChange: updateCoords
+		    });
+		
+		});
+	}
+	
+	//Coordenadas da imagem
+	function updateCoords(c)
+	{
+		
+		var img = $("#img");
+		
+		var width = img.width();
+		var height = img.height();
+		
+	    $('#x').val(c.x/width);
+	    $('#y').val(c.y/height);
+	    $('#w').val(c.w/width);
+	    $('#h').val(c.h/height);
+
+	};
+	
+	//Mostra o preview
+	function readURL(input) {
+
+	    if (input.files && input.files[0]) {
+	        var reader = new FileReader();
+
+	        reader.onload = function (e) {
+	     
+	            $('#img').attr('src', e.target.result);
+	            $("#img").fadeIn("slow");
+	         
+	            toCrop();
+	            $('.jcrop-holder img').attr('src', e.target.result);
+	        }
+	        reader.readAsDataURL(input.files[0]);
+	    }
+	}
+	
+	$(document).ready(function(){
+		
+		$("#img").hide();
+
+		//Ao trocar o input
+		$("#foto").change(function(){
+		    readURL(this);
+		});
+		
+		$("#form").submit (function(event){
+			event.preventDefault();
+	   	    
+			var formData = new FormData($(this)[0]);
+			$.ajax({
+				type: "POST",
+				url: "../WebService/postUsuario",
+		        contentType: false,
+		        processData: false,
+				data: formData,
+				success: function(data){
+					if ($.trim(data) != '1'){
+						$('#error').hide();
+						document.getElementById("error").innerHTML = data;
+						$('#error').fadeIn("slow");
+					} else
+						window.location.assign("index.php");
+				}, error: function(data){
+					console.log(data);
+				}
+			});
+		});
+	});
+	</script>
+
+
+  <body>
+  
+	<div class="container">	
+	 <div class="col-md-4 col-md-offset-4" style="margin-top: 5%">
+		<img class="img-responsive" id="logo" src="images/logo.jpg">
+		  <form class="form-signin" id="form">
+		      
+  			<div class="form-group">
+    			<label for="nm_usuario">Nome de Usuário</label>
+    			<input type="text" class="form-control" id="nm_usuario" name="nm_usuario" placeholder="Digite seu nome">
+  			</div>
+  			
+  			<div class="form-group">
+    			<label for="email">Endereço de Email</label>
+    			<input type="email" class="form-control" id="email" name="email" placeholder="Digite seu Email">
+  			</div>
+  			
+    		<div class="form-group">
+    			<label for="senha">Senha</label>
+    			<input type="password" class="form-control" id="senha" name="senha" placeholder="Senha">
+  			</div>
+  			
+		  <div class="form-group">
+		    <label for="foto">Imagem de Perfil</label>
+		    <input type="file" id="foto" name="foto">
+		    <p class="help-block">Escolha uma imagem para usar no seu perfil</p>
+		    
+		  </div>
+		 
+		 <img  class="preview" id="img" src="" />
+		  	 <br/>
+	
+		  
+  		  <button class="btn btn-lg btn-primary btn-block" type="submit">Cadastrar</button>
+  		  	
+  		  	
+  		  	<!-- Coordenadas da foto  -->
+  		    <input type="hidden" id="x" name="x" value="-1"/>
+            <input type="hidden" id="y" name="y" value="-1"/>
+            <input type="hidden" id="w" name="w" value="-1"/>
+            <input type="hidden" id="h" name="h" value="-1"/>
+  		  
+		  </form> 
+		  <br/>
+	  	<div class="alert alert-danger" role="alert" id="error" style="display: none"></div>
+	 </div>
+	 
+	 <div class="col-md-4 col-md-offset-4" style="margin-top: 5%">
+	 	
+	 </div>
+	 
+	 
+	</div>
+	
+  </body>
+  
+</html>

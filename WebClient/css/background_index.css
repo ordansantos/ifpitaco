@@ -1,0 +1,9 @@
+
+
+body{
+    background-image:url('../images/background_index.jpg');
+    background-attachment:fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    filter: alpha(opacity=40);
+}

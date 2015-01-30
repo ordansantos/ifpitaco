@@ -1,0 +1,95 @@
+
+
+.post > .top{
+	font-weight: bold;
+	margin-left: 11px;
+	position: relative;
+}
+
+.post > .top > div{
+	padding-left: 70px;
+	 	
+}
+
+.post > .top > div > h4{
+	font-weight: bold;
+	color: #0E816A;
+}
+
+.post > .top > div > h6{
+	color: #9197a3;
+}
+
+.post > .top > i{
+	position: absolute; 
+	right: 0; 
+	top: 0;
+	padding: 10px;
+	opacity: 0;
+	color: #3b5998;
+}
+
+.post:hover > .top > i{
+	opacity: 0.2;
+}
+
+.post > .top i:hover{
+	cursor: pointer;
+}
+
+.post > .content{
+	padding: 15px;
+}
+
+.comentario{
+	position: relative;
+	font-size: 14px;
+	margin-left: 15px;
+	padding: 5px;
+	
+}
+
+.comentario h6{
+	
+	color: #9197a3;
+	margin: 2px;
+}
+
+.comentario strong{
+	font-size: 15px;
+	color: #0E816A;
+}
+
+.comentario i{
+	position: absolute; 
+	right: 0; 
+	top: 0;
+	padding: 10px;
+	opacity: 0;
+	color: #3b5998;
+}
+
+.comentario:hover i{
+	opacity: 0.2;
+}
+
+.comentario  i:hover{
+	cursor: pointer;
+}
+
+.comentario  img{
+	
+	margin-right: 10px;
+	margin-top: 2px;
+	float: left;
+}
+
+.comentario .content{
+	
+
+	margin-left: 45px;
+	margin-right: 20px;
+
+}
+
+

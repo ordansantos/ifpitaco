@@ -1,0 +1,55 @@
+
+<!DOCTYPE html>
+
+
+<html>
+
+<head>
+
+</head>
+ <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+ <script type="text/javascript" >
+ 
+ $(document).ready(function() {
+	 
+	$("#form").submit (function(event){
+		event.preventDefault();
+
+		//var values = $(this).serialize();
+		  var formData = new FormData($(this)[0]);
+  
+		//var formData = new FormData($(this)[0])
+		
+		$.ajax({
+			url: "upload.php",
+			type: "post",
+	        contentType: false,
+	        processData: false,
+			data: formData,
+			success: function (data){
+				document.write (data);
+			},
+			error: function (){
+				alert ("error");
+			}
+		
+			
+		});
+		
+	});
+		
+ });
+ 
+</script>
+
+<body>
+
+<form id="form">
+	<input type="file" name="image"/>
+	<input type="text" name="nome"/>
+	<input type="submit"/>
+</form>
+
+</body>
+
+</html>

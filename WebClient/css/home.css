@@ -1,0 +1,56 @@
+@CHARSET "UTF-8";
+
+#mid{
+	
+	margin-left: 30px;
+}
+
+#profile{
+	margin-left: 25px;
+
+}
+
+body{
+	word-wrap: break-word;
+}
+#feed > form{
+	margin-bottom: 20px;
+	word-wrap: break-word;
+}
+
+#comentario_input{
+	
+	
+}
+
+#img_fiscalizar{
+	text-align: center;
+	border: 1px solid;
+	max-width: 100%;
+	margin-top: 20px;
+}
+
+.fiscalizacao_img{
+	max-width: 95%;
+	max-height: 420px;
+	text-align: center;
+	margin-bottom: 10px;
+	margin-left: 11px;
+}
+
+.laike{
+	display: inline;
+	margin-left: 10px;
+}
+
+.laike div{
+	display: inline;
+}
+
+.laike i{
+	margin-right: 10px;
+}
+
+.laikou > i{
+	color: green;
+}

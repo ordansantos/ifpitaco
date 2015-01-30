@@ -1,0 +1,72 @@
+
+   		<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+		<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+.fnenquete li{
+	margin-bottom: 4px;
+
+}
+
+#img_new_enquete{
+	
+	max-width: 100%;
+}
+
+.nome_user{
+	
+
+	font-weight: bold;
+	color: black;
+	font-size: 18px;
+}
+
+.data{
+	color: black;
+	font-size: 12px;
+}
+
+.enquete img{
+	margin-right: 10px;
+	max-width: 100%;
+}
+
+.e_top{
+	background-color:  #d9534f;
+
+	padding-bottom: 3.2px;
+	border-radius: 69px 69px 69px 69px;
+	-moz-border-radius: 69px 69px 69px 69px;
+	-webkit-border-radius: 69px 69px 69px 69px;
+	border: 0px solid #000000;
+}
+
+.enquete .titulo{
+	
+	padding: 5px;
+	font-size: 20px;
+	color: #505050;
+	margin: 10px;
+}
+
+.radio:hover{
+	color: #d9534f;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.enquete{
+	word-wrap: break-word;
+}
+
+.enquete .bot{
+	margin-top: 7px;
+	text-align: center;
+}
+
+.enquete .radio {
+	margin: 10px;
+}
+
+#myChart{
+
+}

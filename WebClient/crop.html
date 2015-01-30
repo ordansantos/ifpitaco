@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<link rel="stylesheet" type="text/css" href="css/cadastrar.css">
+
+<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>	
+<!-- Ordem altera o significado-->
+<link href="jcrop/css/jquery.Jcrop.css" rel="stylesheet" type="text/css" />
+<script src="jcrop/js/jquery.Jcrop.js"></script>
+
+
+<meta charset="UTF-8">
+
+</head>
+
+<script>
+
+
+
+//Não funciona quando não tem src
+function toCrop(){
+
+	$(function(){
+	
+	    $('#img').Jcrop({
+	    	setSelect: [0,0,100,100],
+	        aspectRatio: 1,
+	        onSelect: updateCoords,
+	        onChange: updateCoords
+	    });
+	
+	});
+}
+
+
+function updateCoords(c)
+{
+    $('#x').val(c.x);
+    $('#y').val(c.y);
+    $('#w').val(c.w);
+    $('#h').val(c.h);
+};
+
+
+function readURL(input) {
+
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+     
+            $('#img').attr('src', e.target.result);
+            $("#img").fadeIn();
+            toCrop();
+            $('.jcrop-holder img').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+$(document).ready(function(){
+	$("#img").hide();
+
+	
+	$("#imgInp").change(function(){
+	    readURL(this);
+	});
+
+	
+});
+
+
+
+
+</script>
+
+<body>
+		      
+	 
+				
+
+	<form id="form1" method="POST" action="sendImageToTemp.php" enctype="multipart/form-data">
+	   		<input type='file' id="imgInp" name="foto">
+            <input type="hidden" id="x" name="x" value="-1"/>
+            <input type="hidden" id="y" name="y" value="-1"/>
+            <input type="hidden" id="w" name="w" value="-1"/>
+            <input type="hidden" id="h" name="h" value="-1"/>
+            
+            <input type="submit"/>
+	</form>
+	
+	<img  class="preview"id="img" src=""  />
+		
+
+</body>
+</html>

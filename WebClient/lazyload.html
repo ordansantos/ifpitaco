@@ -1,0 +1,51 @@
+<html>
+  <head>
+    
+    <title>yLog Scroll Tutorial</title>
+    
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js" type="text/javascript"></script>
+
+
+<script>
+  
+	
+
+  $(document).ready(function() {
+	a = 1;
+	while ( $(document).height() - ($(window).scrollTop() + $(window).height())  < 1000 ) {
+	      
+		var lista = document.createElement ("li");
+		lista.innerHTML = a++;
+		document.getElementById("teste").appendChild (lista);
+	   }
+	
+	  $(window).scroll(function() {
+		   if($(window).scrollTop() + $(window).height() == $(document).height()) {
+				var lista = document.createElement ("li");
+				lista.innerHTML = a++;
+				document.getElementById("teste").appendChild (lista);
+		   }
+		   
+			while ( $(document).height() - ($(window).scrollTop() + $(window).height())  < 1000 ) {
+			      
+				var lista = document.createElement ("li");
+				lista.innerHTML = a++;
+				document.getElementById("teste").appendChild (lista);
+			   }
+			
+	   });
+	  
+  });
+  
+</script>
+	
+  </head>
+
+    <div>
+      <ul id="teste" style="position: relative;">
+
+      </ul>
+    </div>
+    
+  </body>
+</html>
