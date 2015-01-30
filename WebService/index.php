@@ -914,7 +914,7 @@ function getEnqueteIds(){
 	$stmt->execute();
 	$ids = $stmt->fetchAll(PDO::FETCH_OBJ);
 	echo '{"ids":'.utf8_encode(json_encode($ids))."}";
-	
+	$conn = null;
 }
 
 function getEnqueteIdsWhereUserDidNotVote($id){
@@ -927,6 +927,6 @@ function getEnqueteIdsWhereUserDidNotVote($id){
 	$stmt->execute();
 	$ids = $stmt->fetchAll(PDO::FETCH_OBJ);
 	echo '{"ids":'.utf8_encode(json_encode($ids))."}";
-	
+	$conn = null;
 }
 
