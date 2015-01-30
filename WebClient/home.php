@@ -97,7 +97,7 @@ function laikeSend(id){
 	id = id.replace ('nl', '');
 	$("#nl"+id).tooltip('hide');
 
-	$.post ("laikar.php", {post_id: id}, function(data){
+	$.post ("services/laikar.php", {post_id: id}, function(data){
 		if (data.trim() == '0')
 			bootbox.alert("Faça login para laikar!", function() {
 				window.location.assign("index.php");
@@ -122,7 +122,7 @@ function likesLoad(){
 			console.log ('like'+post_idx);
 			$.ajax({
 				type: 'POST',
-				url: 'getLaikes.php',
+				url: 'services/getLaikes.php',
 				data: { post_id: post_idx },
 				dataType: 'json',
 				cache: false,
@@ -319,7 +319,7 @@ function comentarioSend (id){
 	event.preventDefault();
 	var data = $('#' + id).serializeArray();
 	data.push ({name:'post_id', value: id});
-		$.post ("comentar.php", data, function(data){
+		$.post ("services/comentar.php", data, function(data){
 			if (data.trim() == '0')
 				bootbox.alert("Faça login para comentar!", function() {
 					window.location.assign("index.php");
@@ -430,7 +430,7 @@ function excluirComentario(id){
 	console.log('entrou: excluir');
 	id = id.replace ('c', '');
 	
-	$.get ("getIdUsuario.php", function(data){
+	$.get ("services/getIdUsuario.php", function(data){
 		console.log(data + ' ' + comentario_user[id] + ' ' + id);
 		if (comentario_user[id] != data)
 			bootbox.dialog({message: "Esse comentário está lhe incomodando?", 
@@ -455,7 +455,7 @@ function excluirComentario(id){
 								
 								$('#c'+id).remove();
 								$.param({comentario_post_id: id});
-								$.post ("deletarComentario.php", {comentario_post_id: id});
+								$.post ("services/deletarComentario.php", {comentario_post_id: id});
 								
 							}
 					}
@@ -472,7 +472,7 @@ function excluirPost(sender){
 	e = sender.parentNode.parentNode.parentNode.parentNode;
 	id = e.getAttribute('id');
 
-	$.get ("getIdUsuario.php", function(data){
+	$.get ("services/getIdUsuario.php", function(data){
 		if (post_user[id] != data)
 			bootbox.dialog({message: "Essa pubicação está lhe incomodando?", 
 				buttons:{
@@ -497,7 +497,7 @@ function excluirPost(sender){
 								$('#'+id).remove();
 								
 								$.param({post_id: id});
-								a = $.post ("deletarPost.php", {post_id: id});
+								a = $.post ("services/deletarPost.php", {post_id: id});
 								console.log(a);
 							}
 					}
@@ -548,7 +548,7 @@ function propostaClick() {
 var values = $('#form_proposta').serialize();
 	
 	$.ajax({
-		url: "propor.php",
+		url: "services/propor.php",
 		type: "post",
 		data: values,
 		async: false,
@@ -573,7 +573,7 @@ function fiscalizacaoClick(){
 	var formData = new FormData($("#form_fiscalizacao")[0]);
 	$.ajax({
 		type: "POST",
-		url: "fiscalizar.php",
+		url: "services/fiscalizar.php",
         contentType: false,
         processData: false,
 		data: formData,
@@ -688,7 +688,7 @@ function newEnqueteClick(){
 	var formData = new FormData($("#form_new_enquete")[0]);
 	$.ajax({
 		type: "POST",
-		url: "postNewEnquete.php",
+		url: "services/postNewEnquete.php",
         contentType: false,
         processData: false,
 		data: formData,
@@ -781,7 +781,7 @@ function newEnqueteClick(){
 		event.preventDefault();
 		var data = $('#form_enquete').serializeArray();
 		data.push ({name:'enquete_id', value: id});
-			$.post ("postVoto.php", data, function(data){
+			$.post ("services/postVoto.php", data, function(data){
 				console.log(data);
 				if (data.trim() == '0')
 					bootbox.alert("Faça login para votar!", function() {
@@ -802,7 +802,7 @@ function newEnqueteClick(){
    
 function getEnquete(){
 
-	$.get ("getIdUsuario.php", function(data){ 
+	$.get ("services/getIdUsuario.php", function(data){ 
 	
 		$.ajax({ 
 			type: 'GET', 
@@ -973,7 +973,7 @@ function drawChart(opts, qtd_opts, qtd_opt){
 	      
 	    </div>
 	    <div>
-	    	<button onClick="parent.location='logout.php'" type="submit" class="btn btn-default navbar-right" style="margin: 8px">Sair</button>
+	    	<button onClick="parent.location='services/logout.php'" type="submit" class="btn btn-default navbar-right" style="margin: 8px">Sair</button>
 	    </div>
 	  </div>
 	</nav>
