@@ -16,6 +16,8 @@
 <html>
  
 	<head>
+	 	<link rel="shortcut icon" href="images/favicon.png">
+  		<title>IFPitaco</title>
 		<meta charset="utf-8"/>
 		<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 		<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
@@ -54,7 +56,7 @@
 
 
   <body>
-  	<nav id="bar" class="navbar navbar-default">
+  	<div id="bar">
 	  <div class="container-fluid">
 	    <div class="navbar-header">
 	
@@ -62,7 +64,7 @@
 	      
 	    </div>
 	  </div>
-	</nav>
+	</div>
 	
 	<div class="container">	
 	
@@ -89,7 +91,7 @@
 	        
 	        <div class="inner-addon left-addon">
     			<i class="glyphicon glyphicon-lock"></i>
-	        	<input name="senha" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+	        	<input name="senha" type="password" id="inputPassword" class="form-control" placeholder="Password" required >
 			</div>
 			
 			<br/>

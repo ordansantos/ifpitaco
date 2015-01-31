@@ -17,7 +17,8 @@
 	<head>
 		
   		<meta charset="utf-8"/>
-  		
+  		<link rel="shortcut icon" href="images/favicon.png">
+  		<title>IFPitaco</title>
 		<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 	
 		<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
@@ -943,7 +944,7 @@ function updateEnqueteVisualizacao(){
 				 <div class='titulo'>"+toPlainText(titulo)+"</div>\
 				 "+imagem+"\
 				 <h4>Resultados: </h4>\
-				 <canvas id='myChart'></canvas>\
+				 <canvas id='myChart' width=250 ></canvas>\
 				 <div id='chartjs-tooltip'></div>\
 			</div>\
 			\
@@ -1018,7 +1019,7 @@ function drawChart(opts, qtd_opts, qtd_opt){
 	}
 
 	var ctx = $("#myChart").get(0).getContext("2d");
-	var myPieChart = new Chart(ctx).Pie(data);
+	var myPieChart = new Chart(ctx).Pie(data, {animationSteps : 50});
 }
 
 

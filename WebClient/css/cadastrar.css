@@ -7,13 +7,16 @@ body{
     background-attachment:fixed;
     background-repeat: no-repeat;
     background-size: cover;
-    background-position: right 50px;
+    background-position: right 40px;
 }
 
 #bar img{
-	height: 50px;
+	height: 40px;
+	position: fixed;
 }
-
+#bar{
+	position: fixed;
+}
 
 .preview {
 max-width: 100%;
@@ -51,7 +54,3 @@ label > span{
 	margin-bottom: 10px;
 }
 
-.container{
-	margin-top: -40px;
-	
-}

@@ -16,6 +16,9 @@
 <html>
 
 	<head>
+		<link rel="shortcut icon" href="images/favicon.png">
+  		<title>IFPitaco</title>
+  		
   		<meta charset="utf-8"/>
 		<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 	
