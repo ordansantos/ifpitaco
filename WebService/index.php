@@ -382,6 +382,20 @@ function postUsuario(){
 	$senha = $_POST['senha'];
 	$email = $_POST['email'];
 	
+	$usuario_tipo = $_POST['usuario_tipo'];
+	$curso = '';
+	$ano_periodo = '';
+	$grau_academico = '';
+	
+	if(isset($_POST['curso']))
+		$curso = $_POST['curso'];
+	
+	if(isset($_POST['ano_periodo']))
+		$ano_periodo = $_POST['ano_periodo'];
+
+	if(isset($_POST['grau_academico']))
+		$grau_academico = $_POST['grau_academico'];
+	
 	if (strlen($name) == 0 || strlen($senha) == 0 || strlen($email) == 0){
 		echo ERRO_STRING_VAZIA;
 		return;
@@ -394,7 +408,8 @@ function postUsuario(){
 	
 	if (usuarioExiste ($email)){ echo ERRO_EMAIL_EXISTE; return; }
 	
-	$sql = "INSERT INTO tb_usuario (nm_usuario, senha, email) values (:nm_usuario, :senha, :email)";
+	$sql = "INSERT INTO tb_usuario (nm_usuario, senha, email, usuario_tipo, curso, ano_periodo, grau_academico) 
+			values (:nm_usuario, :senha, :email, :usuario_tipo, :curso, :ano_periodo, :grau_academico)";
 
 	$conn = getConn();
 	
@@ -405,6 +420,10 @@ function postUsuario(){
 	$stmt->bindParam("senha", $senha);
 	$stmt->bindParam("email", $email);
 	
+	$stmt->bindParam("usuario_tipo", $usuario_tipo);
+	$stmt->bindParam("curso", $curso);
+	$stmt->bindParam("ano_periodo", $ano_periodo);
+	$stmt->bindParam("grau_academico", $grau_academico);
 	
 	if ($stmt->execute()){
 	saveFotoFromPostUsuario($email);
@@ -929,4 +948,5 @@ function getEnqueteIdsWhereUserDidNotVote($id){
 	echo '{"ids":'.utf8_encode(json_encode($ids))."}";
 	$conn = null;
 }
+
 
