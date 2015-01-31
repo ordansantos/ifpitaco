@@ -33,7 +33,7 @@
 		
 		<!--http://www.chartjs.org/docs/-->
 		<script src="Chart/Chart.js"></script>
-		
+		<link rel="stylesheet" type="text/css"  href="css/tooltip_chart_customized.css">
 
 	</head>
 
@@ -60,6 +60,7 @@ $(document).ready(function() {
 	setInterval(function () {comentarioLoad()}, 5000);
 	setInterval(function () {newPosts()}, 5000);
 	setInterval(function () {likesLoad()}, 5000);
+	setInterval(function () {updateEnqueteVisualizacao()}, 5000);
 	
 	$(window).scroll(function() {
 	
@@ -792,6 +793,8 @@ function newEnqueteClick(){
 						window.location.assign("index.php");
 					});
 				else{
+					number_votes_enquete = 0;
+					to_update_enquete = id;
 					novaEnqueteVisualizacao(id);
 					if (last_array_enquete = Number.POSITIVE_INFINITY)
 						last_array_enquete = id;
@@ -801,8 +804,9 @@ function newEnqueteClick(){
    
    var last_array_enquete = Number.POSITIVE_INFINITY;
    var last_array_enquete_to_vote = Number.POSITIVE_INFINITY;
-	
-   
+   var to_update_enquete = 0;
+   var number_votes_enquete = 0;
+
    
 function getEnquete(){
 
@@ -815,25 +819,26 @@ function getEnquete(){
 			dataType:'json',
 			cache: false,
 			success: function (data) {
-				console.log(data);
+	
 				if (data.ids.length != 0){ 
-					
+	
 					created = false;
 					
 					for (i = data.ids.length - 1; i >= 0; i--){
-						if (last_array_enquete_to_vote > data.ids[i].id_enquete){
+						if (last_array_enquete_to_vote > parseInt(data.ids[i].id_enquete)){
 							created = true;
-							last_array_enquete_to_vote = data.ids[i].id_enquete;
+							last_array_enquete_to_vote = parseInt(data.ids[i].id_enquete);
 							break;
 						}
 					}
 							
 					if (!created)
-						last_array_enquete_to_vote = data.ids[data.ids.length - 1].id_enquete;
+						last_array_enquete_to_vote = parseInt(data.ids[data.ids.length - 1].id_enquete);
 					
 					console.log(last_array_enquete_to_vote);
 					novaEnqueteForm (last_array_enquete_to_vote);
-
+					to_update_enquete = 0;
+					number_votes_enquete = 0;
 				}else{
 						
 					$.ajax({ 
@@ -843,23 +848,27 @@ function getEnquete(){
 						dataType:'json',
 						cache: false,
 						success: function (data) {
-							console.log('entrou');
+							console.log(data);
 							if (data.ids.length != 0){
 								created = false;
-							
 								for (i = data.ids.length - 1; i >= 0; i--){
-									if (last_array_enquete > data.ids[i].id_enquete){
+				
+									if (last_array_enquete > parseInt(data.ids[i].id_enquete)){
 										created = true;
-										last_array_enquete = data.ids[i].id_enquete;
+										last_array_enquete = parseInt(data.ids[i].id_enquete);
 										break;
+										
 									}
 								}
 								
 								if (!created)
-									last_array_enquete = data.ids[data.ids.length - 1].id_enquete;
-								console.log(last_array_enquete);
+									last_array_enquete = parseInt(data.ids[data.ids.length - 1].id_enquete);
+								
+								console.log('last = ' + last_array_enquete);
+								
 								novaEnqueteVisualizacao(last_array_enquete);
-									
+								to_update_enquete = last_array_enquete;
+								number_votes_enquete = 0;
 							}
 							
 						}
@@ -869,9 +878,18 @@ function getEnquete(){
 		});
 	});
 }
-   
+
+
+function updateEnqueteVisualizacao(){
+	console.log ('entrou na enquete update' + to_update_enquete);
+	if (to_update_enquete != 0){
+		novaEnqueteVisualizacao(to_update_enquete);
+		console.log("atualizou");
+	}
+}
 
    function novaEnqueteVisualizacao(id_enquete){
+
 	   $("#proxima_enquete").show();
 	   $.ajax({ 
 		  	type: 'GET', 
@@ -880,14 +898,22 @@ function getEnquete(){
 		 	dataType:'json',
 			cache: false,
 		    success: function (data) { 
+			    if (data.length == 0) return;
+			    
 		    	console.log(data);
 		    	data = data[0];
+				sum = parseInt(data.qtd_opt_1) + parseInt(data.qtd_opt_2) + parseInt(data.qtd_opt_3) + parseInt(data.qtd_opt_4) + parseInt(data.qtd_opt_5);
+				if (number_votes_enquete < sum ){
+				
+					number_votes_enquete = sum;
+			    	createEnqueteVisualizacao (data.perfil_45, data.e_imagem, data.nm_usuario, 
+			    					data.data_hora, data.titulo, data.qtd_opt,
+			    		[data.opt_1, data.opt_2, data.opt_3, data.opt_4, data.opt_5],
+			    		[data.qtd_opt_1, data.qtd_opt_2, data.qtd_opt_3, data.qtd_opt_4, data.qtd_opt_5]
+			    		);	
 
-		    	createEnqueteVisualizacao (data.perfil_45, data.e_imagem, data.nm_usuario, 
-		    					data.data_hora, data.titulo, data.qtd_opt,
-		    		[data.opt_1, data.opt_2, data.opt_3, data.opt_4, data.opt_5],
-		    		[data.qtd_opt_1, data.qtd_opt_2, data.qtd_opt_3, data.qtd_opt_4, data.qtd_opt_5]
-		    		);	
+		    		console.log ('atualizou gráfico' + ' ' + number_votes_enquete);
+				}
 		    	
 		    }
 		});
@@ -918,11 +944,15 @@ function getEnquete(){
 				 "+imagem+"\
 				 <h4>Resultados: </h4>\
 				 <canvas id='myChart'></canvas>\
+				 <div id='chartjs-tooltip'></div>\
 			</div>\
 			\
 	   ";
-			
+		
 		document.getElementById("enquete_left").appendChild(enquete);
+
+		//Não possui nenhuma opção no tooltip, então esconda-o
+		$('#chartjs-tooltip').hide();
 		
 		drawChart (opts, qtd_opts, qtd_opt);
    }
@@ -931,13 +961,54 @@ function proximaEnquete(){
 	getEnquete();
 }
 
+//Customizando o tooltip padrão para não limitar a quantidade de caracteres
+Chart.defaults.global.customTooltips = function(tooltip) {
+
+	// Tooltip Element
+    var tooltipEl = $('#chartjs-tooltip');
+    $('#chartjs-tooltip').show();
+    
+    // Hide if no tooltip
+    if (!tooltip) {
+        tooltipEl.css({
+            opacity: 0
+        });
+        return;
+    }
+
+    // Set caret Position
+    tooltipEl.removeClass('above below');
+    tooltipEl.addClass(tooltip.yAlign);
+
+    // Set Text
+    tooltipEl.html(tooltip.text);
+
+    // Find Y Location on page
+    var top;
+    if (tooltip.yAlign == 'above') {
+        top = tooltip.y - tooltip.caretHeight - tooltip.caretPadding;
+    } else {
+        top = tooltip.y + tooltip.caretHeight + tooltip.caretPadding;
+    }
+
+    // Display, position, and set styles for font
+    tooltipEl.css({
+        opacity: 1,
+        left: tooltip.chart.canvas.offsetLeft + tooltip.x + 'px',
+        top: tooltip.chart.canvas.offsetTop + top + 'px',
+        fontFamily: tooltip.fontFamily,
+        fontSize: tooltip.fontSize,
+        fontStyle: tooltip.fontStyle,
+    });
+};
+
 function drawChart(opts, qtd_opts, qtd_opt){
 	
 	colors = ['#F7464A', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'];
 	highlights = ['#FF5A5E', '#5AD3D1', '#FFC870', '#A8B3C5', '#616774'];
 	data = [];
 	for (i = 0; i < qtd_opt; i++){
-		
+
 		data.push({
 			value: parseInt(qtd_opts[i]),
 			color: colors[i],
@@ -947,10 +1018,9 @@ function drawChart(opts, qtd_opts, qtd_opt){
 	}
 
 	var ctx = $("#myChart").get(0).getContext("2d");
-	var myPieChart = new Chart(ctx).Pie(data, {
-			animationSteps : 50
-	});
+	var myPieChart = new Chart(ctx).Pie(data);
 }
+
 
 
 </script>
