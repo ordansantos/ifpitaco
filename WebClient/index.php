@@ -22,7 +22,8 @@
 		<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
 		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 		
-
+		<link rel="stylesheet" type="text/css"  href="css/index.css">
+		<link rel="stylesheet" type="text/css"  href="css/login_border.css">
 	</head>
 
 	
@@ -53,20 +54,44 @@
 
 
   <body>
-  
+  	<nav id="bar" class="navbar navbar-default">
+	  <div class="container-fluid">
+	    <div class="navbar-header">
+	
+	        <img src="images/logo2.png">
+	      
+	    </div>
+	  </div>
+	</nav>
+	
 	<div class="container">	
-		<div class="col-md-4 col-md-offset-4" style="margin-top: 5%">
+	
+		<div class="box-info col-md-6 " >
+			<p>Proponha melhorias ao IFPB, fiscalize problemas do dia a dia e opine! Ajude no crescimento de sua instituição.</p>
+		</div>
+	
+		<div class="col-md-4 col-sm-push-2" >
 		 
 	      <form class="form-signin" id="form">
 	        
-	        <img class="img-responsive" id="logo" src="images/logo2.png">
-	        
+
+
+
 	        <label for="inputEmail" class="sr-only">Email address</label>
 	        
-	        <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+	        <div class="inner-addon left-addon">
+    			<i class="glyphicon glyphicon-user"></i>
+	       		<input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+	        </div>
+	        
 	        <br/>
 	        <label for="inputPassword" class="sr-only">Password</label>
-	        <input name="senha" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+	        
+	        <div class="inner-addon left-addon">
+    			<i class="glyphicon glyphicon-lock"></i>
+	        	<input name="senha" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+			</div>
+			
 			<br/>
 			<div class="row">
 				<div class="col-xs-6">
@@ -82,6 +107,11 @@
 		 <div class="alert alert-danger" role="alert" id="error" style="display: none">Dados Inválidos</div>
 		</div>
 	</div>
+	
+	
+	
+
+
   </body>
   
 </html>

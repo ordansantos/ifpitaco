@@ -1,6 +1,20 @@
 
 
 
+
+body{
+    background-image:url('../images/background_index.jpg');
+    background-attachment:fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: right 50px;
+}
+
+#bar img{
+	height: 50px;
+}
+
+
 .preview {
 max-width: 100%;
 
@@ -20,13 +34,13 @@ label > span{
 
 .curso{
 	display: inline;
-	max-width: 84%;
+	max-width: 82%;
 }
 
 .ano_periodo{
-	max-width: 14.8%;
+	max-width: 16%;
 	display: inline;
-	padding : 5px;
+	padding : 0px;
 }
 
 #aluno{
@@ -35,4 +49,9 @@ label > span{
 
 #professor{
 	margin-bottom: 10px;
+}
+
+.container{
+	margin-top: -40px;
+	
 }

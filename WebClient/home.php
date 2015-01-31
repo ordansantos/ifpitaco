@@ -15,22 +15,26 @@
 <html>
 
 	<head>
+		
   		<meta charset="utf-8"/>
+  		
 		<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 	
 		<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 		<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
 		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-
+		<link rel="stylesheet" type="text/css" href="css/home.css">
 		<link rel="stylesheet" type="text/css" href="css/comentario.css">
 		<script src="js/bootbox.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="css/home.css">
+		
 		<script src="js/jquery-visible.min.js"></script>
 		<script src="js/toPlainText.js"></script>
 		<link rel="stylesheet" type="text/css"  href="css/enquete_form.css">
 		
 		<!--http://www.chartjs.org/docs/-->
 		<script src="Chart/Chart.js"></script>
+		
+
 	</head>
 
 	
@@ -173,7 +177,7 @@ function novoPost (nome, ramo, id, data, comentario, foto, tipo){
 	if (tipo == 2)
 		$img = "<img class='fiscalizacao_img' src='../WebService/uploaded_images/fiscalizacao_foto/"+id+".jpg' />"
 	form.innerHTML = '\
-	<div class="well well-sm" style="margin-bottom: 1px">\
+	<div class="well well-sm">\
 	 	<div class="post">\
 		 <div class="top">\
 		 <i onClick="excluirPost(this)" class="glyphicon glyphicon-remove"></i>\
@@ -716,7 +720,7 @@ function newEnqueteClick(){
 	   
 
 	   var enquete = document.createElement ('div');
-	   enquete.className = "enquete";
+	   enquete.className = "enquete well";
 	   enquete.id = "enquete";
 	   
 	   imagem = '';
@@ -758,7 +762,7 @@ function newEnqueteClick(){
    }
    
    function novaEnqueteForm(id_enquete){
-
+	   $("#proxima_enquete").hide();
 	   $.ajax({ 
 		  	type: 'GET', 
 		  	url: '../WebService/getEnquete/'+id_enquete, 
@@ -830,11 +834,6 @@ function getEnquete(){
 					console.log(last_array_enquete_to_vote);
 					novaEnqueteForm (last_array_enquete_to_vote);
 
-					if (data.ids.length == 1)
-						$("#proxima_enquete").hide();
-					else
-						$("#proxima_enquete").show();
-						
 				}else{
 						
 					$.ajax({ 
@@ -860,11 +859,7 @@ function getEnquete(){
 									last_array_enquete = data.ids[data.ids.length - 1].id_enquete;
 								console.log(last_array_enquete);
 								novaEnqueteVisualizacao(last_array_enquete);
-
-								if (data.ids.length == 1)
-									$("#proxima_enquete").hide();
-								else
-									$("#proxima_enquete").show();
+									
 							}
 							
 						}
@@ -877,6 +872,7 @@ function getEnquete(){
    
 
    function novaEnqueteVisualizacao(id_enquete){
+	   $("#proxima_enquete").show();
 	   $.ajax({ 
 		  	type: 'GET', 
 		  	url: '../WebService/getEnquete/'+id_enquete, 
@@ -904,7 +900,7 @@ function getEnquete(){
 	   
 	   
 	   var enquete = document.createElement ('div');
-	   enquete.className = "enquete";
+	   enquete.className = "enquete well";
 	   enquete.id = "enquete";
 	   enquete.display = "none";
 	   imagem = '';
@@ -967,7 +963,7 @@ function drawChart(opts, qtd_opts, qtd_opt){
 	  <div class="container-fluid">
 	    <div class="navbar-header">
 	      <a class="navbar-brand" href="home.php">
-	        <img alt="Brand" src="images/logo2.png" class="img-responsive">
+	        <img alt="Brand" src="images/logo2.png" id="logo">
 	      </a>
 	      
 	      
@@ -992,29 +988,30 @@ function drawChart(opts, qtd_opts, qtd_opt){
 				  
 				 <!-- Meio -->
 				<div class="col-md-6" id="mid">
-	                                
-					<!-- Button trigger modal -->
-					<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#proporModal">
-					  Propor
-					</button>
-					
-					<!-- Button trigger modal -->
-					<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#fiscalizarModal">
-					  Fiscalizar
-					</button>
-					
-					<!-- Button trigger modal -->
-					<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#newEnqueteModal">
-	  					Criar Enquete
-					</button>
-			
+	                <div class="opcoes_btns">             
+						<!-- Button trigger modal -->
+						<button id="propor_btn" type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#proporModal">
+						  Propor
+						</button>
+						
+						<!-- Button trigger modal -->
+						<button type="button" class="btn btn btn-danger btn-lg" data-toggle="modal" data-target="#fiscalizarModal">
+						  Fiscalizar
+						</button>
+						
+						<!-- Button trigger modal -->
+						<button type="button" class="btn btn-warning btn-lg pull-right" data-toggle="modal" data-target="#newEnqueteModal">
+		  					Criar Enquete
+						</button>
+					</div>
 					<div id="feed"></div>
 		
 	 			</div>
 	 			
 	 			<div class="col-md-3" id="left">
 	 				<span title="próxima" data-toggle="tooltip" data-placement="bottom" class="btn-lg btn pull-right" id="proxima_enquete" onClick="proximaEnquete()">
-	 				<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></span>
+	 				<span id="next" class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></span>
+	 				
 	 				<div id="enquete_left">
 	 				</div>
 	 			
