@@ -46,7 +46,9 @@
 	font-size: 14px;
 	margin-left: 15px;
 	padding: 5px;
+	background-color: white;
 	
+	margin-right: 1px;
 }
 
 .comentario h6{
@@ -80,7 +82,7 @@
 .comentario  img{
 	
 	margin-right: 10px;
-	margin-top: 2px;
+
 	float: left;
 }
 

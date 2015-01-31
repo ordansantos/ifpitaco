@@ -12,7 +12,23 @@
 
 body{
 	word-wrap: break-word;
+	background-image:url('../images/pattern-6plj.png');
+	font-family: Helvetica,Arial,sans-serif;
 }
+
+#bar{
+
+}
+
+.well{
+	background-color: white;
+	margin-bottom: 0px;
+}
+
+#propor_btn{
+	margin-right: 10px;
+}
+
 #feed > form{
 	margin-bottom: 20px;
 	word-wrap: break-word;
@@ -22,6 +38,12 @@ body{
 	
 	
 }
+
+#logo{
+	height: 50px;
+	margin-top: -12px;
+}
+
 
 #img_fiscalizar{
 	text-align: center;
@@ -53,4 +75,8 @@ body{
 
 .laikou > i{
 	color: green;
+}
+
+.opcoes_btns{
+	margin-bottom: 20px;
 }

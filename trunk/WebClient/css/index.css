@@ -1,0 +1,59 @@
+
+
+body{
+    background-image:url('../images/background_index.jpg');
+    background-attachment:fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: right 50px;
+}
+
+img{
+	
+	height: 50px;
+}
+
+p{
+	font-size: 28px;
+	color: white;
+	font-weight: 300;
+	font-family: Helvetica,Arial,sans-serif;
+	color: white;
+	padding: 10px;
+}
+
+.box-info{
+	background-color: rgba(0, 0, 0, 0.3);
+	border-radius: 10px 10px 10px 10px;
+	-moz-border-radius: 10px 10px 10px 10px;
+	-webkit-border-radius: 10px 10px 10px 10px;
+	border: 0px solid #000000;
+	
+}
+
+#bar{
+	margin-bottom: 100px;
+}
+
+
+/* enable absolute positioning */
+.inner-addon { 
+    position: relative; 
+}
+
+/* style icon */
+.inner-addon .glyphicon {
+  position: absolute;
+  padding: 10px;
+  pointer-events: none;
+}
+
+/* align icon */
+.left-addon .glyphicon  { left:  0px;}
+.right-addon .glyphicon { right: 0px;}
+
+/* add padding  */
+.left-addon input  { padding-left:  30px; }
+.right-addon input { padding-right: 30px; }
+
+

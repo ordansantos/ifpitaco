@@ -13,6 +13,9 @@
 		<!-- Ordem altera o significado-->
 		<link href="jcrop/css/jquery.Jcrop.css" rel="stylesheet" type="text/css" />
 		<script src="jcrop/js/jquery.Jcrop.js"></script>
+		
+
+		<link rel="stylesheet" type="text/css"  href="css/login_border.css">
 	</head>
 
 	
@@ -37,7 +40,7 @@
 	function updateCoords(c)
 	{
 		
-		var img = $("#img");
+		var img = $(".jcrop-holder img");
 		
 		var width = img.width();
 		var height = img.height();
@@ -46,22 +49,30 @@
 	    $('#y').val(c.y/height);
 	    $('#w').val(c.w/width);
 	    $('#h').val(c.h/height);
-
+		console.log (c.x/width+ ' ' + c.y/height+ ' ' + c.w/width+ ' ' + c.h/height+ ' ');
 	};
+	
+	isThereJcrop = false;
 	
 	//Mostra o preview
 	function readURL(input) {
-
+		
 	    if (input.files && input.files[0]) {
 	        var reader = new FileReader();
 
 	        reader.onload = function (e) {
-	     
-	            $('#img').attr('src', e.target.result);
-	            $("#img").fadeIn("slow");
-	         
-	            toCrop();
-	            $('.jcrop-holder img').attr('src', e.target.result);
+	        	
+	        	if (!isThereJcrop){
+	        		$("#img").show();
+	        		$('#img').attr('src', e.target.result);
+		            toCrop();
+		            isThereJcrop = true;
+	        	} else{
+	   
+	        		$('.jcrop-holder img').attr('src', e.target.result);
+	        		
+	        	}
+
 	        }
 	        reader.readAsDataURL(input.files[0]);
 	    }
@@ -88,6 +99,7 @@
 
 	
 	$(document).ready(function(){
+	
 		$('#professor').hide();
 		$("#img").hide();
 
@@ -107,10 +119,12 @@
 		        processData: false,
 				data: formData,
 				success: function(data){
+
 					if ($.trim(data) != '1'){
 						$('#error').hide();
 						document.getElementById("error").innerHTML = data;
 						$('#error').fadeIn("slow");
+						window.scrollBy(0,200);
 					} else
 						window.location.assign("index.php");
 				}, error: function(data){
@@ -122,29 +136,43 @@
 	
 	$('[data-toggle="popover"]').popover();
 	$('#professor').hide();
+	
+	function clique(){
+		
+		$('.jcrop-tracker').attr('max-width', '100%');
+	}
 	</script>
+ 
+   <body>
 
-
-  <body>
-  
+  	<nav id="bar" class="navbar navbar-default">
+	  <div class="container-fluid">
+	    <div class="navbar-header">
+	
+	        <img src="images/logo2.png">
+	      
+	    </div>
+	  </div>
+	</nav> 
+ 
 	<div class="container">	
-	 <div class="col-md-5 col-md-offset-4" style="margin-top: 5%">
-		<img class="img-responsive" id="logo" src="images/logo.jpg">
+	 <div class="col-md-4 col-md-offset-4" style="margin-top: 5%">
+
 		  <form class="form-signin" id="form">
-		      
+	
   			<div class="form-group">
     			<label for="nm_usuario"><span class="glyphicon glyphicon glyphicon-user" aria-hidden="true"></span>Nome de Usuário</label>
-    			<input type="text" class="form-control" id="nm_usuario" name="nm_usuario" placeholder="Digite seu nome">
+    			<input pattern="[a-zA-Z]+" required="required"  type="text" class="form-control" id="nm_usuario" name="nm_usuario" placeholder="Digite seu nome">
   			</div>
   			
   			<div class="form-group">
     			<label for="email"><span class="glyphicon glyphicon glyphicon-envelope" aria-hidden="true"></span>Endereço de Email</label>
-    			<input type="email" class="form-control" id="email" name="email" placeholder="Digite seu Email">
+    			<input required="required" type="email" class="form-control" id="email" name="email" placeholder="Digite seu Email">
   			</div>
   			
     		<div class="form-group">
     			<label for="senha"><span class="glyphicon glyphicon glyphicon-lock" aria-hidden="true"></span>Senha</label>
-    			<input type="password" class="form-control" id="senha" name="senha" placeholder="Senha">
+    			<input required="required" type="password" class="form-control" id="senha" name="senha" placeholder="Senha">
   			</div>
   			
 		 
@@ -193,15 +221,15 @@
 					<option value="Outro">Outro</option>	
 				</select>
 		
-				<select style="display: inline" tabindex="0" data-trigger="focus" class="ano_periodo form-control" id="pop" name="ano_periodo" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="right" data-content="Ano/Período">
-					<option value="1º">1º</option>
-					<option value="2º">2º</option>
-					<option value="3º">3º</option>
-					<option value="4º">4º</option>
-					<option value="5º">5º</option>
-					<option value="6º">6º</option>
-					<option value="7º">7º</option>
-					<option value="8º">8º</option>
+				<select style="display: inline; padding : 5px;" tabindex="0" data-trigger="focus" class="ano_periodo form-control" id="pop" name="ano_periodo" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="right" data-content="Ano/Período">
+					<option value="1">1º</option>
+					<option value="2">2º</option>
+					<option value="3">3º</option>
+					<option value="4">4º</option>
+					<option value="5">5º</option>
+					<option value="6">6º</option>
+					<option value="7">7º</option>
+					<option value="8">8º</option>
 				</select>
 			</span>
 		</div>		
@@ -237,7 +265,7 @@
             <input type="hidden" id="h" name="h" value="-1"/>
   		  
 		  </form> 
-		  <br/>
+		<br/>
 	  	<div class="alert alert-danger" role="alert" id="error" style="display: none"></div>
 	 </div>
 	 
