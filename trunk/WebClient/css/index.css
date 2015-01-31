@@ -5,16 +5,16 @@ body{
     background-attachment:fixed;
     background-repeat: no-repeat;
     background-size: cover;
-    background-position: right 50px;
+    background-position: right 40px;
 }
 
 img{
 	
-	height: 50px;
+	height: 40px;
 }
 
 p{
-	font-size: 28px;
+	font-size: 24px;
 	color: white;
 	font-weight: 300;
 	font-family: Helvetica,Arial,sans-serif;
