@@ -43,16 +43,17 @@
 
 .post > .content{
 	padding: 15px;
+	font-size: 17px;
 }
 
 .comentario{
 	position: relative;
 	font-size: 14px;
-	margin-left: 15px;
+	margin-left: 5px;
 	padding: 5px;
 	background-color: white;
 	
-	margin-right: 15px;
+	margin-right: 5px;
 	
 	
 }
