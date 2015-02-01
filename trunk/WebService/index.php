@@ -9,8 +9,10 @@
 
 		echo "servicos.txt \nramos.txt \n";
 	});
-
-
+/*
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
+*/
 define ('ERRO', '0');
 define ('SUCESSO', '1');
 define ('ERRO_STRING_VAZIA', 'Preencha todos os campos corretamente!');
@@ -54,6 +56,8 @@ $app->get('/getUsuarioByPostId/:post_id', 'getUsuarioByPostId');
 $app->get('/getEnquete/:enquete_id', 'getEnquete');
 $app->get('/getEnqueteIds/', 'getEnqueteIds');
 $app->get('/getEnqueteIdsWhereUserDidNotVote/:usuario_id', 'getEnqueteIdsWhereUserDidNotVote');
+$app->get('/getUsuarioById/:usuario_id', 'getUsuarioById');
+$app->get('/getBuscaUsuario/:nome', 'getBuscaUsuario');
 
 $app->run();
 
@@ -530,7 +534,7 @@ function postComentario (){
 	$post_id = $_POST['post_id'];
 	$comentario = $_POST['comentario'];
 	
-	if (strlen($comentario) == 0){
+	if (strlen($comentario) == 0 || trim($comentario) == ''){
 		echo ERRO_STRING_VAZIA;
 		return;
 	}
@@ -908,8 +912,7 @@ function getEnquete($id){
 }
 
 function postVoto(){
-	ECHO 'AQUI';
-	print_r($_POST);
+
 	$sql = "INSERT INTO tb_enquete_voto (usuario_id, enquete_id, voto) VALUES (:usuario_id, :enquete_id, :voto)";
 	
 	$conn = getConn();
@@ -948,5 +951,52 @@ function getEnqueteIdsWhereUserDidNotVote($id){
 	echo '{"ids":'.utf8_encode(json_encode($ids))."}";
 	$conn = null;
 }
+
+function getUsuarioById($id){
+	$sql = "SELECT nm_usuario, usuario_tipo, curso, ano_periodo, grau_academico, perfil_120
+			FROM tb_usuario, tb_imagem_usuario
+			WHERE usuario_id = :id AND id_usuario = :id";
+	$conn = getConn();
+	$stmt = $conn->prepare($sql);
+	$stmt->bindParam("id", $id);
+	$stmt->execute();
+	$usuario = $stmt->fetchAll(PDO::FETCH_OBJ);
+	echo utf8_encode(json_encode($usuario));
+	$conn = null;
+}
+
+
+function getBuscaUsuario ($nome){
+	
+	$sql = 'SELECT nm_usuario, id_usuario, usuario_tipo, perfil_45
+			FROM tb_usuario, tb_imagem_usuario
+			WHERE usuario_id = id_usuario
+			ORDER BY 
+			CASE edit_distance (:nome, nm_usuario)
+			WHEN 0 THEN 0
+			ELSE
+				CASE
+					WHEN LENGTH(:nome) < LENGTH(nm_usuario) THEN
+						edit_distance (:nome, LEFT(nm_usuario, LENGTH(:nome)))
+					WHEN LENGTH(:nome) > LENGTH(nm_usuario) THEN
+						edit_distance (LEFT(:nome, LENGTH(nm_usuario)), nm_usuario)
+					ELSE edit_distance (:nome, nm_usuario)
+						
+				END
+			END, LENGTH(nm_usuario) DESC, id_usuario
+			LIMIT 5';
+	
+	$conn = getConn();
+
+
+	$stmt = $conn->prepare($sql);
+	$stmt->bindParam('nome', $nome);
+
+	$stmt->execute();
+	$usuarios = $stmt->fetchAll(PDO::FETCH_OBJ);
+	echo '{"usuarios":'.utf8_encode(json_encode($usuarios))."}";
+	$conn = null;
+}
+
 
 
