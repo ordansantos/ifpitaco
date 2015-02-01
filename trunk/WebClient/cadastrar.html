@@ -81,9 +81,6 @@
 	    }
 	}
 	
-	function cursoClick(){
-		$('#pop').popover('show')
-	}
 	
 	function option1Click(){
 		$('#professor').hide();
@@ -99,10 +96,19 @@
 		$('#professor').hide();
 		$('#aluno').hide();
 	}
+	
 
 	
 	$(document).ready(function(){
-	
+		
+		$('#pop').focusin(function (){
+			$('#pop').popover('show');
+		});
+		
+		$('#pop').focusout(function(){
+			$('#pop').popover('hide');
+		});
+		
 		$('#professor').hide();
 		$("#img").hide();
 
@@ -165,7 +171,7 @@
 	
   			<div class="form-group">
     			<label for="nm_usuario"><span class="glyphicon glyphicon glyphicon-user" aria-hidden="true"></span>Nome de Usuário</label>
-    			<input pattern="[a-zA-Z]+" required="required"  type="text" class="form-control" id="nm_usuario" name="nm_usuario" placeholder="Digite seu nome">
+    			<input pattern="[a-zA-Z\s]+" required="required"  type="text" class="form-control" id="nm_usuario" name="nm_usuario" placeholder="Digite seu nome">
   			</div>
   			
   			<div class="form-group">
@@ -189,14 +195,14 @@
 			</label>
 			
 			<label class="radio-inline">
-			  <input type="radio" name="usuario_tipo" onClick="option3Click()" id="option1" value="Professor"> Servidor
+			  <input type="radio" name="usuario_tipo" onClick="option3Click()" id="option1" value="Servidor"> Servidor
 			</label>
   		</div>
 	  		
 	  	<div id="aluno">
 			<label style="display: block"><span  class="glyphicon glyphicon-book" aria-hidden="true"></span>Curso</label>
 			<span>
-		  		<select style="display: inline" onClick="cursoClick()" class="curso form-control" name="curso">
+		  		<select style="display: inline" class="curso form-control" name="curso">
 		  		
 			  		<optgroup label="Integrado">
 					  <option value="Informática Integrado">Informática</option>
@@ -224,7 +230,7 @@
 					<option value="Outro">Outro</option>	
 				</select>
 		
-				<select style="display: inline; padding : 5px;" tabindex="0" data-trigger="focus" class="ano_periodo form-control" id="pop" name="ano_periodo" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="right" data-content="Ano/Período">
+				<select style="display: inline; padding : 5px;" tabindex="0" data-trigger="focus" class="ano_periodo form-control" id="pop" name="ano_periodo" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="right" data-content="Ano/Período" >
 					<option value="1">1º</option>
 					<option value="2">2º</option>
 					<option value="3">3º</option>

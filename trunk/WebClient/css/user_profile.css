@@ -1,0 +1,56 @@
+
+
+#profile{
+	margin-left: 25px;
+
+}
+#logo{
+	height: 50px;
+	margin-top: -12px;
+}
+
+body{
+	word-wrap: break-word;
+	background-image:url('../images/pattern-6plj.png');
+	font-family: Helvetica,Arial,sans-serif;
+}
+
+#mid{
+	background-color: rgba(255, 255, 255, 0.7);
+	background: rgba(255, 255, 255, 0.7);
+
+	border-radius: 10px 10px 10px 10px;
+	-moz-border-radius: 10px 10px 10px 10px;
+	-webkit-border-radius: 10px 10px 10px 10px;
+	border: 0px solid #000000;
+	padding: 10px;
+}
+
+#mid h2{
+	 color: #337ab7;
+	 font-weight: 800;
+}
+
+#mid h4, h5{
+	color: #d9534f;
+	font-weight: 600;
+}
+
+#profile{
+	margin-left: 25px;
+	color: black;
+	font-weight: 900;
+	
+}
+
+a{
+	color: inherit;
+}
+
+#profile a:hover{
+	text-decoration: none;
+}
+
+a:hover{
+	color: inherit;
+}

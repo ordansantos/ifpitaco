@@ -1,29 +1,4 @@
 
-<?php
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
-
-	include ('services/redirect.php');
-	
-	$json = redirectGet('http://localhost/WebService/getUsuarioById/'.$_GET['id']);
-
-	$user = json_decode($json);
-	
-	if (sizeof($user) == 0)
-		header ("location: index.php");
-		
-	$user = $user[0];
-	
-	$nome = $user->nm_usuario;
-	$tipo = $user->usuario_tipo;
-	$curso = $user->curso;
-	$ano_periodo = $user->ano_periodo;
-	$grau_academico = $user->grau_academico;
-	$image_perfil = '../'.$user->perfil_120;
-	
-?>
-
-
 
 <?php
 	session_start();
@@ -33,7 +8,31 @@ ini_set("display_errors", 1);
 	
 	$user = $_SESSION['nm_usuario'];
 	$foto = $_SESSION['foto'];
+	$id = $_SESSION['id_usuario'];
 ?>
+
+<?php
+
+	include ('services/redirect.php');
+	
+	$json = redirectGet('http://localhost/WebService/getUsuarioById/'.$_GET['id']);
+
+	$usuario = json_decode($json);
+	
+	if (sizeof($usuario) == 0)
+		header ("location: index.php");
+		
+	$usuario = $usuario[0];
+	
+	$nome = $usuario->nm_usuario;
+	$tipo = $usuario->usuario_tipo;
+	$curso = $usuario->curso;
+	$ano_periodo = $usuario->ano_periodo;
+	$grau_academico = $usuario->grau_academico;
+	$image_perfil = '../'.$usuario->perfil_120;
+	
+?>
+
 
 
 <!DOCTYPE html>
@@ -83,10 +82,10 @@ ini_set("display_errors", 1);
 		<div class="row">
 		 
 		  		<!-- Profile -->
-		  		<div class="col-md-2 text-center " id="profile">.
+		  		<div class="col-md-2 text-center " id="profile">
 		  
 				  	<img  src="<?php echo $foto ?>"  alt="..." class="img-thumbnail">
-				  	<h2><script>document.write(toPlainText('<?php echo $user?>'));</script></h2>
+				  	<a href="userProfile.php?id=<?php echo $id?>"><h2><script>document.write(toPlainText('<?php echo $user?>'));</script></h2></a>
 				  	
 				</div>
 				  
