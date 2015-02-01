@@ -6,13 +6,17 @@
 }
 #logo{
 	height: 50px;
-	margin-top: -12px;
+	margin-top: -14px;
 }
 
 body{
 	word-wrap: break-word;
 	background-image:url('../images/pattern-6plj.png');
 	font-family: Helvetica,Arial,sans-serif;
+}
+
+#bar{
+	height: 10px;
 }
 
 #mid{
