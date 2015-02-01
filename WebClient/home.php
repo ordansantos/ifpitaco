@@ -7,6 +7,7 @@
 	
 	$user = $_SESSION['nm_usuario'];
 	$foto = $_SESSION['foto'];
+	$id = $_SESSION['id_usuario'];
 ?>
 
 
@@ -168,7 +169,7 @@ var last_id_post;
 var first_id_post = 0;
 
 //Criando novo post
-function novoPost (nome, ramo, id, data, comentario, foto, tipo){
+function novoPost (nome, ramo, id, data, comentario, foto, tipo, usuario_id){
 
 	var form = document.createElement ('form');
 	
@@ -185,7 +186,7 @@ function novoPost (nome, ramo, id, data, comentario, foto, tipo){
 		 <i onClick="excluirPost(this)" class="glyphicon glyphicon-remove"></i>\
 			<img  class="pull-left" src="../'+foto+'" >\
 			<div>\
-				<h4>'+toPlainText(nome)+'</h4>\
+				<h4><a  href="userProfile.php?id='+usuario_id+'">'+toPlainText(nome)+'</a></h4>\
 				<h6>'+data+'-'+ramo+'</h6>\
 			</div>\
 		 </div>\
@@ -236,7 +237,7 @@ function postLoad(){
 				post_array[p.post_id] = [];
 				post_user[p.post_id] = p.usuario_id;
 				
-     			novoPost( p.nm_usuario, p.nm_ramo, p.post_id, p.data_hora, p.comentario, p.perfil_45, p.tipo);	
+     			novoPost( p.nm_usuario, p.nm_ramo, p.post_id, p.data_hora, p.comentario, p.perfil_45, p.tipo, p.usuario_id);	
 
      			last_id_post = p.post_id;
 			}
@@ -267,7 +268,7 @@ function morePost(){
 				post_array[p.post_id] = [];
 				post_user[p.post_id] = p.usuario_id;
 				
-     			novoPost( p.nm_usuario, p.nm_ramo, p.post_id, p.data_hora, p.comentario, p.perfil_45, p.tipo);	
+     			novoPost( p.nm_usuario, p.nm_ramo, p.post_id, p.data_hora, p.comentario, p.perfil_45, p.tipo, p.usuario_id);	
 
      			last_id_post = p.post_id;
 			}
@@ -294,7 +295,7 @@ function newPosts(){
           		
 				post_array[p.post_id] = [];
 				post_user[p.post_id] = p.usuario_id;
-     			form = novoPost( p.nm_usuario, p.nm_ramo, p.post_id, p.data_hora, p.comentario, p.perfil_45, p.tipo);	
+     			form = novoPost( p.nm_usuario, p.nm_ramo, p.post_id, p.data_hora, p.comentario, p.perfil_45, p.tipo, p.usuario_id);	
 
      			document.getElementById('feed').insertBefore(form, document.getElementById('feed').firstChild);
      			$('#'+p.post_id).hide();
@@ -338,12 +339,12 @@ function comentarioSend (id){
 }
 
 //Criando um novo comentário
-function novoComentario (nome, comentario, data,  id_usuario, post_id, comentario_post_id, foto){
+function novoComentario (nome, comentario, data,  id_usuario, post_id, comentario_post_id, foto, id_usuario){
 
 	var com = document.createElement("div");
 	com.className = "comentario";
 	com.id = 'c'+comentario_post_id;
-	com.innerHTML = "<img src='../"+foto+"'/><div class='content'><strong>"+toPlainText(nome)+"</strong> "+toPlainText(comentario)+"<h6>"+data+"</h6></div><i onClick='excluirComentario(this.parentNode.id)'class='glyphicon glyphicon-remove'></i>";
+	com.innerHTML = "<img src='../"+foto+"'/><div class='content'><a href='userProfile.php?id="+id_usuario+"'><strong>"+toPlainText(nome)+"</strong></a> "+toPlainText(comentario)+"<h6>"+data+"</h6></div><i onClick='excluirComentario(this.parentNode.id)'class='glyphicon glyphicon-remove'></i>";
 	document.getElementById("pc"+post_id).appendChild(com);
 	
 }
@@ -402,7 +403,7 @@ function comentarioLoad(){
 						}
 						
 					 		console.log(data);
-					 	novoComentario( c.nm_usuario, c.comentario, c.data_hora,  c.id_usuario, post_idx, c.comentario_post_id, c.perfil_32);	
+					 	novoComentario( c.nm_usuario, c.comentario, c.data_hora,  c.id_usuario, post_idx, c.comentario_post_id, c.perfil_32, c.id_usuario);	
 					 	comentario_user[c.comentario_post_id] = c.id_usuario;
 						
 						comment_idx_new++;
@@ -1051,10 +1052,10 @@ function drawChart(opts, qtd_opts, qtd_opt){
 		<div class="row">
 		 
 		  		<!-- Profile -->
-		  		<div class="col-md-2 text-center" id="profile">.
+		  		<div class="col-md-2 text-center" id="profile">
 		  
-				  	<img  src="<?php echo $foto?>"  alt="..." class="img-thumbnail">
-				  	<h2><script>document.write(toPlainText('<?php echo $user?>'));</script></h2>
+				  	<img  src="<?php echo $foto?>"  alt="..." class=" img-thumbnail">
+				  	<a href="userProfile.php?id=<?php echo $id?>"><h2><script>document.write(toPlainText('<?php echo $user?>'));</script></h2></a>
 				</div>
 				  
 				 <!-- Meio -->

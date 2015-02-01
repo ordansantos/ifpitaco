@@ -20,6 +20,10 @@
 	color: #9197a3;
 }
 
+#comentario_input{
+	height: 32.5px;
+}
+
 .post > .top > i{
 	position: absolute; 
 	right: 0; 

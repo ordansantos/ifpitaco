@@ -7,7 +7,21 @@
 
 #profile{
 	margin-left: 25px;
+	color: black;
+	font-weight: 900;
+	
+}
 
+a{
+	color: inherit;
+}
+
+#profile a:hover{
+	text-decoration: none;
+}
+
+a:hover{
+	color: inherit;
 }
 
 body{
