@@ -26,14 +26,24 @@
 		
 		<link rel="stylesheet" type="text/css"  href="css/index.css">
 		<link rel="stylesheet" type="text/css"  href="css/login_border.css">
+		
+		
+
+  		
 	</head>
 
 	
 	<script type="text/javascript">
-	
+
+
+		      
 	 $(document).ready(function() {
+		 
 		 $("#form").submit (function(event){
+			 	
 			 	event.preventDefault();
+				var teste;
+			 	$('#login').attr ("disabled", "disabled");
 			 	
 				var values = $(this).serialize();
 				$.ajax({		
@@ -45,10 +55,13 @@
 							window.location.assign("home.php");
 						 else{
 							$('#error').hide();
-							$('#error').fadeIn("slow");
+							$('#error').fadeIn("fast", function (){
+								$('#login').attr ("disabled", false);
+							});
 						 }
 					}
 				});
+			
 	 	});
 		 
 	 });
@@ -97,10 +110,10 @@
 			<br/>
 			<div class="row">
 				<div class="col-xs-6">
-	        		<button class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
+	        		<button class="btn btn-lg btn-primary btn-block" id="login" type="submit">Log in</button>
 	        	</div>
 	        	<div class="col-xs-6">
-	        		<button onClick="parent.location='cadastrar.html'" class="btn btn-lg btn-success btn-block" type="button">Sign up</button>
+	        		<button onClick="parent.location='cadastrar.html'" id="signup" class="btn btn-lg btn-success btn-block" type="button">Sign up</button>
 		  		</div>
 		  	</div>
 	    	
