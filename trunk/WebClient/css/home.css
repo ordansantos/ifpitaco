@@ -39,7 +39,7 @@ body{
 }
 
 #feed > form{
-	margin-bottom: 20px;
+	margin-bottom: 10px;
 	word-wrap: break-word;
 }
 
@@ -93,3 +93,29 @@ body{
 .opcoes_btns{
 	margin-bottom: 20px;
 }
+
+
+.fiscalizar_icon{
+	margin-right: 30px; 
+	color: #d9534f;
+	font-size: 18px;
+}
+
+.propor_icon{
+	margin-right: 30px; 
+	color: #5cb85c;
+	font-size: 18px;
+}
+
+.enquete_icon{
+	font-size: 18px;
+	color: #f0ad4e;
+}
+
+.enquete_icon_no_vote{
+	font-size: 18px;
+	color: #f0ad4e;
+	margin-top: -15px;
+}
+
+
