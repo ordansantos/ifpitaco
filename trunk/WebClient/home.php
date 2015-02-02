@@ -57,6 +57,7 @@ var post_user = [];
 var is_there_more_post = true;
 
 
+
 /*Definindo os intervalos de Updates e carregamento de comentários mais velhos*/
 $(document).ready(function() {
 	
@@ -65,6 +66,7 @@ $(document).ready(function() {
 	setInterval(function () {newPosts()}, 5000);
 	setInterval(function () {likesLoad()}, 5000);
 	setInterval(function () {updateEnqueteVisualizacao()}, 5000);
+	tintervals = setInterval(function () {atualizaTempos()}, 10000);
 	
 	$(window).scroll(function() {
 	
@@ -161,6 +163,30 @@ function likesLoad(){
   }
 }
 
+var data_post = [];
+var data_enquete;
+var data_comentario = [];
+
+function atualizaTempos (){
+
+	for (i in data_post){
+			document.getElementById('ptime_'+i).innerHTML = tempo_passado(data_post[i]);
+	}
+
+	
+	if ($('#etime').length > 0){
+		document.getElementById('etime').innerHTML = tempo_passado(data_enquete);
+	}
+
+	for (i in data_comentario){
+		if (!$('#ctime_'+i).length > 0){
+			data_comentario.splice (data_post.indexOf (i), 1);
+			continue;
+		}
+		document.getElementById('ctime_'+i).innerHTML = tempo_passado(data_comentario[i]);
+	}
+}
+
 /*Sistema de Envio e carregamento de Posts*/
 
 
@@ -174,13 +200,18 @@ var first_id_post = 0;
 function novoPost (nome, ramo, id, data, comentario, foto, tipo, usuario_id){
 
 	var form = document.createElement ('form');
-	
+	data_post[id] = data;
 	form.id = id;
 	$img='';
+	
+	var tipo_icon = '<div title="Fiscalização" class="fiscalizar_icon glyphicon glyphicon-warning-sign pull-right">';
+	if (tipo == 0)
+		tipo_icon = '<div title="Proposta" class="propor_icon glyphicon glyphicon-send pull-right">';
 	
 	//É uma fiscalização com imagem?
 	if (tipo == 2)
 		$img = "<img class='fiscalizacao_img' src='../WebService/uploaded_images/fiscalizacao_foto/"+id+".jpg' />"
+
 	form.innerHTML = '\
 	<div class="well well-sm">\
 	 	<div class="post">\
@@ -189,7 +220,7 @@ function novoPost (nome, ramo, id, data, comentario, foto, tipo, usuario_id){
 			<img  class="pull-left" src="../'+foto+'" >\
 			<div>\
 				<h4><a  href="userProfile.php?id='+usuario_id+'">'+toPlainText(nome)+'</a></h4>\
-				<h6>'+data+'-'+ramo+'</h6>\
+				<h6><span id="ptime_'+id+'">'+tempo_passado(data)+'</span>&nbsp'+ramo+'</h6>\
 			</div>\
 		 </div>\
 		<div class="content">'+toPlainText(comentario)+'</div>\
@@ -201,6 +232,8 @@ function novoPost (nome, ramo, id, data, comentario, foto, tipo, usuario_id){
 			<div class="btn" style="cursor:default">\
 					<span class="glyphicon glyphicon-comment" aria-hidden="true" ></i><span id="nc'+id+'"> 2</span>\
 			</div> \
+			'+tipo_icon+'\
+			</div>\
 		</div>\
 	 </div>\
 	</div>\
@@ -322,6 +355,7 @@ function newPosts(){
 
 //Enviando um novo comentário
 function comentarioSend (id){
+
 	event.preventDefault();
 
 	if ($("#"+id+" #comentario_input")[0].value == '')
@@ -345,14 +379,15 @@ function comentarioSend (id){
 
 //Criando um novo comentário
 function novoComentario (nome, comentario, data,  id_usuario, post_id, comentario_post_id, foto, id_usuario){
-
+	data_comentario[comentario_post_id] = data;
 	var com = document.createElement("div");
 	com.className = "comentario";
 	com.id = 'c'+comentario_post_id;
-	com.innerHTML = "<img src='../"+foto+"'/><div class='content'><a href='userProfile.php?id="+id_usuario+"'><strong>"+toPlainText(nome)+"</strong></a> "+toPlainText(comentario)+"<h6>"+data+"</h6></div><i onClick='excluirComentario(this.parentNode.id)'class='glyphicon glyphicon-remove'></i>";
+	com.innerHTML = "<img src='../"+foto+"'/><div class='content'><a href='userProfile.php?id="+id_usuario+"'><strong>"+toPlainText(nome)+"</strong></a> "+toPlainText(comentario)+"<h6><span id='ctime_"+comentario_post_id+"'>"+tempo_passado(data)+"</span></h6></div><i onClick='excluirComentario(this.parentNode.id)'class='glyphicon glyphicon-remove'></i>";
 	document.getElementById("pc"+post_id).appendChild(com);
 	
 }
+
 
 //Carregando novos comentários
 function comentarioLoad(){
@@ -368,7 +403,7 @@ function comentarioLoad(){
 		  console.log (post_idx+'nao entrou');
 		  continue;
 	  }
-	  
+	
       (function (post_idx){
           
     	   	console.log (post_idx+'entrou');
@@ -382,8 +417,10 @@ function comentarioLoad(){
 				success: function (data) {
 					console.log(data);
 					 //Verificando se o comentário foi apagado
+	
 					 if (data.flag == '0'){
-						 	post_array.splice (post_idx, 1);
+						 	post_array.splice (post_array.indexOf(post_idx), 1);
+						 	data_post.splice (data_post.indexOf (post_idx), 1);
 						 	$('#'+post_idx).fadeOut(1000);
 						 	return;
 					 }
@@ -492,7 +529,11 @@ function excluirPost(sender){
 					"Sim": {
 							className: "btn-primary btn-sm",
 							
-							callback: function(){ $('#'+id).remove();}
+							callback: function(){ 
+								$('#'+id).remove();
+							 	post_array.splice (post_array.indexOf(id), 1);
+							 	data_post.splice (data_post.indexOf (id), 1);
+							}
 					}
 					
 				}
@@ -507,7 +548,9 @@ function excluirPost(sender){
 							callback: function(){
 								
 								$('#'+id).remove();
-								
+							 	post_array.splice (post_array.indexOf(id), 1);
+							 	data_post.splice (data_post.indexOf (id), 1);
+							 	
 								$.param({post_id: id});
 								a = $.post ("services/deletarPost.php", {post_id: id});
 								console.log(a);
@@ -569,7 +612,7 @@ var values = $('#form_proposta').serialize();
 				alert ("Faça login antes de propor!");
 			else
 				document.getElementById("comentariop").value = "";
-
+			newPosts();
 			
 		},
 		error:function(){
@@ -577,7 +620,7 @@ var values = $('#form_proposta').serialize();
 		}
 	});
 	resetProposta();
-	newPosts();
+	
 }
 
 function fiscalizacaoClick(){
@@ -591,6 +634,7 @@ function fiscalizacaoClick(){
 		data: formData,
 		success: function(data){
 			console.log(data);
+			newPosts();
 		}, error: function(data){
 			console.log(data);
 		}
@@ -598,7 +642,7 @@ function fiscalizacaoClick(){
 	
 	resetFiscalizacao();
 
-	newPosts();
+	
 }
 
 function resetFiscalizacao(){
@@ -735,18 +779,20 @@ function newEnqueteClick(){
 	   if (e_imagem != '')
 		   imagem = "<img src='../"+e_imagem+"'>"
 	   
-	   
+	   data_enquete = data_hora;
+		   
 	   enquete.innerHTML = "\
 			 <div class='e_top'>\
 				<img class='pull-left img-circle' src='../"+perfil_45+"'>\
 					<a href='userProfile.php?id="+usuario_id+"'><div class='nome_user'>"+toPlainText(nm_usuario)+"</div></a>\
-					<div class='data'>"+data_hora+"</div>\
+					<div class='data'><span id='etime'>"+tempo_passado(data_hora)+"</span></div>\
 				 </div>\
 				 <div class='titulo'>"+toPlainText(titulo)+"</div>\
 				 "+imagem+"\
 				 <form id='form_enquete' class='form-horizontal'>\
 				 </form>\
 				 <div class='bot'><button onClick='votoSend("+id_enquete+")' class='btn btn-danger'>Opinar!</button></div>\
+				 <div title='Enquete' class='glyphicon glyphicon-bullhorn enquete_icon_no_vote pull-right'></div>\
 			</div>\
 	   "
 
@@ -940,18 +986,20 @@ function updateEnqueteVisualizacao(){
 	   if (e_imagem != '')
 		   imagem = "<img src='../"+e_imagem+"'>"
 	   
-	   
+	   data_enquete = data_hora;
+		   
 	   enquete.innerHTML = "\
 			 <div class='e_top'>\
 				<img class='pull-left img-circle' src='../"+perfil_45+"'>\
 				<a href='userProfile.php?id="+usuario_id+"'><div class='nome_user'>"+toPlainText(nm_usuario)+"</div></a>\
-					<div class='data'>"+data_hora+"</div>\
+					<div class='data'><span id='etime'>"+tempo_passado(data_hora)+"</span></div>\
 				 </div>\
 				 <div class='titulo'>"+toPlainText(titulo)+"</div>\
 				 "+imagem+"\
 				 <h4>Resultados: </h4>\
 				 <canvas id='myChart' width=250 ></canvas>\
 				 <div id='chartjs-tooltip'></div>\
+				 <div title='Enquete' class='glyphicon glyphicon-bullhorn enquete_icon'></div>\
 			</div>\
 			\
 	   ";
@@ -1157,6 +1205,50 @@ $(document).ready(function(){
 	
 });
 
+function tempo_passado (t){
+	var dt = new Date(t);
+	var now = new Date();
+	
+	mes = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
+       'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+	
+	var month = dt.getMonth();
+	var day = dt.getDate();
+	var year = dt.getFullYear();
+	var hour = dt.getHours();
+	var minute = dt.getMinutes();
+	
+	time = now.getTime() - dt.getTime();
+	
+	var dias = parseInt(time / 86400000);
+	
+	time = time % 86400000;
+	
+	var horas = parseInt(time / 3600000);
+	
+	time = time % 3600000;
+	
+	var minutos = parseInt(time / 60000);
+	
+	time = time % 60000;
+	
+	var segundos = parseInt(time / 1000);
+		
+	if (dias > 28)
+			return day + ' de ' + mes[month] + ' de ' + year + ' às ' + hour + ':' + minute;
+	
+	if (dias)
+		return dias + ' dia' + (dias > 1? 's' : '');
+	if (horas)
+		return horas + ' hora' + (horas > 1? 's' : '');
+	if (minutos)
+		return minutos + ' minuto' + (minutos > 1? 's' : '');
+	if (segundos)
+		return segundos + ' segundo' + (segundos > 1? 's' : '');
+	return 'agora mesmo';
+}
+
+
 </script>
 
 
@@ -1205,17 +1297,17 @@ $(document).ready(function(){
 	                <div class="opcoes_btns">             
 						<!-- Button trigger modal -->
 						<button id="propor_btn" type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#proporModal">
-						  Propor
+						  <span class="glyphicon glyphicon-send" aria-hidden="true"></span> Propor
 						</button>
 						
 						<!-- Button trigger modal -->
 						<button type="button" class="btn btn btn-danger btn-lg" data-toggle="modal" data-target="#fiscalizarModal">
-						  Fiscalizar
+						  <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> Fiscalizar
 						</button>
 						
 						<!-- Button trigger modal -->
 						<button type="button" class="btn btn-warning btn-lg pull-right" data-toggle="modal" data-target="#newEnqueteModal">
-		  					Criar Enquete
+		  					<span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span> Criar Enquete
 						</button>
 					</div>
 					<div id="feed"></div>
