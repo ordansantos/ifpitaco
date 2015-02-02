@@ -379,7 +379,7 @@ function saveFotoFromPostUsuario($email){
 }
 
 function postUsuario(){
-	
+
 	require ('/var/www/html/WebService/wideimage/WideImage.php');
 	
 	$name = $_POST['nm_usuario'];
@@ -445,6 +445,7 @@ Response: id_usuario (0 = error)
 
 */
 function postLogin(){
+
 	//Fazendo o select no banco com as informações enviadas
 	$sql = "SELECT id_usuario FROM tb_usuario WHERE email = :email AND senha = :senha";
 	$conn = getConn();
@@ -466,6 +467,7 @@ Json(Array) a Receber:
 ]}
 */
 function getRamos(){
+	
 	$stmt = getConn()->query("SELECT * FROM tb_ramo");
 	
 	$result = $stmt->fetchAll(PDO::FETCH_OBJ);
