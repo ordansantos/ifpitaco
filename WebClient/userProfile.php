@@ -12,10 +12,12 @@
 ?>
 
 <?php
-
+	include("getRoot.php");
+	$url = getRoot();
+	
 	include ('services/redirect.php');
 	
-	$json = redirectGet('http://localhost/WebService/getUsuarioById/'.$_GET['id']);
+	$json = redirectGet($url.'WebService/getUsuarioById/'.$_GET['id']);
 
 	$usuario = json_decode($json);
 	

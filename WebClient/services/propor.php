@@ -2,6 +2,9 @@
 
 
 <?php
+	include("getRoot.php");
+	
+	$url = getRoot();
 	
 	include ('redirect.php');
 	
@@ -9,6 +12,6 @@
 
 	$_POST["usuario_id"] = trim($_SESSION['id_usuario']); 
 	
-	echo redirectPost('http://localhost/WebService/postProposta');
+	echo redirectPost($url.'WebService/postProposta');
 	
 ?>

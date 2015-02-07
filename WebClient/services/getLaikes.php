@@ -1,4 +1,7 @@
 <?php
+	include("getRoot.php");
+	
+	$url = getRoot();
 	
 	include ('redirect.php');
 	
@@ -9,7 +12,7 @@
 		return;
 	}
 
-	echo redirectGet('http://localhost/WebService/getCntLaikesAndUserFlagByPostIdAndUserId/'.$_POST['post_id'].'/'.trim($_SESSION['id_usuario']));
+	echo redirectGet($url.'WebService/getCntLaikesAndUserFlagByPostIdAndUserId/'.$_POST['post_id'].'/'.trim($_SESSION['id_usuario']));
 	
 
 ?>
