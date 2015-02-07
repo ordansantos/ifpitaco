@@ -56,10 +56,12 @@ var post_user = [];
 //Flag para verificar se ainda pode carregar posts antigos
 var is_there_more_post = true;
 
+var post_comentario_more = [];
 
 
 /*Definindo os intervalos de Updates e carregamento de comentários mais velhos*/
 $(document).ready(function() {
+
 	
 	postLoad(); 
 	setInterval(function () {comentarioLoad()}, 5000);
@@ -84,6 +86,9 @@ $(document).ready(function() {
 	getEnquete();
 
 	 $('[data-toggle="tooltip"]').tooltip();
+
+
+	 
 });
 
 //Mostra o preview da imagem da fiscalização
@@ -121,16 +126,16 @@ function laikeSend(id){
 
 //Carregando novos 'laikes'
 function likesLoad(){
-	console.log ('likesload');
+	
   for (post_idx in post_array){
 	  
 	  if(!$('#'+post_idx).visible(true)){
-		  console.log ('nao like'+post_idx);
+	
 		  continue;
 	  }
 	  
       (function (post_idx){
-			console.log ('like'+post_idx);
+		
 			$.ajax({
 				type: 'POST',
 				url: 'services/getLaikes.php',
@@ -138,7 +143,7 @@ function likesLoad(){
 				dataType: 'json',
 				cache: false,
 				success: function (data) {
-					console.log(data);
+			
 					title = "Laikar"
 					$("#nl"+post_idx).attr('class', '');
 					
@@ -155,7 +160,7 @@ function likesLoad(){
 					
 				},
 				error: function(data){
-						console.log('erro');
+			
 					}
 			});
       })(post_idx);
@@ -180,7 +185,7 @@ function atualizaTempos (){
 
 	for (i in data_comentario){
 		if (!$('#ctime_'+i).length > 0){
-			data_comentario.splice (data_post.indexOf (i), 1);
+			delete data_comentario[i];
 			continue;
 		}
 		document.getElementById('ctime_'+i).innerHTML = tempo_passado(data_comentario[i]);
@@ -237,21 +242,24 @@ function novoPost (nome, ramo, id, data, comentario, foto, tipo, usuario_id){
 		</div>\
 	 </div>\
 	</div>\
-	<div id="pc'+id+'"></div>\
-	<div class="input-group add-on">\
-	<input type="text" class="form-control" placeholder="Comentar..." name="comentario" autocomplete="off" id="comentario_input">\
-	  <div class="input-group-btn">\
-	  <button class="btn btn-default" type="submit" onClick="comentarioSend(this.form.id)"><i class="glyphicon glyphicon-share-alt"></i></button>\
-	  </div>\
+	<div id="cg'+id+'">\
+		<div id="pc'+id+'"></div>\
+		<div class="input-group add-on">\
+		<input type="text" class="form-control" placeholder="Comentar..." name="comentario" autocomplete="off" id="comentario_input">\
+		  <div class="input-group-btn">\
+		  <button class="btn btn-default" type="submit" onClick="comentarioSend(this.form.id)"><i class="glyphicon glyphicon-share-alt"></i></button>\
+		  </div>\
+		</div>\
 	</div>'
 	document.getElementById('feed').appendChild(form);
+	
 	
 	return form;
 }
 
 //Carregamento N posts mais novos ao carregar a página
 function postLoad(){
-	console.log('entrou: postLoad');
+
   $.ajax({ 
   	type: 'GET', 
   	url: '../WebService/getNPosts/5', 
@@ -273,7 +281,7 @@ function postLoad(){
 				post_user[p.post_id] = p.usuario_id;
 				
      			novoPost( p.nm_usuario, p.nm_ramo, p.post_id, p.data_hora, p.comentario, p.perfil_45, p.tipo, p.usuario_id);	
-
+     			
      			last_id_post = p.post_id;
 			}
       	 
@@ -287,7 +295,7 @@ function postLoad(){
 
 //Carregando posts mais antigos
 function morePost(){
-	console.log('entrou: morePost');
+
   $.ajax({ 
   	type: 'GET', 
   	url: '../WebService/getNPostsLessThanMid/3/'+last_id_post, 
@@ -316,7 +324,7 @@ function morePost(){
 }
 //Carregando posts mais novos
 function newPosts(){
-	console.log('entrou: newsPost');
+	
   $.ajax({ 
   	type: 'GET', 
   	url: '../WebService/getAllPostsGreaterThanNid/'+first_id_post, 
@@ -361,7 +369,7 @@ function comentarioSend (id){
 	if ($("#"+id+" #comentario_input")[0].value == '')
 		return;
 	
-	console.log('entrou: comentarioSend');
+
 	
 	var data = $('#' + id).serializeArray();
 	data.push ({name:'post_id', value: id});
@@ -391,7 +399,7 @@ function novoComentario (nome, comentario, data,  id_usuario, post_id, comentari
 
 //Carregando novos comentários
 function comentarioLoad(){
-	console.log('entrou: comentarioLoad');
+
 	
   for (post_idx in post_array){
 	  
@@ -400,13 +408,12 @@ function comentarioLoad(){
 
 	  
 	  if(!$('#'+post_idx).visible(true)){
-		  console.log (post_idx+'nao entrou');
+
 		  continue;
 	  }
 	
       (function (post_idx){
           
-    	   	console.log (post_idx+'entrou');
     	   	
 			$.ajax({
 				type: 'GET',
@@ -415,12 +422,13 @@ function comentarioLoad(){
 				dataType: 'json',
 				cache: false,
 				success: function (data) {
-					console.log(data);
+				
 					 //Verificando se o comentário foi apagado
 	
 					 if (data.flag == '0'){
-						 	post_array.splice (post_array.indexOf(post_idx), 1);
-						 	data_post.splice (data_post.indexOf (post_idx), 1);
+
+						 	delete post_array[post_idx];
+						 	delete data_post[post_idx];
 						 	$('#'+post_idx).fadeOut(1000);
 						 	return;
 					 }
@@ -444,7 +452,7 @@ function comentarioLoad(){
 							 continue;
 						}
 						
-					 		console.log(data);
+					
 					 	novoComentario( c.nm_usuario, c.comentario, c.data_hora,  c.id_usuario, post_idx, c.comentario_post_id, c.perfil_32, c.id_usuario);	
 					 	comentario_user[c.comentario_post_id] = c.id_usuario;
 						
@@ -460,7 +468,7 @@ function comentarioLoad(){
 
 				},
 				error: function(data){
-						console.log('erro');
+						
 					}
 			});
       })(post_idx);
@@ -476,90 +484,88 @@ function comentarioLoad(){
 /*Sistema para excluir um comentário*/
 function excluirComentario(id){
 	
-	console.log('entrou: excluir');
+
 	id = id.replace ('c', '');
 	
-	$.get ("services/getIdUsuario.php", function(data){
-		console.log(data + ' ' + comentario_user[id] + ' ' + id);
-		if (comentario_user[id] != data)
-			bootbox.dialog({message: "Esse comentário está lhe incomodando?", 
-				buttons:{
-					"Não": {className: "btn-default btn-sm"},
-					"Sim": {
-							className: "btn-primary btn-sm",
-							
-							callback: function(){ $('#c'+id).remove();}
-					}
-					
+	if (comentario_user[id] != <?php echo $id?>)
+		bootbox.dialog({message: "Esse comentário está lhe incomodando?", 
+			buttons:{
+				"Não": {className: "btn-default btn-sm"},
+				"Sim": {
+						className: "btn-primary btn-sm",
+						
+						callback: function(){ $('#c'+id).remove();}
 				}
-			}); 
-		else
-			bootbox.dialog({message: "Deseja excluir seu comentário?", 
-				buttons:{
-					"Não": {className: "btn-default btn-sm"},
-					"Sim": {
-							className: "btn-primary btn-sm",
+				
+			}
+		}); 
+	else
+		bootbox.dialog({message: "Deseja excluir seu comentário?", 
+			buttons:{
+				"Não": {className: "btn-default btn-sm"},
+				"Sim": {
+						className: "btn-primary btn-sm",
+						
+						callback: function(){
 							
-							callback: function(){
-								
-								$('#c'+id).remove();
-								$.param({comentario_post_id: id});
-								$.post ("services/deletarComentario.php", {comentario_post_id: id});
-								
-							}
-					}
-					
+							$('#c'+id).remove();
+							$.param({comentario_post_id: id});
+							$.post ("services/deletarComentario.php", {comentario_post_id: id});
+							
+						}
 				}
-			}); 
-	});
+				
+			}
+		}); 
+
 }
 
 /*Sistema para excluir uma publicação*/
 
 function excluirPost(sender){
-	console.log('entrou: excluir-post');
+
 	e = sender.parentNode.parentNode.parentNode.parentNode;
 	id = e.getAttribute('id');
 
-	$.get ("services/getIdUsuario.php", function(data){
-		if (post_user[id] != data)
-			bootbox.dialog({message: "Essa pubicação está lhe incomodando?", 
-				buttons:{
-					"Não": {className: "btn-default btn-sm"},
-					"Sim": {
-							className: "btn-primary btn-sm",
-							
-							callback: function(){ 
-								$('#'+id).remove();
-							 	post_array.splice (post_array.indexOf(id), 1);
-							 	data_post.splice (data_post.indexOf (id), 1);
-							}
-					}
-					
+	if (post_user[id] != <?php echo $id?>)
+		bootbox.dialog({message: "Essa pubicação está lhe incomodando?", 
+			buttons:{
+				"Não": {className: "btn-default btn-sm"},
+				"Sim": {
+						className: "btn-primary btn-sm",
+						
+						callback: function(){ 
+							$('#'+id).remove();
+			
+							delete post_array[id];
+							delete data_post[id];
+				
+						}
 				}
-			}); 
-		else
-			bootbox.dialog({message: "Deseja excluir sua publicação?", 
-				buttons:{
-					"Não": {className: "btn-default btn-sm"},
-					"Sim": {
-							className: "btn-primary btn-sm",
+				
+			}
+		}); 
+	else
+		bootbox.dialog({message: "Deseja excluir sua publicação?", 
+			buttons:{
+				"Não": {className: "btn-default btn-sm"},
+				"Sim": {
+						className: "btn-primary btn-sm",
+						
+						callback: function(){
 							
-							callback: function(){
-								
-								$('#'+id).remove();
-							 	post_array.splice (post_array.indexOf(id), 1);
-							 	data_post.splice (data_post.indexOf (id), 1);
-							 	
-								$.param({post_id: id});
-								a = $.post ("services/deletarPost.php", {post_id: id});
-								console.log(a);
-							}
-					}
-					
+							$('#'+id).remove();
+							delete post_array[id];
+							delete data_post[id];
+							$.param({post_id: id});
+							a = $.post ("services/deletarPost.php", {post_id: id});
+	
+						}
 				}
-			}); 
-	}); 
+				
+			}
+		}); 
+
 }
 
 
@@ -633,10 +639,10 @@ function fiscalizacaoClick(){
         processData: false,
 		data: formData,
 		success: function(data){
-			console.log(data);
+			
 			newPosts();
 		}, error: function(data){
-			console.log(data);
+		
 		}
 	});
 	
@@ -749,13 +755,13 @@ function newEnqueteClick(){
         processData: false,
 		data: formData,
 		success: function(data){
-			console.log(data);
+	
 			if (data.trim() != '0'){
 				novaEnqueteForm(data);
 			}
 				
 		}, error: function(data){
-			console.log('erro'+data);
+
 		}
 	});
 	
@@ -835,12 +841,11 @@ function newEnqueteClick(){
    
    function votoSend(id){
 	   
-		console.log('entrou: votoSend');
 		event.preventDefault();
 		var data = $('#form_enquete').serializeArray();
 		data.push ({name:'enquete_id', value: id});
 			$.post ("services/postVoto.php", data, function(data){
-				console.log(data);
+			
 				if (data.trim() == '0')
 					bootbox.alert("Faça login para votar!", function() {
 						window.location.assign("index.php");
@@ -863,81 +868,78 @@ function newEnqueteClick(){
    
 function getEnquete(){
 
-	$.get ("services/getIdUsuario.php", function(data){ 
-	
-		$.ajax({ 
-			type: 'GET', 
-			url: '../WebService/getEnqueteIdsWhereUserDidNotVote/'+data, 
-			data: { get_param: 'value' }, 
-			dataType:'json',
-			cache: false,
-			success: function (data) {
-	
-				if (data.ids.length != 0){ 
-	
-					created = false;
-					
-					for (i = data.ids.length - 1; i >= 0; i--){
-						if (last_array_enquete_to_vote > parseInt(data.ids[i].id_enquete)){
-							created = true;
-							last_array_enquete_to_vote = parseInt(data.ids[i].id_enquete);
-							break;
-						}
-					}
-							
-					if (!created)
-						last_array_enquete_to_vote = parseInt(data.ids[data.ids.length - 1].id_enquete);
-					
-					console.log(last_array_enquete_to_vote);
-					novaEnqueteForm (last_array_enquete_to_vote);
-					to_update_enquete = 0;
-					number_votes_enquete = 0;
-				}else{
-						
-					$.ajax({ 
-						type: 'GET', 
-						url: '../WebService/getEnqueteIds/', 
-						data: { get_param: 'value' }, 
-						dataType:'json',
-						cache: false,
-						success: function (data) {
-							console.log(data);
-							if (data.ids.length != 0){
-								created = false;
-								for (i = data.ids.length - 1; i >= 0; i--){
+
+	$.ajax({ 
+		type: 'GET', 
+		url: '../WebService/getEnqueteIdsWhereUserDidNotVote/'+<?php echo $id?>, 
+		data: { get_param: 'value' }, 
+		dataType:'json',
+		cache: false,
+		success: function (data) {
+
+			if (data.ids.length != 0){ 
+
+				created = false;
 				
-									if (last_array_enquete > parseInt(data.ids[i].id_enquete)){
-										created = true;
-										last_array_enquete = parseInt(data.ids[i].id_enquete);
-										break;
-										
-									}
+				for (i = data.ids.length - 1; i >= 0; i--){
+					if (last_array_enquete_to_vote > parseInt(data.ids[i].id_enquete)){
+						created = true;
+						last_array_enquete_to_vote = parseInt(data.ids[i].id_enquete);
+						break;
+					}
+				}
+						
+				if (!created)
+					last_array_enquete_to_vote = parseInt(data.ids[data.ids.length - 1].id_enquete);
+				
+	
+				novaEnqueteForm (last_array_enquete_to_vote);
+				to_update_enquete = 0;
+				number_votes_enquete = 0;
+			}else{
+					
+				$.ajax({ 
+					type: 'GET', 
+					url: '../WebService/getEnqueteIds/', 
+					data: { get_param: 'value' }, 
+					dataType:'json',
+					cache: false,
+					success: function (data) {
+				
+						if (data.ids.length != 0){
+							created = false;
+							for (i = data.ids.length - 1; i >= 0; i--){
+			
+								if (last_array_enquete > parseInt(data.ids[i].id_enquete)){
+									created = true;
+									last_array_enquete = parseInt(data.ids[i].id_enquete);
+									break;
+									
 								}
-								
-								if (!created)
-									last_array_enquete = parseInt(data.ids[data.ids.length - 1].id_enquete);
-								
-								console.log('last = ' + last_array_enquete);
-								
-								novaEnqueteVisualizacao(last_array_enquete);
-								to_update_enquete = last_array_enquete;
-								number_votes_enquete = 0;
 							}
 							
+							if (!created)
+								last_array_enquete = parseInt(data.ids[data.ids.length - 1].id_enquete);
+							
+							
+							novaEnqueteVisualizacao(last_array_enquete);
+							to_update_enquete = last_array_enquete;
+							number_votes_enquete = 0;
 						}
-					});
-				}
+						
+					}
+				});
 			}
-		});
+		}
 	});
 }
 
 
 function updateEnqueteVisualizacao(){
-	console.log ('entrou na enquete update' + to_update_enquete);
+
 	if (to_update_enquete != 0){
 		novaEnqueteVisualizacao(to_update_enquete);
-		console.log("atualizou");
+
 	}
 }
 
@@ -953,7 +955,7 @@ function updateEnqueteVisualizacao(){
 		    success: function (data) { 
 			    if (data.length == 0) return;
 			    
-		    	console.log(data);
+
 		    	data = data[0];
 				sum = parseInt(data.qtd_opt_1) + parseInt(data.qtd_opt_2) + parseInt(data.qtd_opt_3) + parseInt(data.qtd_opt_4) + parseInt(data.qtd_opt_5);
 				if (number_votes_enquete < sum ){
@@ -965,7 +967,6 @@ function updateEnqueteVisualizacao(){
 			    		[data.qtd_opt_1, data.qtd_opt_2, data.qtd_opt_3, data.qtd_opt_4, data.qtd_opt_5]
 			    		);	
 
-		    		console.log ('atualizou gráfico' + ' ' + number_votes_enquete);
 				}
 		    	
 		    }
@@ -1205,7 +1206,14 @@ $(document).ready(function(){
 	
 });
 
+
+
 function tempo_passado (t){
+
+	var d = new Date()
+	var n = d.getTimezoneOffset();
+	timezone = n * 60 * 1000;
+	
 	var dt = new Date(t);
 	var now = new Date();
 	
@@ -1218,7 +1226,7 @@ function tempo_passado (t){
 	var hour = dt.getHours();
 	var minute = dt.getMinutes();
 	
-	time = now.getTime() - dt.getTime();
+	time = now.getTime() - dt.getTime() + timezone;
 	
 	var dias = parseInt(time / 86400000);
 	
@@ -1248,12 +1256,17 @@ function tempo_passado (t){
 	return 'agora mesmo';
 }
 
+function teste(){
+	console.log ('entrou');
+	$("#cg"+55).hide();
+}
 
 </script>
 
 
+	
 <body>
-
+<!-- <button onClick="teste()"/> -->	
 
 	<nav id="bar" class="navbar navbar-default">
 	  <div class="container-fluid">

@@ -153,19 +153,19 @@ function saveFiscalizacaoImage($id){
 	if(empty($_FILES)) {
 		return false;
 	}
+	$path = realpath($_SERVER["DOCUMENT_ROOT"]);
 	
-	require ('/var/www/html/WebService/wideimage/WideImage.php');
+	require ($path.'/WebService/wideimage/WideImage.php');
 	
 	if ($_FILES['imagem']['name']){
 		
-		$path = '/var/www/html/';
 		$nome = 'WebService/uploaded_images/fiscalizacao_foto/'.$id.'.jpg';
 		$allowedTypes = array(IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF);
 		$detectedType = exif_imagetype($_FILES['imagem']['tmp_name']);
 		if (in_array($detectedType, $allowedTypes)){
 			
 			$image = WideImage::load ($_FILES['imagem']['tmp_name']);
-			$image->saveToFile($path.$nome);
+			$image->saveToFile($path.'/'.$nome);
 			
 			$sql = "INSERT INTO tb_imagem_fiscalizacao (post_id, imagem) values (:id, :imagem)";
 			$conn = getConn();
@@ -177,6 +177,7 @@ function saveFiscalizacaoImage($id){
 			$conn = null;
 		}
 	}
+	
 	return false;
 }
 
@@ -972,32 +973,24 @@ function getBuscaUsuario ($nome){
 	
 	$sql = 'SELECT nm_usuario, id_usuario, usuario_tipo, perfil_45
 			FROM tb_usuario, tb_imagem_usuario
-			WHERE usuario_id = id_usuario
-			ORDER BY 
-			CASE edit_distance (:nome, nm_usuario)
-			WHEN 0 THEN 0
-			ELSE
-				CASE
-					WHEN LENGTH(:nome) < LENGTH(nm_usuario) THEN
-						edit_distance (:nome, LEFT(nm_usuario, LENGTH(:nome)))
-					WHEN LENGTH(:nome) > LENGTH(nm_usuario) THEN
-						edit_distance (LEFT(:nome, LENGTH(nm_usuario)), nm_usuario)
-					ELSE edit_distance (:nome, nm_usuario)
-						
-				END
-			END, LENGTH(nm_usuario) DESC, id_usuario
-			LIMIT 5';
+			WHERE usuario_id = id_usuario';
 	
 	$conn = getConn();
-
-
 	$stmt = $conn->prepare($sql);
-	$stmt->bindParam('nome', $nome);
-
 	$stmt->execute();
 	$usuarios = $stmt->fetchAll(PDO::FETCH_OBJ);
-	echo '{"usuarios":'.utf8_encode(json_encode($usuarios))."}";
 	$conn = null;
+	
+	$t = strlen($nome);
+	$nome = strtolower($nome);
+	usort ($usuarios, function($a, $b) use ($nome, $t){
+		return  levenshtein($nome, substr(strtolower($a->nm_usuario), 0, $t)) - levenshtein($nome, substr(strtolower($b->nm_usuario), 0, $t));
+	});
+	
+	$usuarios = array_slice($usuarios, 0, 5);
+	
+	echo '{"usuarios":'.utf8_encode(json_encode($usuarios))."}";
+	
 }
 
 
