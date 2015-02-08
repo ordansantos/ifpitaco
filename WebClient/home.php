@@ -1,13 +1,18 @@
 
 <?php
 	session_start();
-	if ($_SESSION['nm_usuario'] == '') {
+	if ($_SESSION['id_usuario'] == '') {
     	header ("location: index.php");
 	}
 	
-	$user = $_SESSION['nm_usuario'];
-	$foto = $_SESSION['foto'];
+	include("services/redirect.php");
+	include("services/getRoot.php");
+	$url = getRoot();
 	$id = $_SESSION['id_usuario'];
+	$foto = redirectGet($url.'WebService/getFotoPerfilById/'.$id);
+	$user = redirectGet($url.'WebService/getNomeById/' . $id);
+	
+
 ?>
 
 
@@ -65,6 +70,7 @@ $(document).ready(function() {
 
 	
 	postLoad(); 
+	
 	setInterval(function () {comentarioLoad()}, 5000);
 	setInterval(function () {newPosts()}, 5000);
 	setInterval(function () {likesLoad()}, 5000);
@@ -236,22 +242,20 @@ function novoPost (nome, ramo, id, data, comentario, foto, tipo, usuario_id, ima
 					<i class="glyphicon glyphicon-thumbs-up" aria-hidden="true" ></i><span> 0</span>\
 			</div></div> \
 			<div class="btn" style="cursor:default">\
-					<span class="glyphicon glyphicon-comment" aria-hidden="true" ></i><span id="nc'+id+'"> 2</span>\
+					<span class="glyphicon glyphicon-comment" aria-hidden="true" ></i><span id="nc'+id+'"> 0</span>\
 			</div> \
 			'+tipo_icon+'\
 			</div>\
 		</div>\
 	 </div>\
 	</div>\
-	<div id="cg'+id+'">\
 		<div id="pc'+id+'"></div>\
 		<div class="input-group add-on">\
-		<input type="text" class="form-control" placeholder="Comentar..." name="comentario" autocomplete="off" id="comentario_input">\
+		<input type="text" class="form-control" placeholder="Comentar..." name="comentario" autocomplete="off" id="input'+id+'">\
 		  <div class="input-group-btn">\
 		  <button class="btn btn-default" type="submit" onClick="comentarioSend(this.form.id)"><i class="glyphicon glyphicon-share-alt"></i></button>\
 		  </div>\
-		</div>\
-	</div>'
+		</div>'
 	document.getElementById('feed').appendChild(form);
 	
 	
@@ -286,17 +290,21 @@ function postLoad(){
      			last_id_post = p.post_id;
 			}
       	 
-      	 $('#feed').fadeIn(400);
+      	$('#feed').fadeIn(400);
      	comentarioLoad();
       	likesLoad();
       }
   });
 
 }
-
+isInAjax = false;
 //Carregando posts mais antigos
+//Ajax não para o código, precisa verificar se está em uma chamada de ajax para carregar mais
 function morePost(){
+	if (isInAjax) return;
+	isInAjax = true;
 
+	
   $.ajax({ 
   	type: 'GET', 
   	url: '../WebService/getNPostsLessThanMid/3/'+last_id_post, 
@@ -307,20 +315,24 @@ function morePost(){
 			 if (data.posts.length == 0)
 				 is_there_more_post = false;
       	 for (i = 0; i < data.posts.length; i++){
-          	p = data.posts[i];
-          		
+          	 
+          		p = data.posts[i];
+
 				post_array[p.post_id] = [];
 				post_user[p.post_id] = p.usuario_id;
 				
      			novoPost( p.nm_usuario, p.nm_ramo, p.post_id, p.data_hora, p.comentario, p.perfil, p.tipo, p.usuario_id, p.imagem);	
 
      			last_id_post = p.post_id;
-			}
-     
+     			alert (p.post_id);
+		 }
+
+      	  likesLoad();
+      	  comentarioLoad();
+      	isInAjax = false;
       }
   });
-  likesLoad();
-  comentarioLoad();
+
 	
 }
 //Carregando posts mais novos
@@ -364,11 +376,15 @@ function newPosts(){
 
 //Enviando um novo comentário
 function comentarioSend (id){
-
+	alert (id);
+	
+	
 	event.preventDefault();
 
-	if ($("#"+id+" #comentario_input")[0].value == '')
+	if ($("#input"+id)[0].value == ''){
+		alert ('vazio');
 		return;
+	}
 	
 
 	
@@ -401,7 +417,7 @@ function novoComentario (nome, comentario, data,  id_usuario, post_id, comentari
 //Carregando novos comentários
 function comentarioLoad(){
 
-	
+
   for (post_idx in post_array){
 	  
 	  //Verifica se o post é visível e assim atualiza seus comentários
@@ -409,10 +425,10 @@ function comentarioLoad(){
 
 	  
 	  if(!$('#'+post_idx).visible(true)){
-
+		
 		  continue;
 	  }
-	
+	 
       (function (post_idx){
           
     	   	
@@ -423,9 +439,9 @@ function comentarioLoad(){
 				dataType: 'json',
 				cache: false,
 				success: function (data) {
-				
+					
 					 //Verificando se o comentário foi apagado
-	
+					
 					 if (data.flag == '0'){
 
 						 	delete post_array[post_idx];
@@ -438,7 +454,8 @@ function comentarioLoad(){
 					 var comment_idx_old = 0;
 					 
 					 document.getElementById("nc"+post_idx).innerHTML = " "+data.comentarios.length;
-					 
+					
+				
 					 while (comment_idx_new < data.comentarios.length){
 						 
 						c = data.comentarios[comment_idx_new];
@@ -640,7 +657,7 @@ function fiscalizacaoClick(){
         processData: false,
 		data: formData,
 		success: function(data){
-			console.log(data);
+	
 			newPosts();
 		}, error: function(data){
 		
@@ -1257,17 +1274,12 @@ function tempo_passado (t){
 	return 'agora mesmo';
 }
 
-function teste(){
-	console.log ('entrou');
-	$("#cg"+55).hide();
-}
 
 </script>
 
 
 	
 <body>
-<!-- <button onClick="teste()"/> -->	
 
 	<nav id="bar" class="navbar navbar-default">
 	  <div class="container-fluid">
@@ -1304,7 +1316,7 @@ function teste(){
 		  			<div class="img-thumbnail">
 				  		<img src="<?php echo $foto?>"  alt="..." class="f120x120">
 				  	</div>
-				  	<a href="userProfile.php?id=<?php echo $id?>"><h2><script>document.write(toPlainText('<?php echo $user?>'));</script></h2></a>
+				  	<a href="userProfile.php?id=<?php echo $id?>"> <h2> <script>document.write(toPlainText('<?php echo $user?>'));</script ></h2></a>
 				</div>
 				  
 				 <!-- Meio -->
