@@ -12,7 +12,7 @@
 ?>
 
 <?php
-	include("getRoot.php");
+	include("services/getRoot.php");
 	$url = getRoot();
 	
 	include ('services/redirect.php');
@@ -31,7 +31,7 @@
 	$curso = $usuario->curso;
 	$ano_periodo = $usuario->ano_periodo;
 	$grau_academico = $usuario->grau_academico;
-	$image_perfil = '../'.$usuario->perfil_120;
+	$image_perfil = $usuario->perfil;
 	
 ?>
 
@@ -57,6 +57,7 @@
 		
 		<link rel="stylesheet" type="text/css"  href="css/user_profile.css">
 		<link rel="stylesheet" type="text/css"  href="css/search.css">
+		<link rel="stylesheet" type="text/css" href="css/foto_size.css">
 	</head>
 <script>
 function addUserToSearchList (id, nome, foto, tipo){
@@ -214,10 +215,9 @@ $(document).ready(function(){
 		 
 		  		<!-- Profile -->
 		  		<div class="col-md-2 text-center " id="profile">
-		  
-				  	<img  src="<?php echo $foto ?>"  alt="..." class="img-thumbnail">
-				  	<a href="userProfile.php?id=<?php echo $id?>"><h2><script>document.write(toPlainText('<?php echo $user?>'));</script></h2></a>
-				  	
+		  			<div class="img-thumbnail">
+				  		<img src="<?php echo $foto?>"  alt="..." class="f120x120">
+				  	</div>
 				</div>
 				  
 				 <!-- Meio -->

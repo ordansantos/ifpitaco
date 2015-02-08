@@ -1,18 +1,15 @@
 
 
 <?php
-	require '../Slim/Slim/Slim.php';
-	\Slim\Slim::registerAutoloader();
-	$app = new \Slim\Slim();
-	//$app->response()->header('Content-Type', 'application/json;charset=utf-8');
-	$app->get('/', function () { 
+require '../Slim/Slim/Slim.php';
+\Slim\Slim::registerAutoloader();
+$app = new \Slim\Slim();
+//$app->response()->header('Content-Type', 'application/json;charset=utf-8');
+$app->get('/', function () { 
 
-		echo "servicos.txt \nramos.txt \n";
-	});
-/*
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
-*/
+	echo "servicos.txt \nramos.txt \n";
+});
+
 define ('ERRO', '0');
 define ('SUCESSO', '1');
 define ('ERRO_STRING_VAZIA', 'Preencha todos os campos corretamente!');
@@ -20,56 +17,68 @@ define ('ERRO_EMAIL_EXISTE', 'Email já cadastrado!');
 define ('ERRO_SENHA_INVALIDA', 'Sua senha precisa ter no mínimo 6 dígitos');
 define ('NOT_IS_IMAGE', 'Envie um formato de imagem válido!');
 
+//Envia uma proposta
 $app->post('/postProposta/','postProposta');
+//Verifica se o login está correto
 $app->post('/postLogin/', 'postLogin');
+//Cadastra um novo usuário
 $app->post('/postUsuario/', 'postUsuario');
+//Envia uma fiscalização
 $app->post('/postFiscalizacao/', 'postFiscalizacao');
-/*
-$app->post('/postAvaliacao/', 'postAvaliacao');
-*/
+//Envia um comentário de um post
 $app->post('/postComentario/', 'postComentario');
+//Delete um comentário específico
 $app->post('/postDeleteComentario/', 'postDeleteComentario');
+//Envia um 'laike' de um post
 $app->post('/postLaike/', 'postLaike');
+//Deleta um post
 $app->post('/postDeletePost/', 'postDeletePost');
+//Envia uma nova Enquete
 $app->post('/postEnquete/', 'postEnquete');
-/*
-$app->get('/getPropostas/','getPropostas');
-$app->get('/getPropostasByRamo/:ramo', 'getPropostasByRamo');
-*/
-/*
-$app->get('/getFiscalizacoes/', 'getFiscalizacoes');
-$app->get('/getFiscalizacoesByRamo/:ramo', 'getFiscalizacoesByRamo');
-$app->get('/getAvaliacaoByRamo/:ramo', 'getAvaliacaoByRamo');
-*/
+//Envia o voto de uma enquete
 $app->post('/postVoto/', 'postVoto');
 
+//Retorna os ramos
 $app->get('/getRamos/', 'getRamos');
+//Retorna o nome de usuário usando seu id
 $app->get('/getNomeById/:id', 'getNomeById');
+//Retorna a foto de perfil usando o id do usuário
 $app->get('/getFotoPerfilById/:id', 'getFotoPerfilById');
+//Retorna os comentários de um post e também uma flag, que responde se o post foi deletado
 $app->get('/getComentariosById/:id', 'getComentariosById');
+//Retorna o id do usuário que realizou o comentário
 $app->get('/getUsuarioByComentarioPostId/:comentario_post_id', 'getUsuarioByComentarioPostId');
+//Retorna N posts inseridos antes o id do post M
 $app->get('/getNPostsLessThanMid/:n/:m', 'getNPostsLessThanMid');
+//Retorna os posts inseridos após o id do post N
 $app->get('/getAllPostsGreaterThanNid/:n', 'getAllPostsGreaterThanNid');
+//Retorna os N últimos Posts
 $app->get('/getNPosts/:n', 'getNPosts');
+//Retorna a quantidade de likes do post e uma flag, que responde se o usuário curtiu
 $app->get('/getCntLaikesAndUserFlagByPostIdAndUserId/:post_id/:usuario_id', getCntLaikesAndUserFlagByPostIdAndUserId);
+//Retorna o usuário que criou o post
 $app->get('/getUsuarioByPostId/:post_id', 'getUsuarioByPostId');
+//Retorna uma enquete pelo id
 $app->get('/getEnquete/:enquete_id', 'getEnquete');
+//Retorna o id de todas as enquetes
 $app->get('/getEnqueteIds/', 'getEnqueteIds');
+//Retorna as enquetes que o usuário não votou
 $app->get('/getEnqueteIdsWhereUserDidNotVote/:usuario_id', 'getEnqueteIdsWhereUserDidNotVote');
+//Retorna as informações de um usuário
 $app->get('/getUsuarioById/:usuario_id', 'getUsuarioById');
+//Busca um usuário em relação a um nome
 $app->get('/getBuscaUsuario/:nome', 'getBuscaUsuario');
 
 $app->run();
 
 
 /*
-Json a enviar: {"comentario":"", "usuario_id":"", "ramo_id":""}
-
-Chave estrangeira: usuario_id e ramo_id
-
-Response: erro ou sucesso
+ * Envia uma proposta.
+Post:
+	'comentario'
+	'usuario_id'
+	'ramo_id'
 */
-
 function postProposta()
 {
 	//Prepara a query do banco de dados
@@ -90,101 +99,76 @@ function postProposta()
 	$conn = null;
 }
 
-
-/*
-Json(Array) a Receber:
-
-{"propostas":[
-	{"comentario":"","nm_usuario":"","data_hora":"","nm_ramo":""}
-]}
-
-*/
-/*
-function getPropostas()
-{	
-	//Realiza uma query no banco de dados em busca dos comentários
+/*Envia uma imagem para o cloudinary.*/
+function sendToCloudinary120_120($path, $x, $y, $w, $h){
 	
-	$stmt = getConn()->query("
-	SELECT comentario, nm_usuario, nm_ramo, data_hora, post_id, perfil_45
-	FROM tb_post, tb_usuario, tb_ramo, tb_imagem_usuario
-	WHERE ramo_id = id_ramo AND tb_post.usuario_id = tb_usuario.id_usuario AND tb_post.usuario_id = tb_imagem_usuario.usuario_id;");
+	$w = intval($w);
+	$h = intval($h);
+	$x = intval($x);
+	$y = intval($y);
+	require 'cloudinary_src/Cloudinary.php';
+	require 'cloudinary_src/Uploader.php';
+	require 'cloudinary_src/Api.php';
 	
-	$propostas = $stmt->fetchAll(PDO::FETCH_OBJ);
-	//Transforma em JSON e retorna ao cliente
-	echo '{"propostas":'.utf8_encode(json_encode($propostas))."}";
+	\Cloudinary::config(array(
+			"cloud_name" => "hikttgesy",
+			"api_key" => "259727914439314",
+			"api_secret" => "zCpYfezoRI9Zd8rRW6A9ITAsMVA"
+	));
+	
+	
+	$img = \Cloudinary\Uploader::upload($path,
+		array(
+		   array("crop" => "crop",
+			"width" => $w, "height" => $h, "x" => $x, "y" => $y),
+			array("crop" => "fill",
+				"width" => 120, "height" => 120)
+		));
+	
+	/*On heroku: return $img['secure_url'];*/
+	return $img['url'];
 }
-*/
-/*
 
-Enviar ramo_id via url
+/*Envia uma imagem para o cloudinary.*/
 
-Json(Array) a receber:
-
-{"propostas":[
-	{"comentario":"","nm_usuario":"","data_hora":"","nm_ramo":""}
-]}
-
-
-*/
-/*
-function getPropostasByRamo($ramo){
-
-	$conn = getConn();
-
-	$stmt = getConn()->prepare("
-	SELECT comentario, nm_usuario, nm_ramo, data_hora 
-	FROM tb_proposta, tb_usuario, tb_ramo 
-	WHERE ramo_id = id_ramo AND usuario_id = id_usuario AND ramo_id = :ramo;");
-
-	$stmt->bindParam("ramo", $ramo);
+function sendToCloudinary($path){
+	require 'cloudinary_src/Cloudinary.php';
+	require 'cloudinary_src/Uploader.php';
+	require 'cloudinary_src/Api.php';
 	
-	$stmt->execute();
+	\Cloudinary::config(array(
+			"cloud_name" => "hikttgesy",
+			"api_key" => "259727914439314",
+			"api_secret" => "zCpYfezoRI9Zd8rRW6A9ITAsMVA"
+	));
 	
-	$result = $stmt->fetchAll(PDO::FETCH_OBJ);
 	
-	echo '{"propostas":'.utf8_encode(json_encode($result))."}";
+	$img = \Cloudinary\Uploader::upload($path);
 	
-	$conn = null;
+	/*On heroku: return $img['secure_url'];*/
+	return $img['url'];
 }
-*/
-//Imagem se encontra em: WebService/uploaded_images/fiscalizacao_foto/$id.jpg
+
+/*Salva a imagem da fiscalizacao.*/
+
 function saveFiscalizacaoImage($id){
 	
-	if(empty($_FILES)) {
-		return false;
-	}
-	$path = realpath($_SERVER["DOCUMENT_ROOT"]);
-	
-	require ($path.'/WebService/wideimage/WideImage.php');
+	if(empty($_FILES)) return '';
 	
 	if ($_FILES['imagem']['name']){
-		
-		$nome = 'WebService/uploaded_images/fiscalizacao_foto/'.$id.'.jpg';
-		$allowedTypes = array(IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF);
-		$detectedType = exif_imagetype($_FILES['imagem']['tmp_name']);
-		if (in_array($detectedType, $allowedTypes)){
-			
-			$image = WideImage::load ($_FILES['imagem']['tmp_name']);
-			$image->saveToFile($path.'/'.$nome);
-			
-			$sql = "INSERT INTO tb_imagem_fiscalizacao (post_id, imagem) values (:id, :imagem)";
-			$conn = getConn();
-			$stmt = $conn->prepare($sql);
-			$stmt->bindParam("id", $id);
-			$stmt->bindParam("imagem", $nome);
-			
-			if ($stmt->execute()) return true;
-			$conn = null;
-		}
+		$nome = sendToCloudinary($_FILES['imagem']['tmp_name']);
+		return $nome;
 	}
 	
-	return false;
+	return '';
 }
 
 /*
-Json a enviar: {"comentario":"", "usuario_id":"", "ramo_id":""}
-
-Resposta: erro ou sucesso
+ * Envia uma fiscalização.
+POST:
+	comentario, usuario_id, ramo_id, tipo
+FILES
+	imagem
 */
 function postFiscalizacao(){
 
@@ -200,11 +184,12 @@ function postFiscalizacao(){
 	if ($stmt->execute()){
 		
 		$post_id = $conn->lastInsertId('post_id');
-		
-		if (saveFiscalizacaoImage($post_id)){
-			$sql = "UPDATE tb_post SET tipo = 2 WHERE post_id = :post_id";
+		$url_img = saveFiscalizacaoImage($post_id);
+		if ($url_img != ''){
+			$sql = "UPDATE tb_post SET tipo = 2, imagem = :img WHERE post_id = :post_id";
 			$stmt = $conn->prepare ($sql);
 			$stmt->bindParam ('post_id', $post_id);
+			$stmt->bindParam ('img', $url_img);
 			$stmt->execute();
 		}
 		
@@ -215,109 +200,7 @@ function postFiscalizacao(){
 	$conn = null;
 }
 
-
-/*
-Json(Array) a Receber:
-
-{"fiscalizacoes":[
-	{"comentario":"","nm_usuario":"","data_hora":"","nm_ramo":""}
-]}
-
-*/
-/*
-function getFiscalizacoes()
-{	
-	
-	$stmt = getConn()->query("
-	SELECT comentario, nm_usuario, nm_ramo, data_hora 
-	FROM tb_fiscalizacao, tb_usuario, tb_ramo 
-	WHERE ramo_id = id_ramo AND usuario_id = id_usuario;");
-	
-	$fiscalizacoes = $stmt->fetchAll(PDO::FETCH_OBJ);
-	//Transforma em JSON e retorna ao cliente
-	echo '{"fiscalizacoes":'.utf8_encode(json_encode($fiscalizacoes))."}";
-}
-*/
-/*
-Json(Array) a Receber:
-
-{"fiscalizacoes":[
-	{"comentario":"","nm_usuario":"","data_hora":"","nm_ramo":""}
-]}
-*/
-/*
-function getFiscalizacoesByRamo($ramo){
-	$stmt = getConn()->prepare("
-	SELECT comentario, nm_usuario, nm_ramo, data_hora 
-	FROM tb_fiscalizacao, tb_usuario, tb_ramo 
-	WHERE ramo_id = id_ramo AND usuario_id = id_usuario AND id_ramo = :ramo;");
-	
-	$stmt->bindParam("ramo", $ramo);
-	$stmt->execute();
-	
-	$result = $stmt->fetchAll(PDO::FETCH_OBJ);
-	
-	echo '{"fiscalizacoes":'.utf8_encode(json_encode($result))."}";	
-}
-
-*/
-/*
-
-Json a enviar: {"nota": "", "usuario_id": "", "ramo_id":""}
-nota: INT(0-10)
-
-resposta: sucesso ou erro
-*/
-/*
-function postAvaliacao(){
-	$request = \Slim\Slim::getInstance()->request();
-	
-	$avaliacao = json_decode($request->getBody());
-	
-	$sql = "INSERT INTO tb_avaliacao (nota, usuario_id, ramo_id) values (:nota, :usuario_id, :ramo_id)";
-
-	$conn = getConn();
-
-	$stmt = $conn->prepare($sql);
-
-	$stmt->bindParam("nota", $avaliacao->nota);
-	$stmt->bindParam("usuario_id", $avaliacao->usuario_id);
-	$stmt->bindParam("ramo_id", $avaliacao->ramo_id);
-	
-	if ($stmt->execute()) echo SUCESSO; else echo ERRO;
-}
-
-*/
-/*
-Enviar ramo_id via url
-Resposta : string float
-*/
-/*
-function getAvaliacaoByRamo($ramo){
-
-	$sql = "SELECT AVG(nota) FROM tb_avaliacao WHERE ramo_id=:ramo";
-	$conn = getConn();
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam("ramo", $ramo);
-	
-	$stmt->execute();
-	
-	$result = $stmt->fetch();
-	
-	$avg =  $result['AVG(nota)'];
-	
-	if ($avg===NULL) $avg = 0;
-	
-	echo $avg;
-
-}	
-*/
-/* 
-Json a enviar: {"nm_usuario": "", "senha":"", "email": ""}
-
-Resposta: erro ou sucesso
-*/ 
-
+/*Verifica se o usuário com o seguinte email existe.*/
 function usuarioExiste ($email){
 	
 	$sql = "SELECT * FROM (tb_usuario) WHERE email = :email";
@@ -331,57 +214,44 @@ function usuarioExiste ($email){
 	$conn = null;
 }
 
+/* Salva a foto ao cadastrar um usuário */
 function saveFotoFromPostUsuario($email){
 	
 	$id = getIdByEmail($email);
+	//Default
+	$novo_nome = 'http://res.cloudinary.com/hikttgesy/image/upload/v1423353982/default_o5gzqs.jpg';
 	
-	$novo_nome = "default";
-	
-	$perfil_120 ='WebService/uploaded_images/perfil_120/';
-	$perfil_45 = 'WebService/uploaded_images/perfil_45/';
-	$perfil_32 = 'WebService/uploaded_images/perfil_32/';
-	
+	if(!empty($_FILES))
 	if ($_FILES['foto']['name']){
-		$allowedTypes = array(IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF);
-		$detectedType = exif_imagetype($_FILES['foto']['tmp_name']);
-		if (in_array($detectedType, $allowedTypes)){
-			$novo_nome = date ("dmyhis");
-			
-			$image = WideImage::load ($_FILES['foto']['tmp_name']);
-
-			
-			if (isset($_POST['x']) && isset($_POST['y']) && isset($_POST['w']) && isset($_POST['h']) ){
-				list($width, $height) = getimagesize($_FILES['foto']['tmp_name']);
-				$image= $image->crop($_POST['x'] * $width, $_POST['y'] * $height, $_POST['w'] * $width, $_POST['h'] * $height);
-			}
-			
-			$image->resize(120, 120, 'fill')->saveToFile('/var/www/html/'.$perfil_120.$novo_nome.'.jpg');
-			$image->resize(45, 45, 'fill')->saveToFile('/var/www/html/'.$perfil_45.$novo_nome.'.jpg');
-			$image->resize(32, 32, 'fill')->saveToFile('/var/www/html/'.$perfil_32.$novo_nome.'.jpg');
-		}
+		if (isset($_POST['x']) && isset($_POST['y']) && isset($_POST['w']) && isset($_POST['h']) ){
+			list($width, $height) = getimagesize($_FILES['foto']['tmp_name']);
+			$novo_nome = sendToCloudinary120_120($_FILES['foto']['tmp_name'], $_POST['x'] * $width, $_POST['y'] * $height, $_POST['w'] * $width, $_POST['h'] * $height);
+		}	
 	}
 
-	$sql = "INSERT INTO tb_imagem_usuario (usuario_id, perfil_120, perfil_45, perfil_32) values (:id, :perfil_120, :perfil_45, :perfil_32)";
+	$sql = "INSERT INTO tb_imagem_usuario (usuario_id, perfil) values (:id, :perfil)";
 	$conn = getConn();
 	
 	$stmt = $conn->prepare($sql);
 	
-	$perfil_120 = $perfil_120.$novo_nome.'.jpg';
-	$perfil_45 = $perfil_45.$novo_nome.'.jpg';
-	$perfil_32 = $perfil_32.$novo_nome.'.jpg';
 	
 	$stmt->bindParam("id", $id);
-	$stmt->bindParam("perfil_120", $perfil_120);
-	$stmt->bindParam("perfil_45", $perfil_45);
-	$stmt->bindParam("perfil_32", $perfil_32);
+	$stmt->bindParam("perfil", $novo_nome);
 	
 	$stmt->execute();
 	$conn = null;
 }
 
+/*Cadastra um usuário
+ * 
+ * POST:
+ * 	'nm_usuario'
+ * 	'senha'
+ * 	'email'
+ * FILES:
+ * 	'foto'
+ * */
 function postUsuario(){
-
-	require ('/var/www/html/WebService/wideimage/WideImage.php');
 	
 	$name = $_POST['nm_usuario'];
 	$senha = $_POST['senha'];
@@ -431,7 +301,7 @@ function postUsuario(){
 	$stmt->bindParam("grau_academico", $grau_academico);
 	
 	if ($stmt->execute()){
-	saveFotoFromPostUsuario($email);
+		saveFotoFromPostUsuario($email);
 		echo SUCESSO; 
 	}
 		else 
@@ -440,9 +310,10 @@ function postUsuario(){
 }
 
 /*
-POST a enviar:
-	'email', 'senha'
-Response: id_usuario (0 = error)
+ * Faz o login do usuário
+POST
+	'email'
+	'senha'
 
 */
 function postLogin(){
@@ -517,7 +388,7 @@ function getConn(){
 function getFotoPerfilById($id){
 	
 	$sql = "
-	SELECT perfil_120 FROM tb_imagem_usuario, tb_usuario
+	SELECT perfil FROM tb_imagem_usuario, tb_usuario
 	WHERE tb_imagem_usuario.usuario_id = tb_usuario.id_usuario AND tb_usuario.id_usuario = :id";
 	$conn = getConn();
 	$stmt = $conn->prepare($sql);
@@ -527,7 +398,7 @@ function getFotoPerfilById($id){
 	
 	$result = $stmt->fetch();
 	
-	echo $result['perfil_120'];
+	echo $result['perfil'];
 	$conn = null;
 }
 
@@ -580,7 +451,7 @@ function getComentariosById ($id){
 	$conn = getConn();
 	
 	$sql = "SELECT nm_usuario, id_usuario, 
-			comentario, data_hora, comentario_post_id, perfil_32 FROM tb_usuario,
+			comentario, data_hora, comentario_post_id, perfil FROM tb_usuario,
 			tb_comentario_post, tb_imagem_usuario WHERE tb_comentario_post.usuario_id = id_usuario 
 			AND tb_imagem_usuario.usuario_id = id_usuario AND post_id = :id ORDER BY comentario_post_id";
 	
@@ -631,7 +502,7 @@ function getNPostsLessThanMid($n, $m){
 	$conn->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
 
 	
-	$sql = "SELECT comentario, nm_usuario, nm_ramo, data_hora, post_id, perfil_45, tb_post.usuario_id as usuario_id, tipo
+	$sql = "SELECT comentario, imagem, nm_usuario, nm_ramo, data_hora, post_id, perfil, tb_post.usuario_id as usuario_id, tipo
 			FROM tb_post, tb_usuario, tb_ramo, tb_imagem_usuario
 			WHERE ramo_id = id_ramo AND tb_post.usuario_id = tb_usuario.id_usuario AND 
 			tb_post.usuario_id = tb_imagem_usuario.usuario_id 
@@ -655,7 +526,7 @@ function getAllPostsGreaterThanNid($n){
 
 	$conn = getConn();
 
-	$sql = "SELECT comentario, nm_usuario, nm_ramo, data_hora, post_id, perfil_45, tb_post.usuario_id as usuario_id, tipo
+	$sql = "SELECT comentario, imagem, nm_usuario, nm_ramo, data_hora, post_id, perfil, tb_post.usuario_id as usuario_id, tipo
 			FROM tb_post, tb_usuario, tb_ramo, tb_imagem_usuario
 			WHERE ramo_id = id_ramo AND tb_post.usuario_id = tb_usuario.id_usuario AND
 			tb_post.usuario_id = tb_imagem_usuario.usuario_id
@@ -683,7 +554,7 @@ function getNPosts($n){
 	$conn->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
 
 	
-	$sql = "SELECT comentario, nm_usuario, nm_ramo, data_hora, post_id, perfil_45, tb_post.usuario_id as usuario_id, tipo
+	$sql = "SELECT comentario, imagem, nm_usuario, nm_ramo, data_hora, post_id, perfil, tb_post.usuario_id as usuario_id, tipo
 			FROM tb_post, tb_usuario, tb_ramo, tb_imagem_usuario
 			WHERE ramo_id = id_ramo AND tb_post.usuario_id = tb_usuario.id_usuario AND 
 			tb_post.usuario_id = tb_imagem_usuario.usuario_id 
@@ -815,33 +686,18 @@ function deleteLaikeByPost ($post_id){
 
 
 function saveEnqueteImage($id){
-
-	require ('/var/www/html/WebService/wideimage/WideImage.php');
 	
-	$path_image = "";
+	$path = '';
 	
 	if(!empty($_FILES))
-	if ($_FILES['imagem']['name']){
-	
-		$path = '/var/www/html/';
-		$nome = 'WebService/uploaded_images/enquete_foto/'.$id.'.jpg';
-		
-		$allowedTypes = array(IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF);
-		$detectedType = exif_imagetype($_FILES['imagem']['tmp_name']);
-		if (in_array($detectedType, $allowedTypes)){
-				
-			$image = WideImage::load ($_FILES['imagem']['tmp_name']);
-			$image->saveToFile($path.$nome);
-			$path_image = $nome;
-
-		}
-	}
+	if ($_FILES['imagem']['name'])
+		$path = sendToCloudinary($_FILES['imagem']['tmp_name']);
 	
 	$sql = "INSERT INTO tb_imagem_enquete (enquete_id, imagem) values (:id, :imagem)";
 	$conn = getConn();
 	$stmt = $conn->prepare($sql);
 	$stmt->bindParam("id", $id);
-	$stmt->bindParam("imagem", $path_image);
+	$stmt->bindParam("imagem", $path);
 	
 	$conn = null;
 	if ($stmt->execute()) return true;
@@ -891,7 +747,7 @@ function getEnquete($id){
 		SELECT 
 		e.qtd_opt, e.opt_1, e.opt_2, e.opt_3, e.opt_4, e.opt_5, e.titulo, e.id_enquete, e.usuario_id, e.data_hora,
 		i_e.imagem as e_imagem, u.nm_usuario,
-		iu.perfil_45,
+		iu.perfil,
 		
 		(SELECT COUNT(*) FROM tb_enquete_voto WHERE enquete_id = :id AND voto = 1) as qtd_opt_1,
 		(SELECT COUNT(*) FROM tb_enquete_voto WHERE enquete_id = :id AND voto = 2) as qtd_opt_2,
@@ -956,7 +812,7 @@ function getEnqueteIdsWhereUserDidNotVote($id){
 }
 
 function getUsuarioById($id){
-	$sql = "SELECT nm_usuario, usuario_tipo, curso, ano_periodo, grau_academico, perfil_120
+	$sql = "SELECT nm_usuario, usuario_tipo, curso, ano_periodo, grau_academico, perfil
 			FROM tb_usuario, tb_imagem_usuario
 			WHERE usuario_id = :id AND id_usuario = :id";
 	$conn = getConn();
@@ -971,7 +827,7 @@ function getUsuarioById($id){
 
 function getBuscaUsuario ($nome){
 	
-	$sql = 'SELECT nm_usuario, id_usuario, usuario_tipo, perfil_45
+	$sql = 'SELECT nm_usuario, id_usuario, usuario_tipo, perfil
 			FROM tb_usuario, tb_imagem_usuario
 			WHERE usuario_id = id_usuario';
 	

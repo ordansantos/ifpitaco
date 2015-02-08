@@ -13,7 +13,7 @@
 		session_start();
 		$_SESSION['id_usuario'] = $id;
 		$_SESSION['nm_usuario'] = redirectGet($url.'WebService/getNomeById/' . $id);
-		$_SESSION['foto'] = $url.redirectGet($url.'WebService/getFotoPerfilById/'.$id);
+		$_SESSION['foto'] = redirectGet($url.'WebService/getFotoPerfilById/'.$id);
 	} 
 	
 	echo $id;
