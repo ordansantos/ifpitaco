@@ -38,7 +38,8 @@
 		<link rel="stylesheet" type="text/css"  href="css/tooltip_chart_customized.css">
 		
 		<link rel="stylesheet" type="text/css"  href="css/search.css">
-
+		
+		<link rel="stylesheet" type="text/css" href="css/foto_size.css">
 	</head>
 
 	
@@ -202,7 +203,7 @@ var last_id_post;
 var first_id_post = 0;
 
 //Criando novo post
-function novoPost (nome, ramo, id, data, comentario, foto, tipo, usuario_id){
+function novoPost (nome, ramo, id, data, comentario, foto, tipo, usuario_id, imagem){
 
 	var form = document.createElement ('form');
 	data_post[id] = data;
@@ -215,14 +216,14 @@ function novoPost (nome, ramo, id, data, comentario, foto, tipo, usuario_id){
 	
 	//É uma fiscalização com imagem?
 	if (tipo == 2)
-		$img = "<img class='fiscalizacao_img' src='../WebService/uploaded_images/fiscalizacao_foto/"+id+".jpg' />"
+		$img = "<img class='fiscalizacao_img' src='"+imagem+"' />"
 
 	form.innerHTML = '\
 	<div class="well well-sm">\
 	 	<div class="post">\
 		 <div class="top">\
 		 <i onClick="excluirPost(this)" class="glyphicon glyphicon-remove"></i>\
-			<img  class="pull-left" src="../'+foto+'" >\
+			<img class="pull-left f45x45" src="'+foto+'" >\
 			<div>\
 				<h4><a  href="userProfile.php?id='+usuario_id+'">'+toPlainText(nome)+'</a></h4>\
 				<h6><span id="ptime_'+id+'">'+tempo_passado(data)+'</span>&nbsp'+ramo+'</h6>\
@@ -280,7 +281,7 @@ function postLoad(){
 				post_array[p.post_id] = [];
 				post_user[p.post_id] = p.usuario_id;
 				
-     			novoPost( p.nm_usuario, p.nm_ramo, p.post_id, p.data_hora, p.comentario, p.perfil_45, p.tipo, p.usuario_id);	
+     			novoPost( p.nm_usuario, p.nm_ramo, p.post_id, p.data_hora, p.comentario, p.perfil, p.tipo, p.usuario_id, p.imagem);	
      			
      			last_id_post = p.post_id;
 			}
@@ -311,7 +312,7 @@ function morePost(){
 				post_array[p.post_id] = [];
 				post_user[p.post_id] = p.usuario_id;
 				
-     			novoPost( p.nm_usuario, p.nm_ramo, p.post_id, p.data_hora, p.comentario, p.perfil_45, p.tipo, p.usuario_id);	
+     			novoPost( p.nm_usuario, p.nm_ramo, p.post_id, p.data_hora, p.comentario, p.perfil, p.tipo, p.usuario_id, p.imagem);	
 
      			last_id_post = p.post_id;
 			}
@@ -338,7 +339,7 @@ function newPosts(){
           		
 				post_array[p.post_id] = [];
 				post_user[p.post_id] = p.usuario_id;
-     			form = novoPost( p.nm_usuario, p.nm_ramo, p.post_id, p.data_hora, p.comentario, p.perfil_45, p.tipo, p.usuario_id);	
+     			form = novoPost( p.nm_usuario, p.nm_ramo, p.post_id, p.data_hora, p.comentario, p.perfil, p.tipo, p.usuario_id, p.imagem);	
 
      			document.getElementById('feed').insertBefore(form, document.getElementById('feed').firstChild);
      			$('#'+p.post_id).hide();
@@ -391,7 +392,7 @@ function novoComentario (nome, comentario, data,  id_usuario, post_id, comentari
 	var com = document.createElement("div");
 	com.className = "comentario";
 	com.id = 'c'+comentario_post_id;
-	com.innerHTML = "<img src='../"+foto+"'/><div class='content'><a href='userProfile.php?id="+id_usuario+"'><strong>"+toPlainText(nome)+"</strong></a> "+toPlainText(comentario)+"<h6><span id='ctime_"+comentario_post_id+"'>"+tempo_passado(data)+"</span></h6></div><i onClick='excluirComentario(this.parentNode.id)'class='glyphicon glyphicon-remove'></i>";
+	com.innerHTML = "<img class='f32x32' src='"+foto+"'/><div class='content'><a href='userProfile.php?id="+id_usuario+"'><strong>"+toPlainText(nome)+"</strong></a> "+toPlainText(comentario)+"<h6><span id='ctime_"+comentario_post_id+"'>"+tempo_passado(data)+"</span></h6></div><i onClick='excluirComentario(this.parentNode.id)'class='glyphicon glyphicon-remove'></i>";
 	document.getElementById("pc"+post_id).appendChild(com);
 	
 }
@@ -453,7 +454,7 @@ function comentarioLoad(){
 						}
 						
 					
-					 	novoComentario( c.nm_usuario, c.comentario, c.data_hora,  c.id_usuario, post_idx, c.comentario_post_id, c.perfil_32, c.id_usuario);	
+					 	novoComentario( c.nm_usuario, c.comentario, c.data_hora,  c.id_usuario, post_idx, c.comentario_post_id, c.perfil, c.id_usuario);	
 					 	comentario_user[c.comentario_post_id] = c.id_usuario;
 						
 						comment_idx_new++;
@@ -634,12 +635,12 @@ function fiscalizacaoClick(){
 	var formData = new FormData($("#form_fiscalizacao")[0]);
 	$.ajax({
 		type: "POST",
-		url: "services/fiscalizar.php",
+		url: "../WebService/postFiscalizacao",
         contentType: false,
         processData: false,
 		data: formData,
 		success: function(data){
-			
+			console.log(data);
 			newPosts();
 		}, error: function(data){
 		
@@ -750,7 +751,7 @@ function newEnqueteClick(){
 	var formData = new FormData($("#form_new_enquete")[0]);
 	$.ajax({
 		type: "POST",
-		url: "services/postNewEnquete.php",
+		url: "../WebService/postEnquete",
         contentType: false,
         processData: false,
 		data: formData,
@@ -771,7 +772,7 @@ function newEnqueteClick(){
 /*SISTEMA DE ENVIO DE VOTO E CARREGAMENTO DE ENQUETES*/
 
 
-   function createEnqueteForm(usuario_id, perfil_45, e_imagem, nm_usuario, data_hora, titulo, id_enquete, e_qtd_opt, opts){
+   function createEnqueteForm(usuario_id, perfil, e_imagem, nm_usuario, data_hora, titulo, id_enquete, e_qtd_opt, opts){
 	
 	   if ($('#enquete').length)
 		   $('#enquete').remove();
@@ -783,13 +784,13 @@ function newEnqueteClick(){
 	   
 	   imagem = '';
 	   if (e_imagem != '')
-		   imagem = "<img src='../"+e_imagem+"'>"
+		   imagem = "<img src='"+e_imagem+"'>"
 	   
 	   data_enquete = data_hora;
 		   
 	   enquete.innerHTML = "\
 			 <div class='e_top'>\
-				<img class='pull-left img-circle' src='../"+perfil_45+"'>\
+				<img class='f45x45 pull-left img-circle' src='"+perfil+"'>\
 					<a href='userProfile.php?id="+usuario_id+"'><div class='nome_user'>"+toPlainText(nm_usuario)+"</div></a>\
 					<div class='data'><span id='etime'>"+tempo_passado(data_hora)+"</span></div>\
 				 </div>\
@@ -831,7 +832,7 @@ function newEnqueteClick(){
 			cache: false,
 		    success: function (data) { 
 		    	data = data[0];
-		    	createEnqueteForm (data.usuario_id, data.perfil_45, data.e_imagem, data.nm_usuario, 
+		    	createEnqueteForm (data.usuario_id, data.perfil, data.e_imagem, data.nm_usuario, 
    					data.data_hora, data.titulo, data.id_enquete, data.qtd_opt,
    					[data.opt_1, data.opt_2, data.opt_3, data.opt_4, data.opt_5]	
 		    		);	
@@ -961,7 +962,7 @@ function updateEnqueteVisualizacao(){
 				if (number_votes_enquete < sum ){
 				
 					number_votes_enquete = sum;
-			    	createEnqueteVisualizacao (data.usuario_id, data.perfil_45, data.e_imagem, data.nm_usuario, 
+			    	createEnqueteVisualizacao (data.usuario_id, data.perfil, data.e_imagem, data.nm_usuario, 
 			    					data.data_hora, data.titulo, data.qtd_opt,
 			    		[data.opt_1, data.opt_2, data.opt_3, data.opt_4, data.opt_5],
 			    		[data.qtd_opt_1, data.qtd_opt_2, data.qtd_opt_3, data.qtd_opt_4, data.qtd_opt_5]
@@ -973,7 +974,7 @@ function updateEnqueteVisualizacao(){
 		});
    }
    
-   function createEnqueteVisualizacao(usuario_id, perfil_45, e_imagem, nm_usuario, data_hora, titulo, qtd_opt, opts, qtd_opts){
+   function createEnqueteVisualizacao(usuario_id, perfil, e_imagem, nm_usuario, data_hora, titulo, qtd_opt, opts, qtd_opts){
 	
 	   if ($('#enquete').length)
 		   $('#enquete').remove();
@@ -985,13 +986,13 @@ function updateEnqueteVisualizacao(){
 	   enquete.display = "none";
 	   imagem = '';
 	   if (e_imagem != '')
-		   imagem = "<img src='../"+e_imagem+"'>"
+		   imagem = "<img src='"+e_imagem+"'>"
 	   
 	   data_enquete = data_hora;
 		   
 	   enquete.innerHTML = "\
 			 <div class='e_top'>\
-				<img class='pull-left img-circle' src='../"+perfil_45+"'>\
+				<img class='f45x45 pull-left img-circle' src='"+perfil+"'>\
 				<a href='userProfile.php?id="+usuario_id+"'><div class='nome_user'>"+toPlainText(nm_usuario)+"</div></a>\
 					<div class='data'><span id='etime'>"+tempo_passado(data_hora)+"</span></div>\
 				 </div>\
@@ -1086,7 +1087,7 @@ function addUserToSearchList (id, nome, foto, tipo){
 	
 	li.innerHTML = '\
 		<a href="userProfile.php?id='+id+'">\
-		<img class="pull-left" src="'+foto+'"></img>\
+		<img class="f45x45 pull-left" src="'+foto+'"></img>\
 		<h3>'+nome+'</h3>\
 		<h5>'+tipo+'</h5>\
 		<\a>';
@@ -1149,7 +1150,7 @@ function doSearch(text) {
 			for (i = 0; i < usuariosFromBusca.length; i++){
 				u = usuariosFromBusca[i];
 				addUserToSearchList(
-					u.id_usuario, u.nm_usuario, '../'+u.perfil_45, u.usuario_tipo		
+					u.id_usuario, u.nm_usuario, u.perfil, u.usuario_tipo		
 				);
 			}
 			
@@ -1300,8 +1301,9 @@ function teste(){
 		 
 		  		<!-- Profile -->
 		  		<div class="col-md-2 text-center" id="profile">
-		  
-				  	<img  src="<?php echo $foto?>"  alt="..." class=" img-thumbnail">
+		  			<div class="img-thumbnail">
+				  		<img src="<?php echo $foto?>"  alt="..." class="f120x120">
+				  	</div>
 				  	<a href="userProfile.php?id=<?php echo $id?>"><h2><script>document.write(toPlainText('<?php echo $user?>'));</script></h2></a>
 				</div>
 				  
@@ -1401,8 +1403,9 @@ function teste(){
 						<li><h4 >Gostaria de enviar uma imagem?</h4></li>
 						<li><input type="file" name="imagem" id="img_input_fiscalizacao"></li>
 						<li><img id="img_fiscalizar"  src=""/></li>
-					
+						
 				</ul>
+				<input type="hidden" name="usuario_id" value="<?php echo $id?>"/>
 				</form>
 				
 	      </div>
@@ -1443,8 +1446,9 @@ function teste(){
 					<li><h4>Adicione opções de voto: </h4></li>
 					<li><input type="text" class="form-control" name="opt_1" id="opt_1" placeholder="1ª Opção"></li>
 					<li><input type="text" class="form-control" name="opt_2" id="opt_2" placeholder="2ª Opção"></li>
+	 			
 	 			</ul>
-	
+				<input type="hidden" name="usuario_id" value="<?php echo $id?>"/>
 	 			<input type="hidden" id="qtd_opt" name="qtd_opt" value="2"/>
  			</form>
 
