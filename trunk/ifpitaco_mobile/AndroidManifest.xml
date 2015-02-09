@@ -45,11 +45,11 @@
             android:label="@string/title_activity_propor" >
         </activity>
         <activity
-       		android:name="br.edu.ifpb.activity.FiscalizarActivity"
+            android:name="br.edu.ifpb.activity.FiscalizarActivity"
             android:label="@string/title_activity_fiscalizar" >
         </activity>
         <activity
-        	android:name="br.edu.ifpb.activity.AvaliarActivity"
+            android:name="br.edu.ifpb.activity.AvaliarActivity"
             android:label="@string/title_activity_avaliar" >
         </activity>
         <activity
@@ -61,16 +61,24 @@
             android:label="@string/title_activity_avaliacoes" >
         </activity>
         <activity
-        	android:name="br.edu.ifpb.activity.FiscalizacoesActivity"
+            android:name="br.edu.ifpb.activity.FiscalizacoesActivity"
             android:label="@string/title_activity_fiscalizacoes" >
         </activity>
         <activity
-        	android:name="br.edu.ifpb.activity.PropostasActivity"
+            android:name="br.edu.ifpb.activity.PropostasActivity"
             android:label="@string/title_activity_propostas" >
         </activity>
-         <activity
-           	android:name="br.edu.ifpb.activity.CadastrarActivity"
+        <activity
+            android:name="br.edu.ifpb.activity.CadastrarActivity"
             android:label="@string/title_activity_cadastrar" >
+        </activity>
+        <activity
+            android:name="br.edu.ifpb.activity.PostActivity"
+            android:label="@string/title_activity_post" >
+        </activity>
+        <activity
+            android:name="br.edu.ifpb.activity.EnqueteActivity"
+            android:label="@string/title_activity_enquete" >
         </activity>
     </application>
 
