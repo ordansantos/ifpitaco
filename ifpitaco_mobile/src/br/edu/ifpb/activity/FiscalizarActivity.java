@@ -63,7 +63,7 @@ public class FiscalizarActivity extends Activity implements OnClickListener {
 			entidadesList.add(r.getRamoNome());
 		}
 
-		listAdapter = new ArrayAdapter<>(this,
+		listAdapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_dropdown_item, entidadesList);
 
 		spEntidades.setAdapter(listAdapter);

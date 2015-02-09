@@ -12,7 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.os.AsyncTask;
-import br.edu.ifpb.EndereÃ§oServiÃ§o;
+import br.edu.ifpb.EndereçoServiço;
 import br.edu.ifpb.entidades.Ramo;
 
 public class RamosAsyncTask extends AsyncTask<Void, Void, List<Ramo>> {
@@ -20,7 +20,7 @@ public class RamosAsyncTask extends AsyncTask<Void, Void, List<Ramo>> {
 	@Override
 	protected List<Ramo> doInBackground(Void... params) {
 		
-		String url = EndereÃ§oServiÃ§o.getEndereÃ§o()+"getRamos";
+		String url = EndereçoServiço.getEndereço()+"getRamos";
 
 		List<Ramo> ramos = new ArrayList<Ramo>();
 		

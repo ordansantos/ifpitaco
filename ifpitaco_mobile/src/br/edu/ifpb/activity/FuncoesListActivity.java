@@ -3,6 +3,7 @@ package br.edu.ifpb.activity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
 import br.edu.ifpb.ifpitaco_mobile.R;
 import android.app.Activity;
 import android.content.Intent;
@@ -34,7 +35,7 @@ public class FuncoesListActivity extends Activity {
 		
 		funcaoList.addAll(Arrays.asList(funcoes));
 		
-		listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, funcaoList);
+		listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, funcaoList);
 		
 		myListView.setAdapter(listAdapter);
 		

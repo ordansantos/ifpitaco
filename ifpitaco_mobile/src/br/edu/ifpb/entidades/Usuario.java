@@ -9,13 +9,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import br.edu.ifpb.EndereÃ§oServiÃ§o;
+import br.edu.ifpb.EndereçoServiço;
 import android.os.AsyncTask;
-import android.widget.ArrayAdapter;
+
 
 public class Usuario {
 	private static String nome;
@@ -45,7 +41,7 @@ public class Usuario {
 
             @Override
     protected String doInBackground(Void... params) {
-                    String url = EndereÃ§oServiÃ§o.getEndereÃ§o()+"getNomeById/"+id;
+                    String url = EndereçoServiço.getEndereço()+"getNomeById/"+id;
                     String content = null;
                     
                     
@@ -64,7 +60,9 @@ public class Usuario {
                     
                     try {
 						content = EntityUtils.toString(response.getEntity());
-					} catch (ParseException | IOException e) {
+					} catch (ParseException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
 						e.printStackTrace();
 					}
                     

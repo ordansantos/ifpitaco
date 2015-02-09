@@ -1,8 +1,11 @@
 package br.edu.ifpb.activity;
 
-
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,7 +29,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 	private EditText etEmail;
 	private EditText etSenha;
-	private Button btEntrar;
+	private TextView btEntrar;
 	private TextView tvCadastra;
 
 	@Override
@@ -36,7 +39,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 		etEmail = (EditText) findViewById(R.id.ETEmailUsuario);
 		etSenha = (EditText) findViewById(R.id.ETSenhaUsuario);
-		btEntrar = (Button) findViewById(R.id.BtEntrar);
+		btEntrar = (TextView) findViewById(R.id.BtEntrar);
 		tvCadastra = (TextView) findViewById(R.id.cadastroTextView);
 
 		btEntrar.setOnClickListener(this);
@@ -65,12 +68,18 @@ public class LoginActivity extends Activity implements OnClickListener {
 			HttpResponse response = null;
 
 			try {
-				JSONObject object = new JSONObject();			
+				/*JSONObject object = new JSONObject();			
 				object.put("email", etEmail.getText());
 				object.put("senha", etSenha.getText());
-				response = HttpService.sendJsonPostRequest("postLogin", object);
+				response = HttpService.sendJsonPostRequest("postLogin", object);*/
 				
-			} catch (JSONException e) {
+				String email = String.valueOf(etEmail.getText());
+				List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>();
+				nameValuePair.add(new BasicNameValuePair("email", String.valueOf( etEmail.getText() ) ) );
+				nameValuePair.add(new BasicNameValuePair("senha", String.valueOf( etSenha.getText() ) ) );
+				response = HttpService.sendParamPostRequest("postLogin", nameValuePair);
+				
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			
@@ -90,12 +99,11 @@ public class LoginActivity extends Activity implements OnClickListener {
 				Usuario u = new Usuario();
 				u.setId(id);
 				u.setNomeUsuario();
-				Toast.makeText(
-						getBaseContext(),
-						"Ol√° " + /* u.getNome()*/ ", bem vindo ao IFPitaco!",
+				Toast.makeText(getBaseContext(),
+						"Ol·! Bem vindo ao IFPitaco!",
 						Toast.LENGTH_SHORT).show();
 				Intent i = new Intent(getBaseContext(),
-						FuncoesListActivity.class);
+						PostActivity.class);
 				startActivity(i);
 			}
 

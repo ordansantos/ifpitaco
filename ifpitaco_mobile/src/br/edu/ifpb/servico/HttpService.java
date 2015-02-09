@@ -21,7 +21,7 @@ import android.util.Log;
 public class HttpService {
 
         // URL to get JSON Array
-        private static String url = "http://192.168.0.139/WebServer/";
+        private static String url = "http://192.168.0.140/WebService/";
 
         // constructor
         public HttpService() {
@@ -86,7 +86,7 @@ public class HttpService {
                 return response;
         }
 
-        public HttpResponse sendParamPostRequest(String service,
+        public static HttpResponse sendParamPostRequest(String service,
                         List<NameValuePair> nameValuePairs) {
 
                 // Response
