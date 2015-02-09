@@ -1,9 +1,9 @@
 package br.edu.ifpb;
 
-public class EndereÃ§oServiÃ§o {
-	private static String endereÃ§o = "http://192.168.0.139/WebServer/";
+public class EndereçoServiço {
+	private static String endereço = "http://192.168.0.139/WebServer/";
 
-	public static String getEndereÃ§o() {
-		return endereÃ§o;
+	public static String getEndereço() {
+		return endereço;
 	}	
 }

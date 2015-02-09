@@ -13,7 +13,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import br.edu.ifpb.EndereÃ§oServiÃ§o;
+import br.edu.ifpb.EndereçoServiço;
 import br.edu.ifpb.ifpitaco_mobile.R;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -25,13 +25,14 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class CadastrarActivity extends Activity implements OnClickListener{
 	 private EditText nome;
 	 private EditText email;
 	 private EditText senha;
-	 private Button btCadastrar;
+	 private TextView btCadastrar;
 	 
 	 @Override
 		protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,7 @@ public class CadastrarActivity extends Activity implements OnClickListener{
 			nome = (EditText) findViewById(R.id.etNomeCadastro);
 			email = (EditText) findViewById(R.id.etEmailCadastro);
 			senha = (EditText) findViewById(R.id.etSenhaCadastro);
-			btCadastrar = (Button) findViewById(R.id.btCadastrar);
+			btCadastrar = (TextView) findViewById(R.id.btCadastrar);
 			
 			btCadastrar.setOnClickListener(this);
 		}
@@ -56,7 +57,7 @@ public class CadastrarActivity extends Activity implements OnClickListener{
 	 @Override
 	 protected String doInBackground(Void... params) {
 	                    
-	           String url = EndereÃ§oServiÃ§o.getEndereÃ§o()+"postUsuario";
+	           String url = EndereçoServiço.getEndereço()+"postUsuario";
 	           String content = null;
 	                    
 	           JSONObject object = new JSONObject();
