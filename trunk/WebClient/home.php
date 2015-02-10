@@ -45,6 +45,8 @@
 		<link rel="stylesheet" type="text/css"  href="css/search.css">
 		
 		<link rel="stylesheet" type="text/css" href="css/foto_size.css">
+		
+		<script src="js/spin.js"></script>
 	</head>
 
 	
@@ -67,7 +69,6 @@ var post_comentario_more = [];
 
 /*Definindo os intervalos de Updates e carregamento de comentários mais velhos*/
 $(document).ready(function() {
-
 	
 	postLoad(); 
 	
@@ -91,9 +92,6 @@ $(document).ready(function() {
 
 	$("#proxima_enquete").hide();
 	getEnquete();
-
-	 $('[data-toggle="tooltip"]').tooltip();
-
 
 	 
 });
@@ -159,8 +157,8 @@ function likesLoad(){
 						$("#nl"+post_idx).attr('class', 'laikou');
 					}
 					
-					document.getElementById("nl"+post_idx).innerHTML = "<i class='glyphicon glyphicon-thumbs-up' aria-hidden='true'></i><span>"+data.cnt+"</span>" ;
-
+					$("#nl"+post_idx).siblings('span').html(" "+data.cnt) ;
+					
 					$("#nl"+post_idx)
 			          .attr('data-original-title', title)
 			          .tooltip('fixTitle');
@@ -199,6 +197,8 @@ function atualizaTempos (){
 	}
 }
 
+
+
 /*Sistema de Envio e carregamento de Posts*/
 
 
@@ -225,40 +225,44 @@ function novoPost (nome, ramo, id, data, comentario, foto, tipo, usuario_id, ima
 		$img = "<img class='fiscalizacao_img' src='"+imagem+"' />"
 
 	form.innerHTML = '\
-	<div class="well well-sm">\
-	 	<div class="post">\
-		 <div class="top">\
-		 <i onClick="excluirPost(this)" class="glyphicon glyphicon-remove"></i>\
-			<img class="pull-left f45x45" src="'+foto+'" >\
-			<div>\
-				<h4><a  href="userProfile.php?id='+usuario_id+'">'+toPlainText(nome)+'</a></h4>\
-				<h6><span id="ptime_'+id+'">'+tempo_passado(data)+'</span>&nbsp'+ramo+'</h6>\
-			</div>\
-		 </div>\
-		<div class="content">'+toPlainText(comentario)+'</div>\
-		'+$img+'\
-		<div class="bot">\
-			<div class="laike btn btn-lg "><div id="nl'+id+'" onClick="laikeSend(this.id)" type="button"  data-toggle="tooltip" data-placement="top">\
-					<i class="glyphicon glyphicon-thumbs-up" aria-hidden="true" ></i><span> 0</span>\
-			</div></div> \
-			<div class="btn" style="cursor:default">\
-					<span class="glyphicon glyphicon-comment" aria-hidden="true" ></i><span id="nc'+id+'"> 0</span>\
-			</div> \
-			'+tipo_icon+'\
+		<div class="well well-sm">\
+			<div class="post">\
+				<div class="top">\
+					<i onClick="excluirPost(this)" class="glyphicon glyphicon-remove"></i>\
+					<img class="pull-left f45x45" src="'+foto+'" >\
+					<div>\
+						<h4><a  href="userProfile.php?id='+usuario_id+'">'+toPlainText(nome)+'</a></h4>\
+						<h6><span id="ptime_'+id+'">'+tempo_passado(data)+'</span>&nbsp'+ramo+'</h6>\
+					</div>\
+				</div>\
+				<div class="content">'+toPlainText(comentario)+'</div>\
+				'+$img+'\
+				<div class="bot">\
+					<div class="laike btn-lg ">\
+						<div id="nl'+id+'" onClick="laikeSend(this.id)" type="button"  data-toggle="tooltip" data-placement="top">\
+							<i class="glyphicon glyphicon-thumbs-up" aria-hidden="true" ></i>\
+						</div>\
+						<span id="cc'+id+'" onClick="curiar_curtida(this.id)" rel="tooltip" data-placement="top" data-original-title="Curiar" data-toggle="modal" data-target="#list_people_laike"> 0</span>\
+					</div> \
+					<div class="btn" style="cursor:default">\
+						<span class="glyphicon glyphicon-comment" aria-hidden="true" ></i><span id="nc'+id+'"> 0</span>\
+					</div> \
+				'+tipo_icon+'\
+				</div>\
 			</div>\
 		</div>\
-	 </div>\
 	</div>\
-		<div id="pc'+id+'"></div>\
-		<div class="input-group add-on">\
+	\
+	<div id="pc'+id+'"></div>\
+	<div class="input-group add-on">\
 		<input type="text" class="form-control" placeholder="Comentar..." name="comentario" autocomplete="off" id="input'+id+'">\
-		  <div class="input-group-btn">\
-		  <button class="btn btn-default" type="submit" onClick="comentarioSend(this.form.id)"><i class="glyphicon glyphicon-share-alt"></i></button>\
-		  </div>\
-		</div>'
+		<div class="input-group-btn">\
+			<button class="btn btn-default" type="submit" onClick="comentarioSend(this.form.id)"><i class="glyphicon glyphicon-share-alt"></i></button>\
+		</div>\
+	</div>';
 	document.getElementById('feed').appendChild(form);
 	
-	
+	$("[rel='tooltip']").tooltip();
 	return form;
 }
 
@@ -324,7 +328,7 @@ function morePost(){
      			novoPost( p.nm_usuario, p.nm_ramo, p.post_id, p.data_hora, p.comentario, p.perfil, p.tipo, p.usuario_id, p.imagem);	
 
      			last_id_post = p.post_id;
-     			alert (p.post_id);
+ 
 		 }
 
       	  likesLoad();
@@ -376,13 +380,13 @@ function newPosts(){
 
 //Enviando um novo comentário
 function comentarioSend (id){
-	alert (id);
+
 	
 	
 	event.preventDefault();
 
 	if ($("#input"+id)[0].value == ''){
-		alert ('vazio');
+	
 		return;
 	}
 	
@@ -883,10 +887,34 @@ function newEnqueteClick(){
    var to_update_enquete = 0;
    var number_votes_enquete = 0;
 
+   first_call = true;
    
 function getEnquete(){
-
-
+	
+	var opts = {
+	  lines: 9, // The number of lines to draw
+	  length: 6, // The length of each line
+	  width: 4, // The line thickness
+	  radius: 8, // The radius of the inner circle
+	  corners: 1, // Corner roundness (0..1)
+	  rotate: 0, // The rotation offset
+	  direction: 1, // 1: clockwise, -1: counterclockwise
+	  color: '#000', // #rgb or #rrggbb or array of colors
+	  speed: 1.6, // Rounds per second
+	  trail: 39, // Afterglow percentage
+	  shadow: false, // Whether to render a shadow
+	  hwaccel: false, // Whether to use hardware acceleration
+	  className: 'spinner', // The CSS class to assign to the spinner
+	  zIndex: 2e9, // The z-index (defaults to 2000000000)
+	  top: '50%', // Top position relative to parent
+	  left: '50%' // Left position relative to parent
+	};
+	
+	var target = document.getElementById('spin');
+	var spinner = new Spinner(opts).spin();
+	if (!first_call)
+		target.appendChild(spinner.el);
+	first_call=false;
 	$.ajax({ 
 		type: 'GET', 
 		url: '../WebService/getEnqueteIdsWhereUserDidNotVote/'+<?php echo $id?>, 
@@ -948,6 +976,7 @@ function getEnquete(){
 					}
 				});
 			}
+			spinner.stop();
 		}
 	});
 }
@@ -1019,6 +1048,7 @@ function updateEnqueteVisualizacao(){
 				 <canvas id='myChart' width=250 ></canvas>\
 				 <div id='chartjs-tooltip'></div>\
 				 <div title='Enquete' class='glyphicon glyphicon-bullhorn enquete_icon'></div>\
+				<div class='glyphicon glyphicon-th-list curiar_enquete_icon' onClick='curiarEnquete()' rel='tooltip' data-placement='top' data-original-title='Curiar' data-toggle='modal' data-target='#list_people_laike'></div>\
 			</div>\
 			\
 	   ";
@@ -1029,11 +1059,14 @@ function updateEnqueteVisualizacao(){
 		$('#chartjs-tooltip').hide();
 		
 		drawChart (opts, qtd_opts, qtd_opt);
+
+		$("[rel='tooltip']").tooltip();
    }
 
 function proximaEnquete(){
 	getEnquete();
 }
+
 
 //Customizando o tooltip padrão para não limitar a quantidade de caracteres
 Chart.defaults.global.customTooltips = function(tooltip) {
@@ -1274,13 +1307,153 @@ function tempo_passado (t){
 	return 'agora mesmo';
 }
 
+function curiar_curtida(id){
+	id = id.replace ('cc', '');
+
+	
+	   $.ajax({ 
+		  	type: 'GET', 
+		  	url: '../WebService/curiarPost/'+id, 
+		  	data: { get_param: 'value' }, 
+		 	dataType:'json',
+			cache: false,
+		    success: function (data) { 
+
+		    	createListPeopleModal(data, 'Curiando');
+		    	
+		    },
+		    error: function (){
+		   
+		    }
+		});
+}
+
+function curiarEnquete(){
+
+   $.ajax({ 
+	  	type: 'GET', 
+	  	url: '../WebService/curiarEnquete/'+to_update_enquete, 
+	  	data: { get_param: 'value' }, 
+	 	dataType:'json',
+		cache: false,
+	    success: function (data) { 
+
+	    	createEnqueteModal (data, 'Curiando enquete');
+	    	
+	    },
+	    error: function (){
+	   
+	    }
+	});
+}
+
+function createEnqueteModal(data, titulo){
+	
+	colors = ['#F7464A', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'];
+	
+	$('#p_list_laike').remove();
+	document.getElementById('p_list_people_laike_titulo').innerHTML = titulo;
+	var ul = document.createElement ('div');
+	
+	ul.className = "list-unstyled";
+	ul.id = 'p_list_laike';
+	
+	document.getElementById('list_people_laike_div').appendChild(ul);
+
+	for (i = 1; i <= data.qtd_opt; i++){
+		
+		ul = document.createElement('ul');
+		ul.className = "list-unstyled modal_enquete_curiar";
+		ul.id = 'optv_'+i;
+		ul.style.borderColor = colors[i-1];
+		document.getElementById('p_list_laike').appendChild(ul);
+
+		
+		title = document.createElement ('li');
+		title.innerHTML = '<div><span style="color:'+colors[i-1]+'" class="glyphicon glyphicon-asterisk" aria-hidden="true"></span> '+data['opt_'+ i]+'</div>';
+		title.className = "modal_enquete_curiar_title";
+		
+		
+		document.getElementById('optv_'+i).appendChild(title);
+	}
+	
+	peoples = data.usuarios;
+	
+	for (i in peoples){
+	
+		p = peoples[i];
+		
+		var li = document.createElement ('li');
+		li.className= 'user_searched';
+		//Tamanho de cada lista
+		li.style.width = '360px';
+		li.innerHTML = '\
+			<div style="margin-left:10px">\
+			<a href="userProfile.php?id='+p.id_usuario+'">\
+			<img class="f45x45 pull-left" src="'+p.perfil+'"></img>\
+			<h3>'+p.nm_usuario+'</h3>\
+			<h5>'+p.usuario_tipo+'</h5>\
+			<\a>';
+
+		document.getElementById('optv_'+p.voto).appendChild(li);
+	}
+
+	//Se colocar o Jquery fora, não atualiza!
+	$('.user_searched').hover(function(){
+		$(this).css('background-color', 'rgba(100, 108, 164, 0.9)');
+	});
+	
+	$('.user_searched').mouseleave(function(){
+		$(this).css('background-color', 'white');
+	});
+
+}
+
+function createListPeopleModal(peoples, titulo){
+
+
+	$('#p_list_laike').remove();
+	document.getElementById('p_list_people_laike_titulo').innerHTML = titulo;
+	var ul = document.createElement ('ul');
+	ul.className = "list-unstyled";
+	ul.id = 'p_list_laike';
+	
+	document.getElementById('list_people_laike_div').appendChild(ul);
+	
+	for (i in peoples){
+		p = peoples[i];
+		
+		var li = document.createElement ('li');
+		li.className= 'user_searched ';
+		li.style.width = '350px';
+		li.innerHTML = '\
+			<div>\
+			<a href="userProfile.php?id='+p.id_usuario+'">\
+			<img class="f45x45 pull-left" src="'+p.perfil+'"></img>\
+			<h3>'+p.nm_usuario+'</h3>\
+			<h5>'+p.usuario_tipo+'</h5>\
+			<\a>';
+
+		document.getElementById('p_list_laike').appendChild(li);
+	}
+
+	//Se colocar o Jquery fora, não atualiza!
+	$('.user_searched').hover(function(){
+		$(this).css('background-color', 'rgba(100, 108, 164, 0.9)');
+	});
+	
+	$('.user_searched').mouseleave(function(){
+		$(this).css('background-color', 'white');
+	});
+
+}
 
 </script>
 
 
 	
 <body>
-
+    
 	<nav id="bar" class="navbar navbar-default">
 	  <div class="container-fluid">
 	    <div class="navbar-header">
@@ -1314,9 +1487,15 @@ function tempo_passado (t){
 		  		<!-- Profile -->
 		  		<div class="col-md-2 text-center" id="profile">
 		  			<div class="img-thumbnail">
-				  		<img src="<?php echo $foto?>"  alt="..." class="f120x120">
+				  		<a href="userProfile.php?id=<?php echo $id?>"><img src="<?php echo $foto?>"  alt="..." class="f120x120"></a>
 				  	</div>
-				  	<a href="userProfile.php?id=<?php echo $id?>"> <h2> <script>document.write(toPlainText('<?php echo $user?>'));</script ></h2></a>
+				  	<a href="userProfile.php?id=<?php echo $id?>"> <h3> <script>document.write(toPlainText('<?php echo $user?>'));</script ></h3></a>
+					<div class='left_options'>
+						<ul class="list-unstyled">
+							<a href="myProfile.php"><li><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>  Editar Perfil</li></a>
+						</ul>
+						
+					</div>
 				</div>
 				  
 				 <!-- Meio -->
@@ -1343,14 +1522,14 @@ function tempo_passado (t){
 	 			
 	 			<div class="col-md-3" id="left">
 	 				<span title="próxima" data-toggle="tooltip" data-placement="bottom" class="btn-lg btn pull-right" id="proxima_enquete" onClick="proximaEnquete()">
-	 				<span id="next" class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></span>
+	 				<span id="next" class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></span><div id="spin"></div>
 	 				
 	 				<div id="enquete_left">
 	 				</div>
 	 			
 
 	 			</div>
-
+				
 	 	</div>
 
 	</div>
@@ -1481,7 +1660,42 @@ function tempo_passado (t){
    </div>
   </div>
 	<!-- FIM MODAL CRIAR ENQUETE -->
+	
+
+    <!-- MODAL List People Laike-->
+
+    
+	<!-- Modal-->
+	<div class="modal fade" id="list_people_laike" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	
+	  <div class="modal-dialog list_people_laike">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel"><span style="cursor: initial;"id='p_list_people_laike_titulo'>Curiar</span></h4>
+	      </div>
+	      
+	      <div class="modal-body">
+	      		
+	      		<div id="list_people_laike_div">
+	      		
+	      		
+	      		</div>
+				
+	      </div>
+	      
+	      <div class="modal-footer">
+
+	        <button type="button" class="btn btn-default" onClick="resetNewEnquete()" data-dismiss="modal">Fechar</button>
+	      </div>
+	      
+	  </div>
+   </div>
+  </div>
   
  </body>
   
 </html>
+
+
+

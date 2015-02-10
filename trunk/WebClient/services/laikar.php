@@ -6,7 +6,7 @@
 	
 	session_start();
 	
-	if ($_SESSION['nm_usuario'] == '') {
+	if ($_SESSION['id_usuario'] == '') {
 		echo '0';
 		return;
 	}
