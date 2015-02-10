@@ -38,6 +38,10 @@ $app->post('/postEnquete/', 'postEnquete');
 //Envia o voto de uma enquete
 $app->post('/postVoto/', 'postVoto');
 
+$app->post('/alterarDados/', 'alterarDados');
+
+$app->post('/updateLastAccess/', 'updateLastAccess');
+
 //Retorna os ramos
 $app->get('/getRamos/', 'getRamos');
 //Retorna o nome de usuário usando seu id
@@ -68,6 +72,12 @@ $app->get('/getEnqueteIdsWhereUserDidNotVote/:usuario_id', 'getEnqueteIdsWhereUs
 $app->get('/getUsuarioById/:usuario_id', 'getUsuarioById');
 //Busca um usuário em relação a um nome
 $app->get('/getBuscaUsuario/:nome', 'getBuscaUsuario');
+
+$app->get('/curiarPost/:id', 'curiarPost');
+
+$app->get('/curiarEnquete/:id', 'curiarEnquete');
+
+$app->get('/getLastAccess/:id', 'getLastAccess');
 
 $app->run();
 
@@ -849,5 +859,172 @@ function getBuscaUsuario ($nome){
 	
 }
 
+/* Salva a foto ao cadastrar um usuário */
+function alteraFotoUsuario($id){
+
+
+	if(!empty($_FILES))
+		if ($_FILES['foto']['name']){
+			if (isset($_POST['x']) && isset($_POST['y']) && isset($_POST['w']) && isset($_POST['h']) ){
+				list($width, $height) = getimagesize($_FILES['foto']['tmp_name']);
+				$url = sendToCloudinary120_120($_FILES['foto']['tmp_name'], $_POST['x'] * $width, $_POST['y'] * $height, $_POST['w'] * $width, $_POST['h'] * $height);
+			
+				$sql = "UPDATE tb_imagem_usuario
+						SET perfil = :img
+						WHERE usuario_id = :id
+						";
+				$conn = getConn();
+				$stmt = $conn->prepare($sql);
+				$stmt->bindParam("id", $id);
+				$stmt->bindParam("img", $url);
+				$stmt->execute();
+				$conn = null;
+			}
+	}
+
+	
+	
+}
+
+function alterarDados(){
+
+	$name = $_POST['nm_usuario'];
+
+	$usuario_tipo = $_POST['usuario_tipo'];
+
+	$id = $_POST['usuario_id'];
+
+	$curso = '';
+	$ano_periodo = '';
+	$grau_academico = '';
+	
+	if(isset($_POST['curso']))
+		$curso = $_POST['curso'];
+
+	if(isset($_POST['ano_periodo']))
+		$ano_periodo = $_POST['ano_periodo'];
+
+	if(isset($_POST['grau_academico']))
+		$grau_academico = $_POST['grau_academico'];
+
+	if (strlen($name) == 0){
+		echo ERRO_STRING_VAZIA;
+		return;
+	}
+	
+	$sql = "UPDATE tb_usuario 
+			SET  nm_usuario = :nm_usuario, usuario_tipo = :usuario_tipo, 
+			curso = :curso, ano_periodo = :ano_periodo, grau_academico = :grau_academico
+			WHERE id_usuario = :id";
+	
+	$conn = getConn();
+	
+	$stmt = $conn->prepare($sql);
+	
+	
+	$stmt->bindParam("nm_usuario", $name);
+
+	$stmt->bindParam("usuario_tipo", $usuario_tipo);
+	$stmt->bindParam("curso", $curso);
+	$stmt->bindParam("ano_periodo", $ano_periodo);
+	$stmt->bindParam("grau_academico", $grau_academico);
+	$stmt->bindParam("id", $id);
+	
+
+	if ($stmt->execute()){
+		alteraFotoUsuario($id);
+		echo SUCESSO;
+	}
+	
+	else
+		echo ERRO;
+	
+	$conn = null;
+}
+
+function curiarPost($id){
+	$sql = 'SELECT u.id_usuario, i.perfil, u.nm_usuario, u.usuario_tipo 
+			FROM tb_usuario as u, tb_imagem_usuario as i, tb_laikar as l
+			WHERE u.id_usuario = i.usuario_id AND post_id = :id AND u.id_usuario = l.usuario_id';
+	$conn = getConn();
+	$stmt = $conn->prepare($sql);
+	$stmt->bindParam('id', $id);
+	
+	$stmt->execute();
+	$usuario = $stmt->fetchAll(PDO::FETCH_OBJ);
+	echo utf8_encode(json_encode($usuario));
+	$conn = null;
+}
+
+function curiarEnquete($id){
+	
+	$sql = '
+			SELECT u.id_usuario, i.perfil, u.nm_usuario, u.usuario_tipo, voto
+			FROM tb_usuario as u, tb_imagem_usuario as i, tb_enquete_voto as e
+			WHERE u.id_usuario = i.usuario_id AND e.usuario_id = u.id_usuario
+			AND e.enquete_id = :id';
+	
+	$conn = getConn();
+	$stmt = $conn->prepare($sql);
+	$stmt->bindParam('id', $id);
+	$stmt->execute();
+	$votos = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+	$votos =  '"usuarios":'.utf8_encode(json_encode($votos));
+
+	$sql = '
+			SELECT e.qtd_opt, e.opt_1, e.opt_2, e.opt_3, e.opt_4, e.opt_5
+			FROM tb_enquete as e
+			WHERE id_enquete = :id';
+	
+	$stmt = $conn->prepare($sql);
+	$stmt->bindParam('id', $id);
+	$stmt->execute();
+	$opts = $stmt->fetch(PDO::FETCH_OBJ);
+	$opts = utf8_encode(json_encode($opts));
+
+	$opts = str_replace('{', "", $opts);
+	$opts = str_replace('}', "", $opts);
+
+	$json = '{'.$opts.','.$votos.'}';
+	echo $json;
+	$conn = null;
+}
+
+function updateLastAccess(){
+	
+	$id = $_POST['usuario_id'];
+	
+	//Cria se não existe
+	getLastAccess($id);
+	
+	$sql = 'UPDATE tb_last_access SET time = now() WHERE usuario_id = :id';
+	$conn = getConn();
+	$stmt = $conn->prepare($sql);
+	$stmt->bindParam('id', $id);
+	if ($stmt->execute());
+	$conn = null;
+}
+
+function getLastAccess($id){
+	$sql = 'SELECT time FROM tb_last_access WHERE usuario_id = :id';
+	$conn = getConn();
+	$stmt = $conn->prepare($sql);
+	$stmt->bindParam('id', $id);
+	$stmt->execute();
+	$time = $stmt->fetch(PDO::FETCH_OBJ);
+	if (!$time){
+		$sql = 'INSERT INTO tb_last_access (usuario_id) VALUES (:id)';
+		$stmt = $conn->prepare($sql);
+		$stmt->bindParam('id', $id);
+		$stmt->execute();
+		getLastAccess($id);
+		$conn = null;
+		return;
+	}
+	$time = utf8_encode(json_encode($time));
+	echo $time;
+	$conn = null;
+}
 
 
