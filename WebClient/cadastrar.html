@@ -17,7 +17,7 @@
 		<link href="jcrop/css/jquery.Jcrop.css" rel="stylesheet" type="text/css" />
 		<script src="jcrop/js/jquery.Jcrop.js"></script>
 		
-		<link href="pace/themes/green/pace-theme-flash.css" rel="stylesheet" />
+		<link href="pace/themes/blue/pace-theme-barber-shop.css" rel="stylesheet" />
 		<script data-pace-options='{ "ajax": true }' src='pace/pace.js'></script>
 		<link rel="stylesheet" type="text/css"  href="css/login_border.css">
 		<script src="js/bootbox.min.js"></script>
@@ -54,7 +54,7 @@
 	    $('#y').val(c.y/height);
 	    $('#w').val(c.w/width);
 	    $('#h').val(c.h/height);
-		console.log (c.x/width+ ' ' + c.y/height+ ' ' + c.w/width+ ' ' + c.h/height+ ' ');
+		
 	};
 	
 	isThereJcrop = false;
@@ -155,10 +155,6 @@
 	$('[data-toggle="popover"]').popover();
 	$('#professor').hide();
 	
-	function clique(){
-		
-		$('.jcrop-tracker').attr('max-width', '100%');
-	}
 	</script>
  
    <body>
@@ -172,13 +168,13 @@
 	</div> 
  
 	<div class="container">	
-	 <div class="col-md-5 col-md-offset-4" style="margin-top: 5%">
-
+	
+		<div class="col-md-5 col-md-offset-4" style="margin-top: 5%">
 		  <form class="form-signin" id="form">
 	
   			<div class="form-group">
     			<label for="nm_usuario"><span class="glyphicon glyphicon glyphicon-user" aria-hidden="true"></span>Nome de Usuário</label>
-    			<input pattern="[a-zA-Z\s]+" required="required"  type="text" class="form-control" id="nm_usuario" name="nm_usuario" placeholder="Digite seu nome">
+    			<input required="required"  type="text" class="form-control" id="nm_usuario" name="nm_usuario" placeholder="Digite seu nome">
   			</div>
   			
   			<div class="form-group">
@@ -286,8 +282,8 @@
 	 </div>
 	 
 	  
-  </div>
-	 
+	</div>
+
 	 
 	
   </body>

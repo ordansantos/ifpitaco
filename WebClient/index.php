@@ -3,7 +3,7 @@
 <?php
 	session_start();
 
-	if ($_SESSION['nm_usuario'] != '') {
+	if ($_SESSION['id_usuario'] != '') {
     	header ("location: home.php");
 	}
 	

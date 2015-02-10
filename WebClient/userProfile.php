@@ -1,22 +1,22 @@
 
 
 <?php
+
 	session_start();
-	if ($_SESSION['nm_usuario'] == '') {
+	if ($_SESSION['id_usuario'] == '') {
     	header ("location: index.php");
 	}
 	
-	$user = $_SESSION['nm_usuario'];
-	$foto = $_SESSION['foto'];
+	include("services/redirect.php");
+	include("services/getRoot.php");
+	$url = getRoot();
 	$id = $_SESSION['id_usuario'];
+	$foto = redirectGet($url.'WebService/getFotoPerfilById/'.$id);
+	$user = redirectGet($url.'WebService/getNomeById/' . $id);
 ?>
 
 <?php
-	include("services/getRoot.php");
-	$url = getRoot();
-	
-	include ('services/redirect.php');
-	
+
 	$json = redirectGet($url.'WebService/getUsuarioById/'.$_GET['id']);
 
 	$usuario = json_decode($json);
@@ -67,7 +67,7 @@ function addUserToSearchList (id, nome, foto, tipo){
 	
 	li.innerHTML = '\
 		<a href="userProfile.php?id='+id+'">\
-		<img class="pull-left" src="'+foto+'"></img>\
+		<img class="f45x45 pull-left" src="'+foto+'"></img>\
 		<h3>'+nome+'</h3>\
 		<h5>'+tipo+'</h5>\
 		<\a>';
@@ -123,7 +123,7 @@ function doSearch(text) {
 			for (i = 0; i < usuariosFromBusca.length; i++){
 				u = usuariosFromBusca[i];
 				addUserToSearchList(
-					u.id_usuario, u.nm_usuario, '../'+u.perfil_45, u.usuario_tipo		
+					u.id_usuario, u.nm_usuario, u.perfil, u.usuario_tipo		
 				);
 			}
 			
@@ -216,8 +216,10 @@ $(document).ready(function(){
 		  		<!-- Profile -->
 		  		<div class="col-md-2 text-center " id="profile">
 		  			<div class="img-thumbnail">
-				  		<img src="<?php echo $foto?>"  alt="..." class="f120x120">
+				  		<a href="userProfile.php?id=<?php echo $id?>"><img src="<?php echo $foto?>"  alt="..." class="f120x120"></a>
 				  	</div>
+				  		<a href="userProfile.php?id=<?php echo $id?>"><h3><script>document.write(toPlainText('<?php echo $user?>'));</script></h3></a>
+		
 				</div>
 				  
 				 <!-- Meio -->
@@ -225,7 +227,7 @@ $(document).ready(function(){
 	 
 					<div id="feed" class="text-center">
 					
-						<img  src="<?php echo $image_perfil ?>"  alt="..." class="img-thumbnail">
+						<img  src="<?php echo $image_perfil ?>"  alt="..." class="f120x120 img-thumbnail">
 						
 						<div class="dados">
 							<h2><script>document.write(toPlainText('<?php echo $nome?>'));</script></h2>
