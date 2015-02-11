@@ -51,8 +51,7 @@
 					url: "services/login.php",
 					data : values,
 					success: function (data){
-						
-
+						console.log (data);
 						if ($.trim(data) != '0')
 							window.location.assign("home.php");
 						 else{
