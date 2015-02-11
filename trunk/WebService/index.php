@@ -462,7 +462,7 @@ function getComentariosById ($id){
 	$conn = getConn();
 	
 	$sql = "SELECT nm_usuario, id_usuario, 
-			comentario, data_hora, comentario_post_id, perfil FROM tb_usuario,
+			comentario, CONVERT_TZ(`data_hora`, @@session.time_zone, '+00:00') as data_hora, comentario_post_id, perfil FROM tb_usuario,
 			tb_comentario_post, tb_imagem_usuario WHERE tb_comentario_post.usuario_id = id_usuario 
 			AND tb_imagem_usuario.usuario_id = id_usuario AND post_id = :id ORDER BY comentario_post_id";
 	
@@ -513,7 +513,7 @@ function getNPostsLessThanMid($n, $m){
 	$conn->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
 
 	
-	$sql = "SELECT comentario, imagem, nm_usuario, nm_ramo, data_hora, post_id, perfil, tb_post.usuario_id as usuario_id, tipo
+	$sql = "SELECT comentario, imagem, nm_usuario, nm_ramo, CONVERT_TZ(`data_hora`, @@session.time_zone, '+00:00') as data_hora, post_id, perfil, tb_post.usuario_id as usuario_id, tipo
 			FROM tb_post, tb_usuario, tb_ramo, tb_imagem_usuario
 			WHERE ramo_id = id_ramo AND tb_post.usuario_id = tb_usuario.id_usuario AND 
 			tb_post.usuario_id = tb_imagem_usuario.usuario_id 
@@ -537,7 +537,7 @@ function getAllPostsGreaterThanNid($n){
 
 	$conn = getConn();
 
-	$sql = "SELECT comentario, imagem, nm_usuario, nm_ramo, data_hora, post_id, perfil, tb_post.usuario_id as usuario_id, tipo
+	$sql = "SELECT comentario, imagem, nm_usuario, nm_ramo, CONVERT_TZ(`data_hora`, @@session.time_zone, '+00:00') as data_hora, post_id, perfil, tb_post.usuario_id as usuario_id, tipo
 			FROM tb_post, tb_usuario, tb_ramo, tb_imagem_usuario
 			WHERE ramo_id = id_ramo AND tb_post.usuario_id = tb_usuario.id_usuario AND
 			tb_post.usuario_id = tb_imagem_usuario.usuario_id
@@ -565,7 +565,7 @@ function getNPosts($n){
 	$conn->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
 
 	
-	$sql = "SELECT comentario, imagem, nm_usuario, nm_ramo, data_hora, post_id, perfil, tb_post.usuario_id as usuario_id, tipo
+	$sql = "SELECT comentario, imagem, nm_usuario, nm_ramo, CONVERT_TZ(`data_hora`, @@session.time_zone, '+00:00') as data_hora, post_id, perfil, tb_post.usuario_id as usuario_id, tipo
 			FROM tb_post, tb_usuario, tb_ramo, tb_imagem_usuario
 			WHERE ramo_id = id_ramo AND tb_post.usuario_id = tb_usuario.id_usuario AND 
 			tb_post.usuario_id = tb_imagem_usuario.usuario_id 
@@ -756,7 +756,8 @@ function getEnquete($id){
 	
 	$sql = "
 		SELECT 
-		e.qtd_opt, e.opt_1, e.opt_2, e.opt_3, e.opt_4, e.opt_5, e.titulo, e.id_enquete, e.usuario_id, e.data_hora,
+		e.qtd_opt, e.opt_1, e.opt_2, e.opt_3, e.opt_4, e.opt_5, e.titulo, e.id_enquete, e.usuario_id, 
+		CONVERT_TZ(`data_hora`, @@session.time_zone, '+00:00') as data_hora,
 		i_e.imagem as e_imagem, u.nm_usuario,
 		iu.perfil,
 		
