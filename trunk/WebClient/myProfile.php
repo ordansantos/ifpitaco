@@ -99,7 +99,7 @@ function updateCoords(c)
     $('#y').val(c.y/height);
     $('#w').val(c.w/width);
     $('#h').val(c.h/height);
-	console.log (c.x/width+ ' ' + c.y/height+ ' ' + c.w/width+ ' ' + c.h/height+ ' ');
+
 };
 
 isThereJcrop = false;
@@ -127,6 +127,7 @@ function readURL(input) {
         reader.readAsDataURL(input.files[0]);
     }
 }
+
 
 
 function addUserToSearchList (id, nome, foto, tipo){
@@ -173,14 +174,27 @@ function getUsersFromBusca(nome, handleData){
 }
 
 var delayTimer;
+var gettingUsers = false;
 
 function doSearch(text) {
 
-    if( /[^a-zA-Z]/.test( text ) ) 
-		return;
+	if (gettingUsers) return;
+	gettingUsers = true;
 	
-    
-	if (text == '') return;
+	if (text == ''){
+		$('#search_list').remove();
+		$('#search_form')[0].reset();
+		clearTimeout(delayTimer);
+
+		gettingUsers = false;
+		return;
+	}
+	
+	
+    if( /[^a-zA-Z]/.test( text ) ){
+    	gettingUsers = false;
+		return;
+    }
 	
     clearTimeout(delayTimer);
     
@@ -205,11 +219,11 @@ function doSearch(text) {
 				$(this).css('background-color', 'white');
 			});
 			$('#search_list_old').remove();
-
+			gettingUsers = false;
 		});
 		
 		
-    }, 200); //Tempo após outra digidatação
+    }, 100); //Tempo após outra digidatação
     
 }
 
@@ -235,6 +249,9 @@ function doSearchSubmitted(){
 }
 
 $(document).ready(function(){
+
+	setInterval(function () {updateLastAccess()}, 1000 * 20);
+	
 	$('#search_form')[0].reset();
 	$('#search_form').focusout(function(){
 	/*	  Se desfocar em cima do form é por que clicou no filho, logo não deve ser removido
@@ -338,6 +355,11 @@ $(document).ready(function(){
 	}
 	
 });
+
+function updateLastAccess(){
+	   $.ajax({url:'services/updateLastAccess.php'});
+		  return false;
+}
 
 function option1Click(){
 	$('#professor').hide();

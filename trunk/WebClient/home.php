@@ -72,6 +72,8 @@ $(document).ready(function() {
 	
 	postLoad(); 
 	
+	setInterval(function () {updateLastAccess()}, 1000 * 20);
+	
 	setInterval(function () {comentarioLoad()}, 5000);
 	setInterval(function () {newPosts()}, 5000);
 	setInterval(function () {likesLoad()}, 5000);
@@ -1047,8 +1049,10 @@ function updateEnqueteVisualizacao(){
 				 <h4>Resultados: </h4>\
 				 <canvas id='myChart' width=250 ></canvas>\
 				 <div id='chartjs-tooltip'></div>\
-				 <div title='Enquete' class='glyphicon glyphicon-bullhorn enquete_icon'></div>\
-				<div class='glyphicon glyphicon-th-list curiar_enquete_icon' onClick='curiarEnquete()' rel='tooltip' data-placement='top' data-original-title='Curiar' data-toggle='modal' data-target='#list_people_laike'></div>\
+				 <div>\
+				 <span title='Enquete' class='glyphicon glyphicon-bullhorn enquete_icon pull-right'></span>\
+				<span class='glyphicon glyphicon-th-list curiar_enquete_icon' onClick='curiarEnquete()' rel='tooltip' data-placement='top' data-original-title='Curiar' data-toggle='modal' data-target='#list_people_laike'></span>\
+				</div>\
 			</div>\
 			\
 	   ";
@@ -1174,21 +1178,27 @@ function getUsersFromBusca(nome, handleData){
 }
 
 var delayTimer;
+var gettingUsers = false;
 
 function doSearch(text) {
 
+	if (gettingUsers) return;
+	gettingUsers = true;
+	
 	if (text == ''){
 		$('#search_list').remove();
 		$('#search_form')[0].reset();
 		clearTimeout(delayTimer);
+
+		gettingUsers = false;
+		return;
 	}
 	
 	
-    if( /[^a-zA-Z]/.test( text ) ) 
+    if( /[^a-zA-Z]/.test( text ) ){
+    	gettingUsers = false;
 		return;
-	
-    
-	if (text == '') return;
+    }
 	
     clearTimeout(delayTimer);
     
@@ -1213,11 +1223,11 @@ function doSearch(text) {
 				$(this).css('background-color', 'white');
 			});
 			$('#search_list_old').remove();
-
+			gettingUsers = false;
 		});
 		
 		
-    }, 200); //Tempo após outra digidatação
+    }, 100); //Tempo após outra digidatação
     
 }
 
@@ -1448,12 +1458,17 @@ function createListPeopleModal(peoples, titulo){
 
 }
 
+function updateLastAccess(){
+   $.ajax({url:'services/updateLastAccess.php'});
+	  return false;
+}
+
 </script>
 
 
 	
 <body>
-    
+
 	<nav id="bar" class="navbar navbar-default">
 	  <div class="container-fluid">
 	    <div class="navbar-header">
