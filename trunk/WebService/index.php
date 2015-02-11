@@ -391,7 +391,7 @@ function getIdByEmail($email){
 
 //Conexão com o banco
 function getConn(){
-	return new PDO('mysql:host=us-cdbr-iron-east-01.cleardb.net;dbname=heroku_04f2f2669f2fb67', 'bdcaf5a1821ba4', 'f4399d4d', 
+	return new PDO('mysql:host=localhost;dbname=bd_ifpitaco', 'root', '', 
 	array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
 }
 
