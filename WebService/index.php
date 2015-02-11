@@ -40,7 +40,7 @@ $app->post('/postVoto/', 'postVoto');
 
 $app->post('/alterarDados/', 'alterarDados');
 
-$app->post('/updateLastAccess/', 'updateLastAccess');
+$app->post('/postUpdateLastAccess/', 'postUpdateLastAccess');
 
 //Retorna os ramos
 $app->get('/getRamos/', 'getRamos');
@@ -336,7 +336,7 @@ function postLogin(){
 	$stmt->bindParam("senha", $_POST['senha']);
 	$stmt->execute();
 	$result = $stmt->fetch();
-	if (!$result) echo ERRO; else echo $result['id_usuario'];
+	if (!$result) echo ERRO; else{ echo $result['id_usuario']; updateLastAccess($result['id_usuario']); }
 	$conn = null;
 }
 
@@ -391,9 +391,10 @@ function getIdByEmail($email){
 
 //Conexão com o banco
 function getConn(){
-	return new PDO('mysql:host=localhost;dbname=bd_ifpitaco', 'root', '', 
+	return new PDO('mysql:host=us-cdbr-iron-east-01.cleardb.net;dbname=heroku_04f2f2669f2fb67', 'bdcaf5a1821ba4', 'f4399d4d', 
 	array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
 }
+
 
 function getFotoPerfilById($id){
 	
@@ -991,18 +992,33 @@ function curiarEnquete($id){
 	$conn = null;
 }
 
-function updateLastAccess(){
+function postUpdateLastAccess(){
 	
 	$id = $_POST['usuario_id'];
-	
-	//Cria se não existe
-	getLastAccess($id);
-	
-	$sql = 'UPDATE tb_last_access SET time = now() WHERE usuario_id = :id';
+	updateLastAccess($id);
+}
+
+function updateLastAccess($id){
+
+	$sql = 'SELECT time FROM tb_last_access WHERE usuario_id = :id';
 	$conn = getConn();
 	$stmt = $conn->prepare($sql);
 	$stmt->bindParam('id', $id);
-	if ($stmt->execute());
+	$stmt->execute();
+	$time = $stmt->fetch(PDO::FETCH_OBJ);
+	if (!$time){
+		$sql = 'INSERT INTO tb_last_access (usuario_id) VALUES (:id)';
+		$stmt = $conn->prepare($sql);
+		$stmt->bindParam('id', $id);
+		$stmt->execute();
+		$conn = null;
+		return;
+	}
+	
+	$sql = 'UPDATE tb_last_access SET time = now() WHERE usuario_id = :id';
+	$stmt = $conn->prepare($sql);
+	$stmt->bindParam('id', $id);
+	$stmt->execute();
 	$conn = null;
 }
 

@@ -14,6 +14,6 @@
 	
 	$_POST["usuario_id"] = trim($_SESSION['id_usuario']);
 	
-	echo redirectPost($url.'WebService/updateLastAccess');
+	echo redirectPost($url.'WebService/postUpdateLastAccess');
 	
 ?>

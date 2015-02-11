@@ -13,6 +13,8 @@
 	$id = $_SESSION['id_usuario'];
 	$foto = redirectGet($url.'WebService/getFotoPerfilById/'.$id);
 	$user = redirectGet($url.'WebService/getNomeById/' . $id);
+	
+
 ?>
 
 <?php
@@ -32,7 +34,7 @@
 	$ano_periodo = $usuario->ano_periodo;
 	$grau_academico = $usuario->grau_academico;
 	$image_perfil = $usuario->perfil;
-	
+	$time = redirectGet($url.'WebService/getLastAccess/'. $_GET['id']);
 ?>
 
 
@@ -60,6 +62,11 @@
 		<link rel="stylesheet" type="text/css" href="css/foto_size.css">
 	</head>
 <script>
+
+oTime = <?php echo $time?>
+
+
+
 function addUserToSearchList (id, nome, foto, tipo){
 	var li = document.createElement ('li');
 	li.id = 'user_searched_id_'+id;
@@ -104,14 +111,27 @@ function getUsersFromBusca(nome, handleData){
 }
 
 var delayTimer;
+var gettingUsers = false;
 
 function doSearch(text) {
 
-    if( /[^a-zA-Z]/.test( text ) ) 
-		return;
+	if (gettingUsers) return;
+	gettingUsers = true;
 	
-    
-	if (text == '') return;
+	if (text == ''){
+		$('#search_list').remove();
+		$('#search_form')[0].reset();
+		clearTimeout(delayTimer);
+
+		gettingUsers = false;
+		return;
+	}
+	
+	
+    if( /[^a-zA-Z]/.test( text ) ){
+    	gettingUsers = false;
+		return;
+    }
 	
     clearTimeout(delayTimer);
     
@@ -136,11 +156,11 @@ function doSearch(text) {
 				$(this).css('background-color', 'white');
 			});
 			$('#search_list_old').remove();
-
+			gettingUsers = false;
 		});
 		
 		
-    }, 200); //Tempo após outra digidatação
+    }, 100); //Tempo após outra digidatação
     
 }
 
@@ -166,6 +186,10 @@ function doSearchSubmitted(){
 }
 
 $(document).ready(function(){
+
+	setInterval(function () {updateLastAccess()}, 1000 * 20);
+	
+	tempo_passado(oTime.time);
 	$('#search_form')[0].reset();
 	$('#search_form').focusout(function(){
 	/*	  Se desfocar em cima do form é por que clicou no filho, logo não deve ser removido
@@ -179,6 +203,40 @@ $(document).ready(function(){
 	}); 
 	
 });
+
+function updateLastAccess(){
+	   $.ajax({url:'services/updateLastAccess.php'});
+		  return false;
+}
+
+function tempo_passado (t){
+
+	var d = new Date()
+	var n = d.getTimezoneOffset();
+	//timezone = n * 60 * 1000;
+	timezone = 0;
+	var maximo_tempo = 1000 * 30;
+	
+	var dt = new Date(t);
+	var now = new Date();
+	
+	time = now.getTime() - dt.getTime() + timezone;
+
+	
+	
+	if (time <= maximo_tempo){
+		$('#status').html ('online');
+		$('#status').css ('color', 'green');
+		$('#status').css ('font-size', '18px');
+	} else{
+		$('#status').html ('offline');
+		$('#status').css ('color', '#d9534f');
+		$('#status').css ('font-size', '16px');
+	}
+		
+}
+
+
 </script>
 <body>
   
@@ -231,7 +289,7 @@ $(document).ready(function(){
 						
 						<div class="dados">
 							<h2><script>document.write(toPlainText('<?php echo $nome?>'));</script></h2>
-							
+							<h5 id="status"></h5>
 							<script>
 								var tipo = '<?php echo $tipo?>';
 								if (tipo == 'Aluno'){
