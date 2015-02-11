@@ -78,7 +78,7 @@ $(document).ready(function() {
 	setInterval(function () {newPosts()}, 5000);
 	setInterval(function () {likesLoad()}, 5000);
 	setInterval(function () {updateEnqueteVisualizacao()}, 5000);
-	tintervals = setInterval(function () {atualizaTempos()}, 10000);
+	tintervals = setInterval(function () {atualizaTempos()}, 1000 * 20);
 	
 	$(window).scroll(function() {
 	
