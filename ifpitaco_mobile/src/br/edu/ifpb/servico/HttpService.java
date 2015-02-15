@@ -21,13 +21,21 @@ import android.util.Log;
 public class HttpService {
 
         // URL to get JSON Array
-        private static String url = "http://192.168.0.140/WebService/";
+        private static String url = "http://192.168.1.7/WebService/";
 
         // constructor
         public HttpService() {
+        	
         }
+        
+        
 
-        public static HttpResponse sendGETRequest(String service) {
+        public static String getUrl() {
+			return url;
+		}
+
+
+		public static HttpResponse sendGETRequest(String service) {
 
                 HttpResponse response = null;
 
