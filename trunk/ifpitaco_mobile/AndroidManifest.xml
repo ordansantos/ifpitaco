@@ -80,6 +80,10 @@
             android:name="br.edu.ifpb.activity.EnqueteActivity"
             android:label="@string/title_activity_enquete" >
         </activity>
+        <activity
+            android:name="br.edu.ifpb.activity.PerfilActivity"
+            android:label="@string/title_activity_perfil" >
+        </activity>
     </application>
 
 </manifest>

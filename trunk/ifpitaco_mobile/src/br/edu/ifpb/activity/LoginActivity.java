@@ -6,17 +6,15 @@ import java.util.List;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,10 +52,15 @@ public class LoginActivity extends Activity implements OnClickListener {
 			new PostLogin().execute();
 			break;
 		case R.id.cadastroTextView:
-			Intent i = new Intent(getBaseContext(), CadastrarActivity.class);
-			startActivity(i);
+			goToUrl("http://ifpitaco.ddns.net/cadastrar.html");
 		}
 	}
+	
+	private void goToUrl (String url) {
+        Uri uriUrl = Uri.parse(url);
+        Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+        startActivity(launchBrowser);
+    }
 
 	// Post com AsyncTask
 	private class PostLogin extends AsyncTask<Void, Void, HttpResponse> {
@@ -73,7 +76,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 				object.put("senha", etSenha.getText());
 				response = HttpService.sendJsonPostRequest("postLogin", object);*/
 				
-				String email = String.valueOf(etEmail.getText());
 				List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>();
 				nameValuePair.add(new BasicNameValuePair("email", String.valueOf( etEmail.getText() ) ) );
 				nameValuePair.add(new BasicNameValuePair("senha", String.valueOf( etSenha.getText() ) ) );
@@ -98,7 +100,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 			} else {
 				Usuario u = new Usuario();
 				u.setId(id);
-				u.setNomeUsuario();
 				Toast.makeText(getBaseContext(),
 						"Olá! Bem vindo ao IFPitaco!",
 						Toast.LENGTH_SHORT).show();

@@ -1,38 +1,78 @@
 package br.edu.ifpb.activity;
 
-import br.edu.ifpb.ifpitaco_mobile.R;
-import br.edu.ifpb.ifpitaco_mobile.R.id;
-import br.edu.ifpb.ifpitaco_mobile.R.layout;
-import br.edu.ifpb.ifpitaco_mobile.R.menu;
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
-public class EnqueteActivity extends ActionBarActivity {
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
+import br.edu.ifpb.asynctask.GetEnquetesAsyncTask;
+import br.edu.ifpb.asynctask.GetFotoPerfilAsyncTask;
+import br.edu.ifpb.ifpitaco_mobile.R;
+
+public class EnqueteActivity extends Activity implements OnClickListener{
+
+	private ListView listview;
+	private ArrayList<String> myArrayList;
+	private Button btPosts;
+	private ImageView btPerfil;
+	private Bitmap img;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_enquete);
-	}
+		
+		listview = (ListView) findViewById(R.id.listEnquetes);
+		btPosts = (Button) findViewById(R.id.btPostagensEnq);
+		btPerfil = (ImageView) findViewById(R.id.btImagemPerfilEnq);
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.enquete, menu);
-		return true;
-	}
+		listview = (ListView) findViewById(R.id.listEnquetes);
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
+		GetEnquetesAsyncTask getenqasynctask= new GetEnquetesAsyncTask();
+		GetFotoPerfilAsyncTask getFtPerfAsyncTask = new GetFotoPerfilAsyncTask();
+
+		try {
+			myArrayList = getenqasynctask.execute().get();
+			img = getFtPerfAsyncTask.execute().get();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
 		}
-		return super.onOptionsItemSelected(item);
+
+		btPerfil.setImageBitmap(img);
+		
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+				getBaseContext(), android.R.layout.simple_list_item_1,
+				myArrayList);
+
+		listview.setAdapter(adapter);
+
+		btPosts.setOnClickListener(this);
+		btPerfil.setOnClickListener(this);
+		
+	}
+
+	@Override
+	public void onClick(View v) {
+		Intent i = null;
+		switch (v.getId()) {
+		case R.id.btPostagensEnq:
+			i = new Intent(this, PostActivity.class);
+			break;
+		case R.id.btImagemPerfilEnq:
+			i = new Intent(this, PerfilActivity.class);
+			break;
+		}
+		
+		startActivity(i);
 	}
 }
