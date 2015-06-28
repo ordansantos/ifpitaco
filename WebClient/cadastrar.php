@@ -6,159 +6,40 @@
 	<head>
 		<link rel="shortcut icon" href="images/favicon.png">
   		<title>IFPitaco</title>
-  		
-		<link rel="stylesheet" type="text/css" href="css/cadastrar.css">
 		<meta charset="utf-8">
+		
+		<!-- JQuery -->
 		<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 		<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+		
+		<!-- Bootstrap -->
 		<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
 		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>	
 	
-		<!-- Ordem altera o significado-->
-		<link href="jcrop/css/jquery.Jcrop.css" rel="stylesheet" type="text/css" />
-		<script src="jcrop/js/jquery.Jcrop.js"></script>
 		
-		<link href="pace/themes/blue/pace-theme-barber-shop.css" rel="stylesheet" />
-		<script data-pace-options='{ "ajax": true }' src='pace/pace.js'></script>
-		<link rel="stylesheet" type="text/css"  href="css/login_border.css">
+		<!-- Pace cool loading plugin -->
+		<script data-pace-options='{ "ajax": true }' src='js/pace/pace.js'></script>
 		
 		<!-- Bootbox -->
 		<script src="js/bootbox/bootbox.min.js"></script>
+		
+		<!-- Cropper Plugin-->
+		<link  href="js/cropper-master/dist/cropper.css" rel="stylesheet">
+		<script src="js/cropper-master/dist/cropper.js"></script>
+		
+		<!-- Image Cropper -->
+		<script src="js/ifpitaco/tools/image_cropper.js"></script>
+		
+		<!-- cadastrar Controller -->
+		<script src="js/ifpitaco/cadastrar.js"></script>
+		
+		<!-- CSS -->
+		<link rel="stylesheet" type="text/css"  href="css/login_border.css">
+		<link rel="stylesheet" type="text/css" href="css/cadastrar.css">
+		<link href="js/pace/themes/blue/pace-theme-barber-shop.css" rel="stylesheet" />
+		
 	</head>
 
-	
-	<script type="text/javascript">
-	
-	//Não funciona quando não tem src
-	function toCrop(){
-
-		$(function(){
-		
-		    $('#img').Jcrop({
-		    	setSelect: [0,0,120,120],
-		        aspectRatio: 1,
-		        onSelect: updateCoords,
-		        onChange: updateCoords
-		    });
-		
-		});
-	}
-	
-	//Coordenadas da imagem
-	function updateCoords(c)
-	{
-		
-		var img = $(".jcrop-holder img");
-		
-		var width = img.width();
-		var height = img.height();
-		
-	    $('#x').val(c.x/width);
-	    $('#y').val(c.y/height);
-	    $('#w').val(c.w/width);
-	    $('#h').val(c.h/height);
-		
-	};
-	
-	isThereJcrop = false;
-	
-	//Mostra o preview
-	function readURL(input) {
-		
-	    if (input.files && input.files[0]) {
-	        var reader = new FileReader();
-
-	        reader.onload = function (e) {
-	        	
-	        	if (!isThereJcrop){
-	        		$("#img").show();
-	        		$('#img').attr('src', e.target.result);
-		            toCrop();
-		            isThereJcrop = true;
-	        	} else{
-	   
-	        		$('.jcrop-holder img').attr('src', e.target.result);
-	        		
-	        	}
-
-	        }
-	        reader.readAsDataURL(input.files[0]);
-	    }
-	}
-	
-	
-	function option1Click(){
-		$('#professor').hide();
-		$('#aluno').show();
-	}
-	
-	function option2Click(){
-		$('#aluno').hide();
-		$('#professor').show();
-	}
-	
-	function option3Click(){
-		$('#professor').hide();
-		$('#aluno').hide();
-	}
-	
-
-	
-	$(document).ready(function(){
-		
-		$('#pop').focusin(function (){
-			$('#pop').popover('show');
-		});
-		
-		$('#pop').focusout(function(){
-			$('#pop').popover('hide');
-		});
-		
-		$('#professor').hide();
-		$("#img").hide();
-
-		//Ao trocar o input
-		$("#foto").change(function(){
-		    readURL(this);
-		});
-		
-		$("#form").submit (function(event){
-			event.preventDefault();
-
-			$('#submit').attr ("disabled", "disabled");
-			var formData = new FormData($(this)[0]);
-			$.ajax({
-				type: "POST",
-				url: "../WebService/postUsuario",
-		        contentType: false,
-		        processData: false,
-				data: formData,
-				success: function(data){
-					
-					if ($.trim(data) != '1'){
-						$('#error').hide();
-						document.getElementById("error").innerHTML = data;
-						$('#error').fadeIn("fast", function (){
-							$('#submit').attr ("disabled", false);
-						});
-						window.scrollBy(0,200);
-					} else
-						window.location.assign("index.php");
-				}, error: function(data){
-
-					bootbox.alert("Faça o upload corretamente! Escolha uma imagem válida ou uma imagem menor que 5000 x 5000.", function() {
-						window.location.assign('cadastrar.html');
-					});
-				
-				}
-			});
-		});
-	});
-	
-	$('[data-toggle="popover"]').popover();
-	$('#professor').hide();
-	
-	</script>
  
    <body>
 
@@ -262,22 +143,21 @@
 		  <div class="form-group">
 		 
 		    <label for="foto"><span class="glyphicon glyphicon glyphicon-camera" aria-hidden="true"></span>Imagem de Perfil</label>
-			<input accept="image/x-png, image/gif, image/jpeg"type="file" id="foto" name="foto" class="button">
+			<input accept="image/x-png, image/gif, image/jpeg"type="file" id="image_input" name="foto" class="button">
 		    <p class="help-block">Escolha uma imagem para usar no seu perfil</p>
 		    
 		  </div>
-		 
-		 		 <img  class="preview" id="img" src="" />
+		 	
 		  	 <br/>
 		  
   		  <button id="submit" class="btn btn-lg btn-primary btn-block" type="submit">Cadastrar</button>
   		  	
   		  	
-  		  	<!-- Coordenadas da foto  -->
-  		    <input type="hidden" id="x" name="x" value="-1"/>
-            <input type="hidden" id="y" name="y" value="-1"/>
-            <input type="hidden" id="w" name="w" value="-1"/>
-            <input type="hidden" id="h" name="h" value="-1"/>
+  		  	<!-- Coordenadas da foto | Cropper  -->
+  		    <input type="hidden" id="crop_x" name="x" value="1"/>
+            <input type="hidden" id="crop_y" name="y" value="1"/>
+            <input type="hidden" id="crop_w" name="w" value="1"/>
+            <input type="hidden" id="crop_h" name="h" value="1"/>
   		  
 		  </form> 
 		<br/>
@@ -287,7 +167,24 @@
 	  
 	</div>
 
-	 
+	<!-- MODAL CROPPER -->
+	<div class="modal fade" id="cropper-modal">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+
+	      <div class="modal-body">
+	        <div>
+	          <img id="img_to_crop">
+	        </div>
+	      </div>
+	      
+		<div class="modal-footer">
+	      	<button type="button" class="btn btn-primary" data-dismiss="modal">Cortar</button>
+	      </div>
+	      
+	    </div>
+	  </div>
+	</div>
 	
   </body>
   

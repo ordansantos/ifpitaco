@@ -1,6 +1,8 @@
 
 /**
  * Realiza o login 
+ * Chamado por:
+ * 	index.php
  */
 
 

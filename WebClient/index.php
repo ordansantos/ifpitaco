@@ -80,7 +80,7 @@
 	        		<button class="btn btn-lg btn-primary btn-block" id="login" type="submit">Log in</button>
 	        	</div>
 	        	<div class="col-xs-6">
-	        		<button onClick="parent.location='cadastrar.html'" id="signup" class="btn btn-lg btn-success btn-block" type="button">Sign up</button>
+	        		<button onClick="parent.location='cadastrar.php'" id="signup" class="btn btn-lg btn-success btn-block" type="button">Sign up</button>
 		  		</div>
 		  	</div>
 	    	
