@@ -25,28 +25,34 @@
   		<meta charset="utf-8"/>
   		<link rel="shortcut icon" href="images/favicon.png">
   		<title>IFPitaco</title>
+  		
 		<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
-	
 		<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 		<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
 		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+		
+		<script src="js/ifpitaco/toPlainText.js"></script>
+		
+		<!-- Verifica se elemento está visível -->
+		<script src="js/jquery_visible/jquery-visible.min.js"></script>
+		
+		<!--http://www.chartjs.org/docs/ | Gráfico pizza-->
+		<script src="js/Chart/Chart.js"></script>
+
+		<!-- Ícone de carregamento de enquete -->
+		<script src="js/spin/spin.js"></script>
+		
+		<!-- Bootbox -->
+		<script src="js/bootbox/bootbox.min.js"></script>
+		
+		<!-- CSS -->
+		<link rel="stylesheet" type="text/css" href="css/tooltip_chart_customized.css">
+		<link rel="stylesheet" type="text/css" href="css/search.css">
+		<link rel="stylesheet" type="text/css" href="css/foto_size.css">
+		<link rel="stylesheet" type="text/css" href="css/enquete_form.css">
 		<link rel="stylesheet" type="text/css" href="css/home.css">
 		<link rel="stylesheet" type="text/css" href="css/comentario.css">
-		<script src="js/bootbox.min.js"></script>
-		
-		<script src="js/jquery-visible.min.js"></script>
-		<script src="js/toPlainText.js"></script>
-		<link rel="stylesheet" type="text/css"  href="css/enquete_form.css">
-		
-		<!--http://www.chartjs.org/docs/-->
-		<script src="Chart/Chart.js"></script>
-		<link rel="stylesheet" type="text/css"  href="css/tooltip_chart_customized.css">
-		
-		<link rel="stylesheet" type="text/css"  href="css/search.css">
-		
-		<link rel="stylesheet" type="text/css" href="css/foto_size.css">
-		
-		<script src="js/spin.js"></script>
 	</head>
 
 	

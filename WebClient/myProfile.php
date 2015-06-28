@@ -39,7 +39,8 @@
 <html>
 
 	<head>
-		<script src="js/bootbox.min.js"></script>
+		<!-- Bootbox -->
+		<script src="js/bootbox/bootbox.min.js"></script>
 		
 		<link rel="stylesheet" type="text/css"  href="css/login_border.css">
 		<link rel="stylesheet" type="text/css"  href="css/my_profile.css">
@@ -53,7 +54,7 @@
 		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 		
 		
-		<script src="js/toPlainText.js"></script>
+		<script src="js/ifpitaco/toPlainText.js"></script>
 		
 		<link rel="stylesheet" type="text/css"  href="css/user_profile.css">
 		<link rel="stylesheet" type="text/css"  href="css/search.css">

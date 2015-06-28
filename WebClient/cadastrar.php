@@ -13,6 +13,7 @@
 		<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 		<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
 		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>	
+	
 		<!-- Ordem altera o significado-->
 		<link href="jcrop/css/jquery.Jcrop.css" rel="stylesheet" type="text/css" />
 		<script src="jcrop/js/jquery.Jcrop.js"></script>
@@ -20,7 +21,9 @@
 		<link href="pace/themes/blue/pace-theme-barber-shop.css" rel="stylesheet" />
 		<script data-pace-options='{ "ajax": true }' src='pace/pace.js'></script>
 		<link rel="stylesheet" type="text/css"  href="css/login_border.css">
-		<script src="js/bootbox.min.js"></script>
+		
+		<!-- Bootbox -->
+		<script src="js/bootbox/bootbox.min.js"></script>
 	</head>
 
 	

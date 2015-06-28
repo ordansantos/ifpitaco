@@ -1,5 +1,4 @@
 
-
 <?php
 	session_start();
 
@@ -16,62 +15,32 @@
 <html>
  
 	<head>
+	
 	 	<link rel="shortcut icon" href="images/favicon.png">
   		<title>IFPitaco</title>
 		<meta charset="utf-8"/>
+		
+		<!-- JQuery -->
 		<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 		<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+		
+		<!-- Bootstrap -->
 		<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
 		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 		
+		<!-- Services -->
+		<script type="text/javascript" src="js/ifpitaco/services/login.js"></script>
+		
+		<!-- CSS -->
 		<link rel="stylesheet" type="text/css"  href="css/index.css">
 		<link rel="stylesheet" type="text/css"  href="css/login_border.css">
 		
-		
-
-  		
 	</head>
 
-	
-	<script type="text/javascript">
-
-
-		      
-	 $(document).ready(function() {
-		 
-		 $("#form").submit (function(event){
-			 	
-			 	event.preventDefault();
-				var teste;
-			 	$('#login').attr ("disabled", "disabled");
-			 	
-				var values = $(this).serialize();
-				$.ajax({		
-					type: "POST",
-					url: "services/login.php",
-					data : values,
-					success: function (data){
-						if ($.trim(data) != '0')
-							window.location.assign("home.php");
-						 else{
-							$('#error').hide();
-							$('#error').fadeIn("fast", function (){
-								$('#login').attr ("disabled", false);
-							});
-						 }
-					},
-					error: function (data){
-						console.log (data);					
-					}
-				});
-				
-	 	});
-		 
-	 });
-	</script>
 
 
   <body>
+  
   	<div id="bar">
 	  <div class="container-fluid">
 	      <a class="navbar-header" href="index.php">
@@ -89,9 +58,6 @@
 		<div class="col-md-4 col-sm-push-2" >
 		 
 	      <form class="form-signin" id="form">
-	        
-
-
 
 	        <label for="inputEmail" class="sr-only">Email address</label>
 	        
@@ -124,9 +90,6 @@
 		</div>
 	</div>
 	
-	
-	
-
 
   </body>
   

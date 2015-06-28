@@ -55,7 +55,7 @@
 		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 		
 		
-		<script src="js/toPlainText.js"></script>
+		<script src="js/ifpitaco/toPlainText.js"></script>
 		
 		<link rel="stylesheet" type="text/css"  href="css/user_profile.css">
 		<link rel="stylesheet" type="text/css"  href="css/search.css">
