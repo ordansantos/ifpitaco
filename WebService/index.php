@@ -1,7 +1,7 @@
 
 
 <?php
-require '../Slim/Slim/Slim.php';
+require './Slim/Slim/Slim.php';
 \Slim\Slim::registerAutoloader();
 $app = new \Slim\Slim();
 //$app->response()->header('Content-Type', 'application/json;charset=utf-8');
@@ -391,7 +391,7 @@ function getIdByEmail($email){
 
 //Conexão com o banco
 function getConn(){
-	return new PDO('mysql:host=localhost;dbname=bd_ifpitaco', 'root', '', 
+	return new PDO('mysql:host=localhost;dbname=bd_ifpitaco', 'ifpitaco', 'ifpitacopass', 
 	array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
 }
 
