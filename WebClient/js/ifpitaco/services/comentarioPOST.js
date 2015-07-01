@@ -19,7 +19,7 @@ function comentarioPOST (id){
 					window.location.assign("index.php");
 				});
 			else{
-				COMENTARIO.load();
+				COMENTARIO.load(id);
 			}
 		});
 		document.getElementById(id).reset();

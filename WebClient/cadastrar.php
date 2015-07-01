@@ -34,7 +34,7 @@
 		<script src="js/ifpitaco/cadastrarController.js"></script>
 		
 		<!-- cadastrar Ajax -->
-		<script src="js/ifpitaco/services/cadastrarAjax.js"></script>
+		<script src="js/ifpitaco/services/cadastrarPOST.js"></script>
 		
 		<!-- CSS -->
 		<link rel="stylesheet" type="text/css"  href="css/login_border.css">

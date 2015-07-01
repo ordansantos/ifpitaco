@@ -3,8 +3,8 @@
  */
 	
 
-//Matriz de posts, cada linha possui o id dos comentários
-var post_array = [];
+//Vetor de índice de posts
+var postArray = [];
 
 (function(){
 
@@ -15,7 +15,7 @@ var post_array = [];
 		
 		postLoad(); 
 		
-		setInterval(function () {COMENTARIO.load(post_array)}, 5000);
+		setInterval(function () {postReload()}, 5000);
 		setInterval(function () {newPosts()}, 5000);
 		setInterval(function () {likesLoad()}, 5000);
 		tintervals = setInterval(function () {atualizaTempos()}, 1000 * 20);
@@ -102,10 +102,30 @@ function novoPost (post){
 	return form;
 }
 
+function postReload(){
+
+		for (p in postArray){
+			  
+			  /**
+			   * Verifica se o post é visível e assim atualiza seus comentários
+			  */
+				if (document.getElementById(postArray[p]) == null)
+					console.log(postArray[p]);
+			  if(!$('#'+postArray[p]).visible(true)){
+				  continue;
+			  }
+			 
+		    COMENTARIO.load(postArray[p]);
+		   
+		}
+
+}
+
 //Carregando novos 'laikes'
 function likesLoad(){
 	
-  for (post_idx in post_array){
+  for (p in postArray){
+	  post_idx = postArray[p];
 	  
 	  if(!$('#'+post_idx).visible(true)){
 	
@@ -168,16 +188,17 @@ function postLoad(){
           	if (i == 0)
           		first_id_post = post.post_id;
 				
-				post_array[post.post_id] = [];
+				postArray.push (post.post_id);
 				post_user[post.post_id] = post.usuario_id;
 				
      			novoPost( post );	
      			
      			last_id_post = post.post_id;
+     			
+     			COMENTARIO.load(post.post_id);
 			}
       	 
       	$('#feed').fadeIn(400);
-     	COMENTARIO.load();
       	likesLoad();
       }
   });
@@ -215,18 +236,17 @@ function morePost(){
 	
 	     	 		//Json
 	        		post = data.posts[i];
-	
-					post_array[post.post_id] = [];
+	        		postArray.push(post.post_id);
 					post_user[post.post_id] = post.usuario_id;
 					
 	   			novoPost( post);	
 	
 	   			last_id_post = post.post_id;
+	   			COMENTARIO.load(post.post_id);
 	
 			 }
 	
 	    	  likesLoad();
-	    	  COMENTARIO.load();
 	    	isInAjax = false;
 	    }
 	});
@@ -246,7 +266,7 @@ function newPosts(){
 	    	 for (i = 0; i < data.posts.length; i++){
 	        		post = data.posts[i];
 	        		
-					post_array[post.post_id] = [];
+	        		postArray.push(post.post_id);
 					post_user[post.post_id] = post.usuario_id;
 	   			form = novoPost( post );	
 	
@@ -256,11 +276,10 @@ function newPosts(){
 					
 	   			first_id_post = post.post_id;
 	
-	   			
+	   			COMENTARIO.load(post.post_id);
 				}
 				if (data.posts.length != 0){
 					likesLoad();
-				  	COMENTARIO.load();
 				}
 	   
 	    }
@@ -285,8 +304,7 @@ function excluirPost(sender){
 						
 						callback: function(){ 
 							$('#'+id).remove();
-			
-							delete post_array[id];
+							postArray.splice(postArray.indexOf(id), 1);
 							delete data_post[id];
 				
 						}
@@ -304,7 +322,7 @@ function excluirPost(sender){
 						callback: function(){
 							
 							$('#'+id).remove();
-							delete post_array[id];
+							postArray.splice(postArray.indexOf(id), 1);
 							delete data_post[id];
 							$.param({post_id: id});
 							a = $.post ("services/deletarPost.php", {post_id: id});
