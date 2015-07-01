@@ -31,7 +31,10 @@
 		<script src="js/ifpitaco/tools/image_cropper.js"></script>
 		
 		<!-- cadastrar Controller -->
-		<script src="js/ifpitaco/cadastrar.js"></script>
+		<script src="js/ifpitaco/cadastrarController.js"></script>
+		
+		<!-- cadastrar Ajax -->
+		<script src="js/ifpitaco/services/cadastrarAjax.js"></script>
 		
 		<!-- CSS -->
 		<link rel="stylesheet" type="text/css"  href="css/login_border.css">

@@ -29,7 +29,7 @@
 		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 		
 		<!-- Services -->
-		<script type="text/javascript" src="js/ifpitaco/services/login.js"></script>
+		<script type="text/javascript" src="js/ifpitaco/services/loginAjax.js"></script>
 		
 		<!-- CSS -->
 		<link rel="stylesheet" type="text/css"  href="css/index.css">
