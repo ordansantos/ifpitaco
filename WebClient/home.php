@@ -67,6 +67,8 @@
 		
 		<script src="js/ifpitaco/postForm.js"></script>
 		<script src="js/ifpitaco/tempoController.js"></script>
+		<script src="js/ifpitaco/enqueteForm.js"></script>
+		<script src="js/ifpitaco/services/enquetePOST.js"></script>
 	</head>
 
 	
@@ -92,112 +94,6 @@ $(document).ready(function() {
 });
 
 var data_enquete;
-/*SISTEMA DE ENVIO DE UMA NOVA ENQUETE*/
-$(document).ready(function() {
-	
-
-	$("#img_input_new_enquete").change(function(){
-	    readUrlFromEnquete(this);
-	});
-	
-	resetNewEnquete();
-	$("#img_new_enquete").hide();
-});
-
-
-function readUrlFromEnquete(input) {
-
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-
-        reader.onload = function (e) {
-     
-            $('#img_new_enquete').attr('src', e.target.result);
-            $("#img_new_enquete").fadeIn("slow");
-        }
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-
-function resetNewEnquete(){
-	
-	$("#form_new_enquete")[0].reset();
-	for (i = qtd_opt; i > 2; i--){
-		$('#opt_'+i).remove();
-		$('#l_'+i).remove();
-	}
-	qtd_opt = 2;
-	$("#img_new_enquete").hide();
-	$('#less').hide();
-	$('#more').show();
-}
-
-var qtd_opt = 2;
-
-function more(){
-	if (qtd_opt == 2) $('#less').show();
-	qtd_opt++;
-	
-	var form = "<input type='text' class='form-control' name='opt_"+qtd_opt+"' id='opt_"+qtd_opt+"' placeholder='"+qtd_opt+"ª Opção'>"
-	
-	var li = document.createElement ('li');
-	li.id = "l_"+qtd_opt;
-	li.innerHTML = form;
-	document.getElementById('lista').appendChild(li);
-	
-	$('#qtd_opt').val(qtd_opt);
-	
-	if (qtd_opt == 5) $('#more').hide();
-	
-}
-
-function less(){
-	
-	if (qtd_opt == 5)  $('#more').show();
-	
-	$('#opt_'+qtd_opt).remove();
-	$('#l_'+qtd_opt).remove();
-	qtd_opt--;
-	
-	$('#qtd_opt').val(qtd_opt);
-	
-	if (qtd_opt == 2) $('#less').hide();
-}
-
-function newEnqueteClick(){
-
-	if (document.getElementById('titulo').value == ''){
-		bootbox.alert("<h4><strong>Dê um título a sua enquete!</strong></h4>");
-		return;
-	}
-	for ( i = 1; i <= qtd_opt; i++){
-		if (document.getElementById('opt_'+i).value == ''){
-			bootbox.alert("<h4><strong>Preencha todas as opções de voto!</strong></h4>");
-			return;
-		}
-	}
-
-	
-	var formData = new FormData($("#form_new_enquete")[0]);
-	$.ajax({
-		type: "POST",
-		url: "../WebService/postEnquete",
-        contentType: false,
-        processData: false,
-		data: formData,
-		success: function(data){
-	
-			if (data.trim() != '0'){
-				novaEnqueteForm(data);
-			}
-				
-		}, error: function(data){
-
-		}
-	});
-	
-	resetNewEnquete();
-}
 
 /*SISTEMA DE ENVIO DE VOTO E CARREGAMENTO DE ENQUETES*/
 
@@ -541,6 +437,50 @@ function drawChart(opts, qtd_opts, qtd_opt){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function addUserToSearchList (id, nome, foto, tipo){
 	var li = document.createElement ('li');
 	li.id = 'user_searched_id_'+id;
@@ -583,6 +523,7 @@ function getUsersFromBusca(nome, handleData){
 	    }
 	});
 }
+
 
 var delayTimer;
 var gettingUsers = false;
@@ -1067,15 +1008,15 @@ function updateLastAccess(){
 
 
 
-			<button type="button" class = "btn btn-primary " id="more" onClick="more()">Add <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button> 
-			<button type="button" class = "btn btn-danger " id="less" onClick="less()"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span> </button>
+			<button type="button" class = "btn btn-primary " id="more" onClick="ENQUETEFORM.more()">Add <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button> 
+			<button type="button" class = "btn btn-danger " id="less" onClick="ENQUETEFORM.less()"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span> </button>
 
 				
 	      </div>
 	      
 	      <div class="modal-footer">
 	      	<button type="button" class="btn btn-primary" onClick="newEnqueteClick(); " data-dismiss="modal">Enviar</button>
-	        <button type="button" class="btn btn-default" onClick="resetNewEnquete()" data-dismiss="modal">Fechar</button>
+	        <button type="button" class="btn btn-default" onClick="ENQUETEFORM.resetNewEnquete()" data-dismiss="modal">Fechar</button>
 	      </div>
 	      
 	  </div>
@@ -1108,7 +1049,7 @@ function updateLastAccess(){
 	      
 	      <div class="modal-footer">
 
-	        <button type="button" class="btn btn-default" onClick="resetNewEnquete()" data-dismiss="modal">Fechar</button>
+	        <button type="button" class="btn btn-default" onClick="ENQUETEFORM.resetNewEnquete()" data-dismiss="modal">Fechar</button>
 	      </div>
 	      
 	  </div>
