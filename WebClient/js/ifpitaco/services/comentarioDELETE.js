@@ -3,7 +3,7 @@
  */
 
 /*Sistema para excluir um comentário*/
-function excluirComentario(id){
+function comentarioDELETE(id){
 
 	id = id.replace ('c', '');
 	

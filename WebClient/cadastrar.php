@@ -31,7 +31,7 @@
 		<script src="js/ifpitaco/tools/image_cropper.js"></script>
 		
 		<!-- cadastrar Controller -->
-		<script src="js/ifpitaco/cadastrarController.js"></script>
+		<script src="js/ifpitaco/cadastrarForm.js"></script>
 		
 		<!-- cadastrar Ajax -->
 		<script src="js/ifpitaco/services/cadastrarPOST.js"></script>

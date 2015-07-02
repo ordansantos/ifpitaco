@@ -59,6 +59,14 @@
 		<script src="js/ifpitaco/services/comentarioDELETE.js"></script>
 		<script src="js/ifpitaco/services/comentarioPOST.js"></script>
 		<script src="js/ifpitaco/comentarioController.js"></script>
+		<script src="js/ifpitaco/services/fiscalizacaoPOST.js"></script>
+		<script src="js/ifpitaco/services/propostaPOST.js"></script>
+		<script src="js/ifpitaco/services/postDELETE.js"></script>
+		<script src="js/ifpitaco/likesController.js"></script>
+		<script src="js/ifpitaco/services/laikePOST.js"></script>
+		
+		<script src="js/ifpitaco/postForm.js"></script>
+		<script src="js/ifpitaco/tempoController.js"></script>
 	</head>
 
 	
@@ -83,7 +91,7 @@ $(document).ready(function() {
 	 
 });
 
-
+var data_enquete;
 /*SISTEMA DE ENVIO DE UMA NOVA ENQUETE*/
 $(document).ready(function() {
 	
@@ -975,7 +983,7 @@ function updateLastAccess(){
 	      </div>
 	      
 	      <div class="modal-footer">
-	      	<button type="button" class="btn btn-primary" onClick="propostaClick()" data-dismiss="modal">Enviar</button>
+	      	<button type="button" class="btn btn-primary" onClick="propostaPOST()" data-dismiss="modal">Enviar</button>
 	        <button type="button" class="btn btn-default" onClick="resetProposta()" data-dismiss="modal">Fechar</button>
 	      </div>
 	      
@@ -1016,7 +1024,7 @@ function updateLastAccess(){
 	      </div>
 	      
 	      <div class="modal-footer">
-	      	<button type="button" class="btn btn-primary" onClick="fiscalizacaoClick()" data-dismiss="modal">Enviar</button>
+	      	<button type="button" class="btn btn-primary" onClick="fiscalizacaoPOST()" data-dismiss="modal">Enviar</button>
 	        <button type="button" class="btn btn-default" onClick="resetFiscalizacao()" data-dismiss="modal">Fechar</button>
 	      </div>
 	      
