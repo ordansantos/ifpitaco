@@ -8,9 +8,7 @@ POST = (function(){
 	
 	var postObject = {};
 	
-	var this_js_script = $('script[src*=somefile]'); 
-	
-	postObject.usuario_id = this_js_script.attr('data-usuario_id');
+	postObject.usuario_id = SESSION.getUsuarioId();
 	
 	//Vetor de índice de posts
 	postObject.postArray = [];

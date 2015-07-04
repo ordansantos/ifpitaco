@@ -21,6 +21,8 @@ POSTFORM = (function(){
 		
 		postform.resetFiscalizacao();
 		
+		postform.addRamos();
+		
 	});
 	
 	//Mostra o preview da imagem da fiscalização
@@ -38,38 +40,42 @@ POSTFORM = (function(){
 	    }
 	}
 	
-	//Adicionando os ramos aos formulários
-	$.get("../WebService/getRamos", function(data, status){
+	postform.addRamos = function(){
 		
-		var ramos = JSON.parse(data).ramos;
-		var form1 = document.getElementById("form_ramos_proposta");
-		var form2 = document.getElementById("form_ramos_fiscalizacao");
-		
-		for (i = 0; i < ramos.length; i++){
+		//Adicionando os ramos aos formulários
+		$.get("../WebService/getRamos", function(data, status){
 			
-			var t = ramos[i].nm_ramo.split(":");
+			var ramos = JSON.parse(data).ramos;
+			var form1 = document.getElementById("form_ramos_proposta");
+			var form2 = document.getElementById("form_ramos_fiscalizacao");
 			
-			if (i == 0 || (i > 0 && t[0] != ramos[i-1].nm_ramo.split(":")[0])){
-				var optgroup = document.createElement("optgroup");
-				optgroup.label = t[0];
-				form1.add(optgroup);
-				optgroup = document.createElement("optgroup");
-				optgroup.label = t[0];
-				form2.add(optgroup);
+			for (i = 0; i < ramos.length; i++){
+				
+				var t = ramos[i].nm_ramo.split(":");
+				
+				if (i == 0 || (i > 0 && t[0] != ramos[i-1].nm_ramo.split(":")[0])){
+					var optgroup = document.createElement("optgroup");
+					optgroup.label = t[0];
+					form1.add(optgroup);
+					optgroup = document.createElement("optgroup");
+					optgroup.label = t[0];
+					form2.add(optgroup);
+				}
+				
+				
+				var option = document.createElement("option");
+				option.value = ramos[i].id_ramo;
+				option.text = ramos[i].nm_ramo.split(":")[1];
+				form1.add(option);
+				
+				option = document.createElement("option");
+				option.value = ramos[i].id_ramo;
+				option.text = ramos[i].nm_ramo.split(":")[1];
+				form2.add(option);
 			}
-			
-			
-			var option = document.createElement("option");
-			option.value = ramos[i].id_ramo;
-			option.text = ramos[i].nm_ramo.split(":")[1];
-			form1.add(option);
-			
-			option = document.createElement("option");
-			option.value = ramos[i].id_ramo;
-			option.text = ramos[i].nm_ramo.split(":")[1];
-			form2.add(option);
-		}
-	});
+		});
+		
+	}
 	
 	postform.resetFiscalizacao = function(){
 		$("#img_fiscalizar").hide();

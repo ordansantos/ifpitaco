@@ -3,6 +3,8 @@
  */
 
 function newEnqueteClick(){
+	
+	if (!ENQUETEFORM.check()) return;
 
 	var formData = new FormData($("#form_new_enquete")[0]);
 	$.ajax({
@@ -14,7 +16,8 @@ function newEnqueteClick(){
 		success: function(data){
 	
 			if (data.trim() != '0'){
-				novaEnqueteForm(data);
+
+				ENQUETECONTROLLER.novaEnqueteForm(data);
 			}
 				
 		}, error: function(data){

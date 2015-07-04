@@ -68,7 +68,7 @@ ENQUETEFORM = (function(){
 			return false;
 		}
 		
-		for ( i = 1; i <= qtd_opt; i++){
+		for ( i = 1; i <= enqueteform.qtd_opt; i++){
 			if (document.getElementById('opt_'+i).value == ''){
 				bootbox.alert("<h4><strong>Preencha todas as opções de voto!</strong></h4>");
 				return false;

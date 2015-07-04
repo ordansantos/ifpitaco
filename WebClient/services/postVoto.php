@@ -1,5 +1,4 @@
 <?php
-	
 	include ('redirect.php');
 	include("getRoot.php");
 	$url = getRoot();
@@ -13,7 +12,6 @@
 	
 	$_POST["usuario_id"] = trim($_SESSION['id_usuario']);
 	
-
 	echo redirectPost ($url.'WebService/postVoto');
 
 ?>
