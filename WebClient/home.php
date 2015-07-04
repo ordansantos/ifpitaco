@@ -32,7 +32,7 @@ $user = redirectGet($url . 'WebService/getNomeById/' . $id);
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
 
-        <script src="js/ifpitaco/toPlainText.js"></script>
+        <script src="js/ifpitaco/tools/htmlentities.js"></script>
 
         <!-- Verifica se elemento está visível -->
         <script src="js/jquery_visible/jquery-visible.min.js"></script>

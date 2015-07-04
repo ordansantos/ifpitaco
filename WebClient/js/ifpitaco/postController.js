@@ -198,11 +198,11 @@ POST = (function () {
                 '<i onClick="postDELETE(this)" class="glyphicon glyphicon-remove"></i>' +
                 '<img class="pull-left f45x45" src="' + post.perfil + '" >' +
                 '<div>' +
-                '<h4><a  href="userProfile.php?id=' + post.usuario_id + '">' + toPlainText(post.nm_usuario) + '</a></h4>' +
+                '<h4><a  href="userProfile.php?id=' + post.usuario_id + '">' + htmlentitiesJS(post.nm_usuario) + '</a></h4>' +
                 '<h6><span id="ptime_' + post.post_id + '">' + TEMPO.tempoPassado(post.data_hora) + '</span>&nbsp' + post.nm_ramo + '</h6>' +
                 '</div>' +
                 '</div>' +
-                '<div class="content">' + toPlainText(post.comentario) + '</div>' +
+                '<div class="content">' + htmlentitiesJS(post.comentario) + '</div>' +
                 img +
                 '<div class="bot">' +
                 '<div class="laike btn-lg ">' +

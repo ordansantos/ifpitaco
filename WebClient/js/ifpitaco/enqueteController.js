@@ -46,10 +46,10 @@ ENQUETE = (function () {
         enquete.innerHTML = "\
 			 <div class='e_top'>\
 				<img class='f45x45 pull-left img-circle' src='" + data.perfil + "'>\
-					<a href='userProfile.php?id=" + data.usuario_id + "'><div class='nome_user'>" + toPlainText(data.nm_usuario) + "</div></a>\
+					<a href='userProfile.php?id=" + data.usuario_id + "'><div class='nome_user'>" + htmlentitiesJS(data.nm_usuario) + "</div></a>\
 					<div class='data'><span id='etime'>" + TEMPO.tempoPassado(data.data_hora) + "</span></div>\
 				 </div>\
-				 <div class='titulo'>" + toPlainText(data.titulo) + "</div>\
+				 <div class='titulo'>" + htmlentitiesJS(data.titulo) + "</div>\
 				 " + imagem + "\
 				 <form id='form_enquete' class='form-horizontal'>\
 				 </form>\
@@ -68,7 +68,7 @@ ENQUETE = (function () {
             o.innerHTML = "\
 				<label>\
 					<input type='radio' name='voto' value='" + (i + 1) + "' " + (i == 0 ? 'checked' : '') + ">\
-					" + toPlainText(opts[i]) + "\
+					" + htmlentitiesJS(opts[i]) + "\
 				</label>\
 			";
 
@@ -254,10 +254,10 @@ ENQUETE = (function () {
         enquete.innerHTML = "\
    			 <div class='e_top'>\
    				<img class='f45x45 pull-left img-circle' src='" + data.perfil + "'>\
-   				<a href='userProfile.php?id=" + data.usuario_id + "'><div class='nome_user'>" + toPlainText(data.nm_usuario) + "</div></a>\
+   				<a href='userProfile.php?id=" + data.usuario_id + "'><div class='nome_user'>" + htmlentitiesJS(data.nm_usuario) + "</div></a>\
    					<div class='data'><span id='etime'>" + TEMPO.tempoPassado(data.data_hora) + "</span></div>\
    				 </div>\
-   				 <div class='titulo'>" + toPlainText(data.titulo) + "</div>\
+   				 <div class='titulo'>" + htmlentitiesJS(data.titulo) + "</div>\
    				 " + imagem + "\
    				 <h4>Resultados: </h4>\
    				 <canvas id='myChart' width=250 ></canvas>\
