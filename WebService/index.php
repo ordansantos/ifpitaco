@@ -1039,9 +1039,21 @@ function getLastAccess($id){
 		$conn = null;
 		return;
 	}
-	$time = utf8_encode(json_encode($time));
-	echo $time;
-	$conn = null;
+        
+
+	$check = utf8_encode(json_encode(isOnline($time->time)));
+        
+	echo $check;
+        
+
+}
+
+function isOnline ($time){
+    
+    $now = new DateTime();
+    $access = new DateTime($time);
+    
+    return ['check' => ($now->getTimestamp() - $access->getTimestamp()) <= 120? 'online' : 'offline'];
 }
 
 

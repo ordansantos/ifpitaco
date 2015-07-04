@@ -4,7 +4,7 @@
 
 
 
-ENQUETECONTROLLER = (function(){
+ENQUETE = (function(){
 
 	var enqueteObject = {};
 
@@ -45,7 +45,7 @@ ENQUETECONTROLLER = (function(){
 			 <div class='e_top'>\
 				<img class='f45x45 pull-left img-circle' src='"+data.perfil+"'>\
 					<a href='userProfile.php?id="+data.usuario_id+"'><div class='nome_user'>"+toPlainText(data.nm_usuario)+"</div></a>\
-					<div class='data'><span id='etime'>"+tempo_passado(data.data_hora)+"</span></div>\
+					<div class='data'><span id='etime'>"+TEMPO.tempoPassado(data.data_hora)+"</span></div>\
 				 </div>\
 				 <div class='titulo'>"+toPlainText(data.titulo)+"</div>\
 				 "+imagem+"\
@@ -221,7 +221,7 @@ ENQUETECONTROLLER = (function(){
 			   if (enqueteObject.number_votes_enquete < sum ){
 
 				   enqueteObject.number_votes_enquete = sum;
-				   enqueteObject.createEnqueteVisualizacao (data);	
+				   enqueteObject.createEnqueteVisualizacao (data, id_enquete);	
 
 			   }
 
@@ -229,7 +229,7 @@ ENQUETECONTROLLER = (function(){
 	   });
    }
       
-   enqueteObject.createEnqueteVisualizacao = function (data){
+   enqueteObject.createEnqueteVisualizacao = function (data, id_enquete){
 	   
 	   var opts = [data.opt_1, data.opt_2, data.opt_3, data.opt_4, data.opt_5];
 	   var qtd_opts =  [data.qtd_opt_1, data.qtd_opt_2, data.qtd_opt_3, data.qtd_opt_4, data.qtd_opt_5];
@@ -252,7 +252,7 @@ ENQUETECONTROLLER = (function(){
    			 <div class='e_top'>\
    				<img class='f45x45 pull-left img-circle' src='"+data.perfil+"'>\
    				<a href='userProfile.php?id="+data.usuario_id+"'><div class='nome_user'>"+toPlainText(data.nm_usuario)+"</div></a>\
-   					<div class='data'><span id='etime'>"+tempo_passado(data.data_hora)+"</span></div>\
+   					<div class='data'><span id='etime'>"+TEMPO.tempoPassado(data.data_hora)+"</span></div>\
    				 </div>\
    				 <div class='titulo'>"+toPlainText(data.titulo)+"</div>\
    				 "+imagem+"\
@@ -261,7 +261,7 @@ ENQUETECONTROLLER = (function(){
    				 <div id='chartjs-tooltip'></div>\
    				 <div>\
    				 <span title='Enquete' class='glyphicon glyphicon-bullhorn enquete_icon pull-right'></span>\
-   				<span class='glyphicon glyphicon-th-list curiar_enquete_icon' onClick='curiarEnquete()' rel='tooltip' data-placement='top' data-original-title='Curiar' data-toggle='modal' data-target='#list_people_laike'></span>\
+   				<span class='glyphicon glyphicon-th-list curiar_enquete_icon' onClick='CURIAR.curiarEnquete("+ id_enquete +")' rel='tooltip' data-placement='top' data-original-title='Curiar' data-toggle='modal' data-target='#list_people_laike'></span>\
    				</div>\
    			</div>\
    			\
@@ -281,6 +281,11 @@ ENQUETECONTROLLER = (function(){
 	   enqueteObject.getEnquete();
    }
 
+   enqueteObject.atualizaTempo = function(){
+        if ($('#etime').length > 0){
+                document.getElementById('etime').innerHTML = TEMPO.tempoPassado(enqueteObject.data_enquete);
+        }
+   }
    
    return enqueteObject;
 	

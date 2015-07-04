@@ -2,7 +2,7 @@
  * 
  */
 
-function newEnqueteClick(){
+function enquetePost(){
 	
 	if (!ENQUETEFORM.check()) return;
 
@@ -17,7 +17,7 @@ function newEnqueteClick(){
 	
 			if (data.trim() != '0'){
 
-				ENQUETECONTROLLER.novaEnqueteForm(data);
+				ENQUETE.novaEnqueteForm(data);
 			}
 				
 		}, error: function(data){

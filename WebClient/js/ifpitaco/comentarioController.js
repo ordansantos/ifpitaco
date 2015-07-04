@@ -15,7 +15,7 @@ var COMENTARIO = (function(){
 		var com = document.createElement("div");
 		com.className = "comentario";
 		com.id = 'c'+comentarioData.comentario_post_id;
-		com.innerHTML = "<img class='f32x32' src='"+comentarioData.perfil+"'/><div class='content'><a href='userProfile.php?id="+comentarioData.id_usuario+"'><strong>"+toPlainText(comentarioData.nm_usuario)+"</strong></a> "+toPlainText(comentarioData.comentario)+"<h6><span id='ctime_"+comentarioData.comentario_post_id+"'>"+tempo_passado(comentarioData.data_hora)+"</span></h6></div><i onClick='comentarioDELETE(this.parentNode.id)'class='glyphicon glyphicon-remove'></i>";
+		com.innerHTML = "<img class='f32x32' src='"+comentarioData.perfil+"'/><div class='content'><a href='userProfile.php?id="+comentarioData.id_usuario+"'><strong>"+toPlainText(comentarioData.nm_usuario)+"</strong></a> "+toPlainText(comentarioData.comentario)+"<h6><span id='ctime_"+comentarioData.comentario_post_id+"'>"+TEMPO.tempoPassado(comentarioData.data_hora)+"</span></h6></div><i onClick='comentarioDELETE(this.parentNode.id)'class='glyphicon glyphicon-remove'></i>";
 		document.getElementById("pc" + post_idx).appendChild(com);
 		
 	}
@@ -55,7 +55,7 @@ var COMENTARIO = (function(){
 				delete comentario.data_comentario[i];
 				continue;
 			}
-			document.getElementById('ctime_'+i).innerHTML = tempo_passado(comentario.data_comentario[i]);
+			document.getElementById('ctime_'+i).innerHTML = TEMPO.tempoPassado(comentario.data_comentario[i]);
 		}
 		
 	}

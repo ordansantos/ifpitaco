@@ -60,326 +60,37 @@
 		<link rel="stylesheet" type="text/css"  href="css/search.css">
 		<link rel="stylesheet" type="text/css" href="css/foto_size.css">
 		
-		<link href="pace/themes/blue/pace-theme-barber-shop.css" rel="stylesheet" />
-		<script data-pace-options='{ "ajax": true }' src='pace/pace.js'></script>
+		<link href="js/pace/themes/blue/pace-theme-barber-shop.css" rel="stylesheet" />
+		<script data-pace-options='{ "ajax": true }' src='js/pace/pace.js'></script>
 		<link href="jcrop/css/jquery.Jcrop.css" rel="stylesheet" type="text/css" />
 		<script src="jcrop/js/jquery.Jcrop.js"></script>
 		
+                <script src="js/ifpitaco/searchController.js"></script>
+                <script src="js/ifpitaco/sessionController.js"></script>
+                
+                <script src="js/ifpitaco/tools/image_cropper.js"></script>
+                
+                <!-- Cropper Plugin-->
+		<link  href="js/cropper-master/dist/cropper.css" rel="stylesheet">
+		<script src="js/cropper-master/dist/cropper.js"></script>
+                
+                <script src="js/ifpitaco/services/alterarDadosPOST.js"></script>
+                
+                <script src="js/ifpitaco/cadastrarForm.js"></script>
+                <script src="js/ifpitaco/myProfileForm.js"></script>
+                
+                <script>
+                    prepare ({
+                        tipo: '<?php echo $tipo?>',
+                        curso: '<?php echo $curso?>',
+                        ano_periodo: '<?php echo $ano_periodo?>',
+                        grau_academico: '<?php echo $grau_academico?>'
+                    });
+                </script>
 	</head>
-<script>
 
-
-//Não funciona quando não tem src
-
-
-
-function toCrop(){
-
-	$(function(){
-	
-	    $('#img').Jcrop({
-	    	setSelect: [0,0,120,120],
-	        aspectRatio: 1,
-	        onSelect: updateCoords,
-	        onChange: updateCoords
-	    });
-	
-	});
-}
-
-//Coordenadas da imagem
-function updateCoords(c)
-{
-	
-	var img = $(".jcrop-holder img");
-	
-	var width = img.width();
-	var height = img.height();
-	
-    $('#x').val(c.x/width);
-    $('#y').val(c.y/height);
-    $('#w').val(c.w/width);
-    $('#h').val(c.h/height);
-
-};
-
-isThereJcrop = false;
-
-//Mostra o preview
-function readURL(input) {
-	
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-
-        reader.onload = function (e) {
-        	
-        	if (!isThereJcrop){
-        		$("#img").show();
-        		$('#img').attr('src', e.target.result);
-	            toCrop();
-	            isThereJcrop = true;
-        	} else{
-   
-        		$('.jcrop-holder img').attr('src', e.target.result);
-        		
-        	}
-
-        }
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-
-
-
-function addUserToSearchList (id, nome, foto, tipo){
-	var li = document.createElement ('li');
-	li.id = 'user_searched_id_'+id;
-	li.className= 'user_searched';
-	
-	li.innerHTML = '\
-		<a href="userProfile.php?id='+id+'">\
-		<img class="f45x45 pull-left" src="'+foto+'"></img>\
-		<h3>'+nome+'</h3>\
-		<h5>'+tipo+'</h5>\
-		<\a>';
-	
-	document.getElementById('search_list').appendChild(li);
-}
-
-function createSearchList(){
-	
-	$('#search_list').attr('id', 'search_list_old');
-	
-	var ul = document.createElement ('ul');
-	ul.className = "list-unstyled";
-	ul.id = 'search_list';
-	document.getElementById('search_form').appendChild(ul);
-	
-}
-
-function getUsersFromBusca(nome, handleData){
-
-   $.ajax({ 
-	  	type: 'GET', 
-	  	url: '../WebService/getBuscaUsuario/'+nome, 
-	  	data: { get_param: 'value' }, 
-	 	dataType:'json',
-		cache: false,
-	    success: function (data) { 
-	    	handleData (data.usuarios);
-	    },
-	    error: function (){
-	    	handleData ([]);
-	    }
-	});
-}
-
-var delayTimer;
-var gettingUsers = false;
-
-function doSearch(text) {
-
-	if (gettingUsers) return;
-	gettingUsers = true;
-	
-	if (text == ''){
-		$('#search_list').remove();
-		$('#search_form')[0].reset();
-		clearTimeout(delayTimer);
-
-		gettingUsers = false;
-		return;
-	}
-	
-	
-    if( /[^a-zA-Z]/.test( text ) ){
-    	gettingUsers = false;
-		return;
-    }
-	
-    clearTimeout(delayTimer);
-    
-    delayTimer = setTimeout(function() {
-
-		createSearchList();
-	
-		getUsersFromBusca(text, function(usuariosFromBusca){
-			for (i = 0; i < usuariosFromBusca.length; i++){
-				u = usuariosFromBusca[i];
-				addUserToSearchList(
-					u.id_usuario, u.nm_usuario, u.perfil, u.usuario_tipo		
-				);
-			}
-			
-			//Se colocar o Jquery fora, não atualiza!
-			$('.user_searched').hover(function(){
-				$(this).css('background-color', 'rgba(100, 108, 164, 0.9)');
-			});
-			
-			$('.user_searched').mouseleave(function(){
-				$(this).css('background-color', 'white');
-			});
-			$('#search_list_old').remove();
-			gettingUsers = false;
-		});
-		
-		
-    }, 100); //Tempo após outra digidatação
-    
-}
-
-
-function doSearchSubmitted(){
-	
-	text = $('#search_input')[0].value;
-	
-    if( /[^a-zA-Z]/.test( text ) )
-       return false;
-	    
-	if (text == '') return false;
-	
-	getUsersFromBusca(text, function(usuariosFromBusca){
-		if (usuariosFromBusca.length == 0) return;
-		
-		u = usuariosFromBusca[0].id_usuario;
-		
-		window.location.assign("userProfile.php?id="+u);
-	});
-	
-	return false;
-}
-
-$(document).ready(function(){
-
-	setInterval(function () {updateLastAccess()}, 1000 * 20);
-	
-	$('#search_form')[0].reset();
-	$('#search_form').focusout(function(){
-	/*	  Se desfocar em cima do form é por que clicou no filho, logo não deve ser removido
-			para realizar a troca de página */
-			
-		if (!$('#search_form').is(':hover')){
-			$('#search_list').remove();
-			$('#search_form')[0].reset();
-			clearTimeout(delayTimer);
-		}
-	}); 
-
-	
-	$('#pop').focusin(function (){
-		$('#pop').popover('show');
-	});
-	
-	$('#pop').focusout(function(){
-		$('#pop').popover('hide');
-	});
-	
-	$('#professor').hide();
-	$("#img").hide();
-
-	//Ao trocar o input
-	$("#foto").change(function(){
-	    readURL(this);
-	});
-
-
-
-	$("#form").submit (function(event){
-		event.preventDefault();
-
-		$('#submit').attr ("disabled", "disabled");
-		var formData = new FormData($(this)[0]);
-		$.ajax({
-			type: "POST",
-			url: "../WebService/alterarDados",
-	        contentType: false,
-	        processData: false,
-			data: formData,
-			success: function(data){
-				
-				if ($.trim(data) != '1'){
-					
-				} else
-					window.location.assign("home.php");
-				
-			}, error: function(data){
-
-				bootbox.alert("Faça o upload corretamente! Escolha uma imagem válida ou uma imagem menor que 5000 x 5000.", function() {
-					window.location.assign('myProfile.php');
-				});
-			
-			}
-		});
-	});
-
-
-	var tipo = '<?php echo $tipo?>';
-	var curso = '<?php echo $curso?>';
-	var ano_periodo = <?php echo $ano_periodo?>;
-	var grau_academico = '<?php echo $grau_academico?>';
-
-	ids = {};
-
-	ids['Informática Integrado'] = 'c1';
-	ids['Manutenção e Suporte em Informática Integrado'] = 'c2';
-	ids['Mineração Integrado'] = 'c3';
-	ids['Petróleo e Gás Integrado'] = 'c4';
-	ids['Manutenção e Suporte em Informática Subsequente'] = 'c5';
-	ids['Mineração Subsequente'] = 'c6';
-	ids['Construção de Edifícios Superior'] = 'c7';	
-	ids['Física Superior'] = 'c8';
-	ids['Letras em Língua Portuguesa Superior'] = 'c9';
-	ids['Matemática Superior'] = 'c10';
-	ids['Operação de Microcomputadores Proeja'] = 'c11';
-	ids['Outro'] = 'c12';
-	gs = {};
-
-	gs['Especialização'] = 'g1';
-	gs['Doutorado'] = 'g2';
-	gs['Mestrado'] = 'g3';
-	gs['Outro'] = 'g4';
-	
-	if (tipo == 'Aluno'){
-		document.getElementById("option1").checked = true;
-		document.getElementById(ids[curso]).selected = true;
-		document.getElementById('a'+ano_periodo).selected = true;
-		option1Click();
-	}
-	if (tipo == 'Professor'){
-		document.getElementById("option2").checked = true;
-		document.getElementById(gs[grau_academico]).selected = true;
-		option2Click();
-	}
-	if (tipo == 'Servidor'){
-		document.getElementById("option3").checked = true;
-		option3Click();
-	}
-	
-});
-
-function updateLastAccess(){
-	   $.ajax({url:'services/updateLastAccess.php'});
-		  return false;
-}
-
-function option1Click(){
-	$('#professor').hide();
-	$('#aluno').show();
-}
-
-function option2Click(){
-	$('#aluno').hide();
-	$('#professor').show();
-}
-
-function option3Click(){
-	$('#professor').hide();
-	$('#aluno').hide();
-}
-
-</script>
+ 
 <body>
-  
   
 	<nav id="bar" class="navbar navbar-default">
 	  <div class="container-fluid">
@@ -395,10 +106,10 @@ function option3Click(){
 	    
 	    <!-- Inline block -->
 	    <div>
-	    	<form  role="search" onsubmit="return doSearchSubmitted()" id="search_form">
+	    	<form  role="search" onsubmit="return SEARCH.doSearchSubmitted()" id="search_form">
 	          	<div class="inner-addon right-addon">
     	   			<i class="glyphicon glyphicon-search"></i>	
-	    			<input type="text" id='search_input' class="navbar-left form-control" placeholder="Procurar Usuário"  onkeyup="doSearch(this.value)">
+	    			<input type="text" id='search_input' class="navbar-left form-control" placeholder="Procurar Usuário"  onkeyup="SEARCH.doSearch(this.value)">
 	   			 </div>
 	    	</form>
 	    </div>
@@ -507,22 +218,20 @@ function option3Click(){
 		  <div class="form-group">
 		 
 		    <label for="foto"><span style="margin-right: 10px" class="glyphicon glyphicon glyphicon-camera" aria-hidden="true"></span>Imagem de Perfil</label>
-			<input accept="image/x-png, image/gif, image/jpeg"type="file" id="foto" name="foto" class="button">
+			<input accept="image/x-png, image/gif, image/jpeg"type="file" id="image_input" name="foto" class="button">
 		    <p class="help-block">Escolha uma imagem para usar no seu perfil</p>
 		    
 		  </div>
-		 
-		 		 <img  class="preview" id="img" src="" />
-		  	 <br/>
+
 		  
   		  <button id="submit" class="btn btn-lg btn-primary btn-block" type="submit">Alterar Dados</button>
   		  	
   		  	
   		  	<!-- Coordenadas da foto  -->
-  		    <input type="hidden" id="x" name="x" value="-1"/>
-            <input type="hidden" id="y" name="y" value="-1"/>
-            <input type="hidden" id="w" name="w" value="-1"/>
-            <input type="hidden" id="h" name="h" value="-1"/>
+  		    <input type="hidden" id="crop_x" name="x" value="1"/>
+            <input type="hidden" id="crop_y" name="y" value="1"/>
+            <input type="hidden" id="crop_w" name="w" value="1"/>
+            <input type="hidden" id="crop_h" name="h" value="1"/>
   		  	<input type="hidden" name="usuario_id" value="<?php echo $id?>"/>
 		  </form> 
 					
@@ -533,6 +242,26 @@ function option3Click(){
 
 	</div>
 
+    
+    
+    	<!-- MODAL CROPPER -->
+	<div class="modal fade" id="cropper-modal">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+
+	      <div class="modal-body">
+	        <div>
+	          <img id="img_to_crop">
+	        </div>
+	      </div>
+	      
+		<div class="modal-footer">
+	      	<button type="button" class="btn btn-primary" data-dismiss="modal">Cortar</button>
+	      </div>
+	      
+	    </div>
+	  </div>
+	</div>
    
  </body>
   

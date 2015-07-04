@@ -15,7 +15,7 @@ function votoPost(id){
 				window.location.assign("index.php");
 			});
 		else
-			ENQUETECONTROLLER.afterPostVoto(id);
+			ENQUETE.afterPostVoto(id);
 			
 	});
 }

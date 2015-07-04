@@ -29,9 +29,15 @@ POST = (function(){
 	$(document).ready(function() {
 		
 		postObject.postLoad(); 
-		
+
 		setInterval(function () { postObject.postReload() }, 5000);
 		setInterval(function () { postObject.newPost() }, 10000);
+                
+                $(window).scroll(function() {
+			  if( $(document).height() - ($(window).scrollTop() + $(window).height())  < 50 && postObject.is_there_more_post) {
+				  POST.morePost();
+			  }
+		});
 		
 	});
 
@@ -101,7 +107,7 @@ POST = (function(){
 		     	 		//Json
 		        		post = data.posts[i];
 		        		
-		        		postArray.push(post.post_id);
+		        		postObject.postArray.push(post.post_id);
 						
 		        		postObject.createPost( post);	
 		
@@ -151,23 +157,16 @@ POST = (function(){
 
 	postObject.data_post = [];
 	
-
-
-	function atualizaTempos (){
+	postObject.atualizaTempo = function(){
 	
-		for (i in postObject.data_post){
-				if (!$('#ptime_'+i).length > 0){
-					delete data_post[i];
-					continue;
-				}
-				document.getElementById('ptime_'+i).innerHTML = tempo_passado(data_post[i]);
-		}
-	
-		
-		if ($('#etime').length > 0){
-			document.getElementById('etime').innerHTML = tempo_passado(data_enquete);
-		}
-	
+            for (i in postObject.data_post){
+                if (!$('#ptime_'+i).length > 0){
+                        delete postObject.data_post[i];
+                        continue;
+                }
+     
+                document.getElementById('ptime_'+i).innerHTML = TEMPO.tempoPassado(postObject.data_post[i]);
+            }
 		
 	}
 	
@@ -195,7 +194,7 @@ POST = (function(){
 						'<img class="pull-left f45x45" src="'+post.perfil+'" >' + 
 						'<div>' + 
 							'<h4><a  href="userProfile.php?id='+post.usuario_id+'">'+toPlainText(post.nm_usuario)+'</a></h4>' + 
-							'<h6><span id="ptime_'+post.post_id+'">'+tempo_passado(post.data)+'</span>&nbsp'+post.nm_ramo+'</h6>' +
+							'<h6><span id="ptime_'+post.post_id+'">'+TEMPO.tempoPassado(post.data_hora)+'</span>&nbsp'+post.nm_ramo+'</h6>' +
 						'</div>' +
 					'</div>' + 
 					'<div class="content">'+toPlainText(post.comentario)+'</div>' + 
@@ -205,7 +204,7 @@ POST = (function(){
 							'<div id="nl'+post.post_id+'" onClick="laikePOST(this.id)" type="button"  data-toggle="tooltip" data-placement="top">' + 
 								'<i class="glyphicon glyphicon-thumbs-up" aria-hidden="true" ></i>' +
 							'</div>' + 
-							'<span id="cc'+post.post_id+'" onClick="curiar_curtida(this.id)" rel="tooltip" data-placement="top" data-original-title="Curiar" data-toggle="modal" data-target="#list_people_laike"> 0</span>' + 
+							'<span id="cc'+post.post_id+'" onClick="CURIAR.curiarCurtida(this.id)" rel="tooltip" data-placement="top" data-original-title="Curiar" data-toggle="modal" data-target="#list_people_laike"> 0</span>' + 
 						'</div>' + 
 						'<div class="btn" style="cursor:default">' +
 							'<span class="glyphicon glyphicon-comment" aria-hidden="true" ></i><span id="nc'+post.post_id+'"> 0</span>' + 

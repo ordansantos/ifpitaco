@@ -1,7 +1,7 @@
 <?php
 	
 	function getRoot(){
-		return 'localhost/workspace/ifpitaco/';
+		return 'localhost/ifpitaco/';
 	}
 	
 ?>

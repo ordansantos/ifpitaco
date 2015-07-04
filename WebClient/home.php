@@ -80,354 +80,10 @@
 	<script src="js/ifpitaco/tools/chart.js"></script>
 	
 	<script src="js/ifpitaco/services/votoPOST.js"></script>
+        
+        <script src="js/ifpitaco/searchController.js"></script>
+        <script src="js/ifpitaco/curiarController.js"></script>
 </head>
-
-
-
-<script type="text/javascript">
-
-
-	$(document).ready(function() {
-		
-		setInterval(function () {updateLastAccess()}, 1000 * 20);
-		 
-	});
-
-
-
-function addUserToSearchList (id, nome, foto, tipo){
-	var li = document.createElement ('li');
-	li.id = 'user_searched_id_'+id;
-	li.className= 'user_searched';
-	
-	li.innerHTML = '\
-		<a href="userProfile.php?id='+id+'">\
-		<img class="f45x45 pull-left" src="'+foto+'"></img>\
-		<h3>'+nome+'</h3>\
-		<h5>'+tipo+'</h5>\
-		<\a>';
-	
-	document.getElementById('search_list').appendChild(li);
-}
-
-function createSearchList(){
-	
-	$('#search_list').attr('id', 'search_list_old');
-	
-	var ul = document.createElement ('ul');
-	ul.className = "list-unstyled";
-	ul.id = 'search_list';
-	document.getElementById('search_form').appendChild(ul);
-	
-}
-
-function getUsersFromBusca(nome, handleData){
-
-   $.ajax({ 
-	  	type: 'GET', 
-	  	url: '../WebService/getBuscaUsuario/'+nome, 
-	  	data: { get_param: 'value' }, 
-	 	dataType:'json',
-		cache: false,
-	    success: function (data) { 
-	    	handleData (data.usuarios);
-	    },
-	    error: function (){
-	    	handleData ([]);
-	    }
-	});
-}
-
-
-var delayTimer;
-var gettingUsers = false;
-
-function doSearch(text) {
-
-	if (gettingUsers) return;
-	gettingUsers = true;
-	
-	if (text == ''){
-		$('#search_list').remove();
-		$('#search_form')[0].reset();
-		clearTimeout(delayTimer);
-
-		gettingUsers = false;
-		return;
-	}
-	
-	
-    if( /[^a-zA-Z]/.test( text ) ){
-    	gettingUsers = false;
-		return;
-    }
-	
-    clearTimeout(delayTimer);
-    
-    delayTimer = setTimeout(function() {
-
-		createSearchList();
-	
-		getUsersFromBusca(text, function(usuariosFromBusca){
-			for (i = 0; i < usuariosFromBusca.length; i++){
-				u = usuariosFromBusca[i];
-				addUserToSearchList(
-					u.id_usuario, u.nm_usuario, u.perfil, u.usuario_tipo		
-				);
-			}
-			
-			//Se colocar o Jquery fora, não atualiza!
-			$('.user_searched').hover(function(){
-				$(this).css('background-color', 'rgba(100, 108, 164, 0.9)');
-			});
-			
-			$('.user_searched').mouseleave(function(){
-				$(this).css('background-color', 'white');
-			});
-			$('#search_list_old').remove();
-			gettingUsers = false;
-		});
-		
-		
-    }, 100); //Tempo após outra digidatação
-    
-}
-
-
-function doSearchSubmitted(){
-	
-	text = $('#search_input')[0].value;
-	
-    if( /[^a-zA-Z]/.test( text ) )
-       return false;
-	    
-	if (text == '') return false;
-	
-	getUsersFromBusca(text, function(usuariosFromBusca){
-		if (usuariosFromBusca.length == 0) return;
-		
-		u = usuariosFromBusca[0].id_usuario;
-		
-		window.location.assign("userProfile.php?id="+u);
-	});
-	
-	return false;
-}
-
-$(document).ready(function(){
-	$('#search_form')[0].reset();
-	$('#search_form').focusout(function(){
-	/*	  Se desfocar em cima do form é por que clicou no filho, logo não deve ser removido
-			para realizar a troca de página */
-			
-		if (!$('#search_form').is(':hover')){
-			$('#search_list').remove();
-			$('#search_form')[0].reset();
-			clearTimeout(delayTimer);
-		}
-	}); 
-	
-});
-
-
-
-function tempo_passado (t){
-
-	var d = new Date()
-	var n = d.getTimezoneOffset();
-	timezone = n * 60 * 1000;
-	
-	var dt = new Date(t);
-	var now = new Date();
-	
-	mes = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
-       'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-	
-	var month = dt.getMonth();
-	var day = dt.getDate();
-	var year = dt.getFullYear();
-	var hour = dt.getHours();
-	var minute = dt.getMinutes();
-	
-	time = now.getTime() - dt.getTime() + timezone;
-	
-	var dias = parseInt(time / 86400000);
-	
-	time = time % 86400000;
-	
-	var horas = parseInt(time / 3600000);
-	
-	time = time % 3600000;
-	
-	var minutos = parseInt(time / 60000);
-	
-	time = time % 60000;
-	
-	var segundos = parseInt(time / 1000);
-		
-	if (dias > 28)
-			return day + ' de ' + mes[month] + ' de ' + year + ' às ' + hour + ':' + minute;
-	
-	if (dias)
-		return dias + ' dia' + (dias > 1? 's' : '');
-	if (horas)
-		return horas + ' hora' + (horas > 1? 's' : '');
-	if (minutos)
-		return minutos + ' minuto' + (minutos > 1? 's' : '');
-	if (segundos)
-		return segundos + ' segundo' + (segundos > 1? 's' : '');
-	return 'agora mesmo';
-}
-
-function curiar_curtida(id){
-	id = id.replace ('cc', '');
-
-	
-	   $.ajax({ 
-		  	type: 'GET', 
-		  	url: '../WebService/curiarPost/'+id, 
-		  	data: { get_param: 'value' }, 
-		 	dataType:'json',
-			cache: false,
-		    success: function (data) { 
-
-		    	createListPeopleModal(data, 'Curiando');
-		    	
-		    },
-		    error: function (){
-		   
-		    }
-		});
-}
-
-function curiarEnquete(){
-
-   $.ajax({ 
-	  	type: 'GET', 
-	  	url: '../WebService/curiarEnquete/'+to_update_enquete, 
-	  	data: { get_param: 'value' }, 
-	 	dataType:'json',
-		cache: false,
-	    success: function (data) { 
-
-	    	createEnqueteModal (data, 'Curiando enquete');
-	    	
-	    },
-	    error: function (){
-	   
-	    }
-	});
-}
-
-function createEnqueteModal(data, titulo){
-	
-	colors = ['#F7464A', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'];
-	
-	$('#p_list_laike').remove();
-	document.getElementById('p_list_people_laike_titulo').innerHTML = titulo;
-	var ul = document.createElement ('div');
-	
-	ul.className = "list-unstyled";
-	ul.id = 'p_list_laike';
-	
-	document.getElementById('list_people_laike_div').appendChild(ul);
-
-	for (i = 1; i <= data.qtd_opt; i++){
-		
-		ul = document.createElement('ul');
-		ul.className = "list-unstyled modal_enquete_curiar";
-		ul.id = 'optv_'+i;
-		ul.style.borderColor = colors[i-1];
-		document.getElementById('p_list_laike').appendChild(ul);
-
-		
-		title = document.createElement ('li');
-		title.innerHTML = '<div><span style="color:'+colors[i-1]+'" class="glyphicon glyphicon-asterisk" aria-hidden="true"></span> '+data['opt_'+ i]+'</div>';
-		title.className = "modal_enquete_curiar_title";
-		
-		
-		document.getElementById('optv_'+i).appendChild(title);
-	}
-	
-	peoples = data.usuarios;
-	
-	for (i in peoples){
-	
-		p = peoples[i];
-		
-		var li = document.createElement ('li');
-		li.className= 'user_searched';
-		//Tamanho de cada lista
-		li.style.width = '360px';
-		li.innerHTML = '\
-			<div style="margin-left:10px">\
-			<a href="userProfile.php?id='+p.id_usuario+'">\
-			<img class="f45x45 pull-left" src="'+p.perfil+'"></img>\
-			<h3>'+p.nm_usuario+'</h3>\
-			<h5>'+p.usuario_tipo+'</h5>\
-			<\a>';
-
-		document.getElementById('optv_'+p.voto).appendChild(li);
-	}
-
-	//Se colocar o Jquery fora, não atualiza!
-	$('.user_searched').hover(function(){
-		$(this).css('background-color', 'rgba(100, 108, 164, 0.9)');
-	});
-	
-	$('.user_searched').mouseleave(function(){
-		$(this).css('background-color', 'white');
-	});
-
-}
-
-function createListPeopleModal(peoples, titulo){
-
-
-	$('#p_list_laike').remove();
-	document.getElementById('p_list_people_laike_titulo').innerHTML = titulo;
-	var ul = document.createElement ('ul');
-	ul.className = "list-unstyled";
-	ul.id = 'p_list_laike';
-	
-	document.getElementById('list_people_laike_div').appendChild(ul);
-	
-	for (i in peoples){
-		p = peoples[i];
-		
-		var li = document.createElement ('li');
-		li.className= 'user_searched ';
-		li.style.width = '350px';
-		li.innerHTML = '\
-			<div>\
-			<a href="userProfile.php?id='+p.id_usuario+'">\
-			<img class="f45x45 pull-left" src="'+p.perfil+'"></img>\
-			<h3>'+p.nm_usuario+'</h3>\
-			<h5>'+p.usuario_tipo+'</h5>\
-			<\a>';
-
-		document.getElementById('p_list_laike').appendChild(li);
-	}
-
-	//Se colocar o Jquery fora, não atualiza!
-	$('.user_searched').hover(function(){
-		$(this).css('background-color', 'rgba(100, 108, 164, 0.9)');
-	});
-	
-	$('.user_searched').mouseleave(function(){
-		$(this).css('background-color', 'white');
-	});
-
-}
-
-function updateLastAccess(){
-   $.ajax({url:'services/updateLastAccess.php'});
-	  return false;
-}
-
-</script>
-
-
 
 <body>
 
@@ -447,12 +103,12 @@ function updateLastAccess(){
 
 			<!-- Inline block -->
 			<div>
-				<form role="search" onsubmit="return doSearchSubmitted()"
+				<form role="search" onsubmit="return SEARCH.doSearchSubmitted()"
 					id="search_form">
 					<div class="inner-addon right-addon">
 						<i class="glyphicon glyphicon-search"></i> <input type="text"
 							id='search_input' class="navbar-left form-control"
-							placeholder="Procurar Usuário" onkeyup="doSearch(this.value)">
+							placeholder="Procurar Usuário" onkeyup="SEARCH.doSearch(this.value)">
 					</div>
 				</form>
 			</div>
@@ -473,7 +129,7 @@ function updateLastAccess(){
 				</div>
 				<a href="userProfile.php?id=<?php echo $id?>">
 					<h3>
-						<script>document.write(toPlainText('<?php echo $user?>'));</script>
+						<?php echo htmlentities($user) ?>
 					</h3>
 				</a>
 				<div class='left_options'>
@@ -518,7 +174,7 @@ function updateLastAccess(){
 			<div class="col-md-3" id="left">
 				<span title="próxima" data-toggle="tooltip" data-placement="bottom"
 					class="btn-lg btn pull-right" id="proxima_enquete"
-					onClick="ENQUETECONTROLLER.proximaEnquete()"> <span id="next"
+					onClick="ENQUETE.proximaEnquete()"> <span id="next"
 					class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></span>
 				<div id="spin"></div>
 
@@ -567,7 +223,7 @@ function updateLastAccess(){
 					<button type="button" class="btn btn-primary"
 						onClick="propostaPOST()" data-dismiss="modal">Enviar</button>
 					<button type="button" class="btn btn-default"
-						onClick="resetProposta()" data-dismiss="modal">Fechar</button>
+						onClick="POSTFORM.resetProposta()" data-dismiss="modal">Fechar</button>
 				</div>
 
 			</div>
@@ -616,7 +272,7 @@ function updateLastAccess(){
 					<button type="button" class="btn btn-primary"
 						onClick="fiscalizacaoPOST()" data-dismiss="modal">Enviar</button>
 					<button type="button" class="btn btn-default"
-						onClick="resetFiscalizacao()" data-dismiss="modal">Fechar</button>
+						onClick="POSTFORM.resetFiscalizacao()" data-dismiss="modal">Fechar</button>
 				</div>
 
 			</div>
@@ -679,7 +335,7 @@ function updateLastAccess(){
 
 				<div class="modal-footer">
 					<button type="button" class="btn btn-primary"
-						onClick="newEnqueteClick(); " data-dismiss="modal">Enviar</button>
+						onClick="enquetePost(); " data-dismiss="modal">Enviar</button>
 					<button type="button" class="btn btn-default"
 						onClick="ENQUETEFORM.resetNewEnquete()" data-dismiss="modal">Fechar</button>
 				</div>

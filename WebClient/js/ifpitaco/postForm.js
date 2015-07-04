@@ -13,12 +13,6 @@ POSTFORM = (function(){
 			loadImageFiscalizacaoForm(this);
 		});
 		
-		$(window).scroll(function() {
-			  if( $(document).height() - ($(window).scrollTop() + $(window).height())  < 50 && is_there_more_post) {
-				  POST.morePost();
-			  }
-		});
-		
 		postform.resetFiscalizacao();
 		
 		postform.addRamos();

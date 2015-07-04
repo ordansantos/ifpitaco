@@ -2,6 +2,18 @@
  * Corta uma imagem e seta os atributos do form
  * Chamado por:
  * 	cadastrar.php
+ * Atributos:
+ *  #crop_x
+ *  #crop_y
+ *  #crop_w
+ *  #crop_h
+ *  #img_to_crop
+ *  #image_input
+ *  
+ *  Importar:
+ *      <!-- Cropper Plugin-->
+	<link  href="js/cropper-master/dist/cropper.css" rel="stylesheet">
+	<script src="js/cropper-master/dist/cropper.js"></script>
  */
 
 (function (){
@@ -24,14 +36,13 @@
 	        reader.onload = function (e) {
 	            $('#img_to_crop').attr('src', e.target.result);
 	            $('#img_to_crop').attr('style', "max-width: 100%");
-	        }
+	        };
 	
 	        reader.readAsDataURL(input.files[0]);
 	    }
 	}
 	
 	$(document).ready(function(){
-		
 		//Cropper
 		var $image = $('#img_to_crop'),
 		    cropBoxData,
