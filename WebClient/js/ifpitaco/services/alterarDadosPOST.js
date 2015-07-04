@@ -4,7 +4,6 @@
     $(document).ready(function () {
 
         $("#form").submit(function (event) {
-
             event.preventDefault();
 
             $('#submit').attr("disabled", "disabled");
