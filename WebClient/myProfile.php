@@ -61,8 +61,6 @@ $grau_academico = $usuario->grau_academico;
 
         <link href="js/pace/themes/blue/pace-theme-barber-shop.css" rel="stylesheet" />
         <script data-pace-options='{ "ajax": true }' src='js/pace/pace.js'></script>
-        <link href="jcrop/css/jquery.Jcrop.css" rel="stylesheet" type="text/css" />
-        <script src="jcrop/js/jquery.Jcrop.js"></script>
 
         <script src="js/ifpitaco/searchController.js"></script>
         <script src="js/ifpitaco/sessionController.js"></script>

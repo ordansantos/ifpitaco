@@ -115,7 +115,7 @@ $status = json_decode(redirectGet($url . 'WebService/getLastAccess/' . $_GET['id
                             if ($tipo == 'Aluno') {
                                 echo '<h4>' . $curso . '</h4>';
                                 echo '<h4>' . $ano_periodo . 'º Ano/Período</h4>';
-                            } else
+                            } else if ($tipo == 'Professor')
                                 echo '<h4>' . $grau_academico . '</h4>';
                             echo '<h5>' . $tipo . '</h5>';
                             ?>
