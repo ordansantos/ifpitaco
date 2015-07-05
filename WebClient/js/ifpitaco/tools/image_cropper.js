@@ -21,10 +21,14 @@
     //Atualiza as coordenadas da imagem no form
     function updateCoords(photo, canvas)
     {
-        $('#crop_x').val(photo.left / canvas.width);
-        $('#crop_y').val(photo.top / canvas.height);
-        $('#crop_w').val(photo.width / canvas.width);
-        $('#crop_h').val(photo.height / canvas.height);
+        var percent_x = (photo.left - canvas.left) / canvas.width;
+        var percent_y = (photo.top - canvas.top) / canvas.height;
+        var percent_width = photo.width / canvas.width;
+        var percent_height = photo.height / canvas.height;
+        $('#crop_x').val(percent_x);
+        $('#crop_y').val(percent_y);
+        $('#crop_w').val(percent_width);
+        $('#crop_h').val(percent_height);
     }
     ;
 
@@ -41,9 +45,11 @@
 
             reader.readAsDataURL(input.files[0]);
         }
+        
+        settar();
     }
 
-    $(document).ready(function () {
+    function settar() {
         //Cropper
         var $image = $('#img_to_crop'),
                 cropBoxData,
@@ -68,7 +74,10 @@
             $image.cropper('destroy');
             updateCoords(cropBoxData, canvasData);
         });
-
+        
+    };
+    
+    $(document).ready(function () {
         //Ao trocar o input
         $("#image_input").change(function () {
             readURL(this);

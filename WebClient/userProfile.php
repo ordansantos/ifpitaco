@@ -47,9 +47,6 @@ $status = json_decode(redirectGet($url . 'WebService/getLastAccess/' . $_GET['id
         <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
-
-        <script src="js/ifpitaco/tools/htmlentitiesJS.js"></script>
-
         <link rel="stylesheet" type="text/css"  href="css/user_profile.css">
         <link rel="stylesheet" type="text/css"  href="css/search.css">
         <link rel="stylesheet" type="text/css" href="css/foto_size.css">
