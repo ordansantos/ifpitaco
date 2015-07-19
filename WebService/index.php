@@ -1,24 +1,17 @@
-
-
 <?php
-require './Slim/Slim/Slim.php';
+
+require_once 'header.php';
+
 \Slim\Slim::registerAutoloader();
 $app = new \Slim\Slim();
 //$app->response()->header('Content-Type', 'application/json;charset=utf-8');
-$app->get('/', function () { 
 
-	echo "servicos.txt \nramos.txt \n";
+$app->get('/', function () { 
+	echo "It's working";
 });
 
-define ('ERRO', '0');
-define ('SUCESSO', '1');
-define ('ERRO_STRING_VAZIA', 'Preencha todos os campos corretamente!');
-define ('ERRO_EMAIL_EXISTE', 'Email já cadastrado!');
-define ('ERRO_SENHA_INVALIDA', 'Sua senha precisa ter no mínimo 6 dígitos');
-define ('NOT_IS_IMAGE', 'Envie um formato de imagem válido!');
-
 //Envia uma proposta
-$app->post('/postProposta/','postProposta');
+$app->post('/postProposta/', 'postProposta' );
 //Verifica se o login está correto
 $app->post('/postLogin/', 'postLogin');
 //Cadastra um novo usuário
@@ -32,7 +25,7 @@ $app->post('/postDeleteComentario/', 'postDeleteComentario');
 //Envia um 'laike' de um post
 $app->post('/postLaike/', 'postLaike');
 //Deleta um post
-$app->post('/postDeletePost/', 'postDeletePost');
+$app->post('/postDeletePublicacao/', 'postDeletePublicacao');
 //Envia uma nova Enquete
 $app->post('/postEnquete/', 'postEnquete');
 //Envia o voto de uma enquete
@@ -89,24 +82,8 @@ Post:
 	'usuario_id'
 	'ramo_id'
 */
-function postProposta()
-{
-	//Prepara a query do banco de dados
-	$sql = "INSERT INTO tb_post (comentario, usuario_id, ramo_id, tipo) values (:comentario, :usuario_id, :ramo_id, 0)";
-	//Inicia uma conexão com o banco
-	$conn = getConn();
-	//Prepara a query para receber os dados da tabela
-	$stmt = $conn->prepare($sql);
-	//Insere os dados
-
-	$stmt->bindParam("comentario", $_POST['comentario']);
-	$stmt->bindParam("usuario_id", $_POST['usuario_id']);
-	$stmt->bindParam("ramo_id", $_POST['ramo_id']);
-	
-	//Executa a Query e retorna se ocorreu tudo certo
-	if ($stmt->execute()) echo SUCESSO; else echo ERRO;
-	
-	$conn = null;
+function postProposta (){
+    echo (new Proposta())->post();
 }
 
 /*Envia uma imagem para o cloudinary.*/
@@ -203,9 +180,9 @@ function postFiscalizacao(){
 			$stmt->execute();
 		}
 		
-		echo SUCESSO;
+		echo MsgEnum::SUCESSO;
 	} else 
-		echo ERRO;
+		echo MsgEnum::ERRO;
 	
 	$conn = null;
 }
@@ -282,16 +259,16 @@ function postUsuario(){
 		$grau_academico = $_POST['grau_academico'];
 	
 	if (strlen($name) == 0 || strlen($senha) == 0 || strlen($email) == 0){
-		echo ERRO_STRING_VAZIA;
+		echo MsgEnum::STRING_VAZIA;
 		return;
 	}
 	
 	if (strlen($senha) < 6){
-		echo ERRO_SENHA_INVALIDA;
+		echo MsgEnum::SENHA_INVALIDA;
 		return;
 	}
 	
-	if (usuarioExiste ($email)){ echo ERRO_EMAIL_EXISTE; return; }
+	if (usuarioExiste ($email)){ echo MsgEnum::EMAIL_EXISTENTE; return; }
 	
 	$sql = "INSERT INTO tb_usuario (nm_usuario, senha, email, usuario_tipo, curso, ano_periodo, grau_academico) 
 			values (:nm_usuario, :senha, :email, :usuario_tipo, :curso, :ano_periodo, :grau_academico)";
@@ -312,10 +289,10 @@ function postUsuario(){
 	
 	if ($stmt->execute()){
 		saveFotoFromPostUsuario($email);
-		echo SUCESSO; 
+		echo MsgEnum::SUCESSO; 
 	}
 		else 
-			echo ERRO;
+			echo MsgEnum::ERRO;
 	$conn = null;
 }
 
@@ -336,7 +313,7 @@ function postLogin(){
 	$stmt->bindParam("senha", $_POST['senha']);
 	$stmt->execute();
 	$result = $stmt->fetch();
-	if (!$result) echo ERRO; else{ echo $result['id_usuario']; updateLastAccess($result['id_usuario']); }
+	if (!$result) echo MsgEnum::ERRO; else{ echo $result['id_usuario']; updateLastAccess($result['id_usuario']); }
 	$conn = null;
 }
 
@@ -435,9 +412,9 @@ function postComentario (){
 	$stmt->bindParam("comentario", $comentario);
 	
 	if ($stmt->execute())
-		echo SUCESSO;
+		echo MsgEnum::SUCESSO;
 	else
-		echo ERRO;
+		echo MsgEnum::ERRO;
 	$conn = null;
 }
 
@@ -486,9 +463,9 @@ function postDeleteComentario (){
 	$stmt->bindParam ('comentario_post_id', $_POST['comentario_post_id']);
 	
 	if ($stmt->execute())
-		echo SUCESSO;
+		echo MsgEnum::SUCESSO;
 	else 	
-		echo ERRO;
+		echo MsgEnum::ERRO;
 	
 	$conn = null;
 }
@@ -591,9 +568,9 @@ function deleteLaike(){
 	$stmt->bindParam ('post_id', $_POST['post_id']);
 	
 	if ($stmt->execute())
-		return SUCESSO;
+		return MsgEnum::SUCESSO;
 	else 	
-		return ERRO;
+		return MsgEnum::ERRO;
 	$conn = null;
 }
 
@@ -608,7 +585,7 @@ function postLaike (){
 	$stmt->bindParam ('post_id', $_POST['post_id']);
 
 	if ($stmt->execute())
-		echo SUCESSO;
+		echo MsgEnum::SUCESSO;
 	else 	
 		echo deleteLaike();
 	$conn = null;
@@ -651,7 +628,7 @@ function getUsuarioByPostId($post_id){
 	$conn = null;
 }
 
-function postDeletePost (){
+function postDeletePublicacao (){
 	
 	$conn = getConn();
 	$sql = "DELETE FROM tb_post WHERE post_id = :post_id";
@@ -664,8 +641,8 @@ function postDeletePost (){
 			return;
 		}
 	
-	echo ERRO;
-	$conn = null;
+	echo MsgEnum::ERRO;
+
 }
 
 
@@ -677,7 +654,7 @@ function deleteComentarioByPost ($post_id){
 	$stmt->bindParam ('post_id', $_POST['post_id']);
 
 	if ($stmt->execute())
-		return SUCESSO;
+		return MsgEnum::SUCESSO;
 	$conn = null;
 	return	ERRO;
 }
@@ -690,7 +667,7 @@ function deleteLaikeByPost ($post_id){
 	$stmt->bindParam ('post_id', $_POST['post_id']);
 
 	if ($stmt->execute())
-		return SUCESSO;
+		return MsgEnum::SUCESSO;
 	$conn = null;
 	return	ERRO;
 }
@@ -748,7 +725,7 @@ function postEnquete(){
 		echo $id_enquete;
 	}
 	else 
-		echo ERRO;
+		echo MsgEnum::ERRO;
 	$con = null;
 }
 
@@ -793,9 +770,9 @@ function postVoto(){
 	$stmt->bindParam ('voto', $_POST['voto']);
 	
 	if ($stmt->execute())
-		echo SUCESSO;
+		echo MsgEnum::SUCESSO;
 	else 
-		echo ERRO;
+		echo MsgEnum::ERRO;
 	$conn = null;
 }
 
@@ -910,7 +887,7 @@ function alterarDados(){
 		$grau_academico = $_POST['grau_academico'];
 
 	if (strlen($name) == 0){
-		echo ERRO_STRING_VAZIA;
+		echo MsgEnum::STRING_VAZIA;
 		return;
 	}
 	
@@ -935,11 +912,11 @@ function alterarDados(){
 
 	if ($stmt->execute()){
 		alteraFotoUsuario($id);
-		echo SUCESSO;
+		echo MsgEnum::SUCESSO;
 	}
 	
 	else
-		echo ERRO;
+		echo MsgEnum::ERRO;
 	
 	$conn = null;
 }
