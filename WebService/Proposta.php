@@ -22,7 +22,7 @@ class Proposta {
 
         if ($stmt->execute()) {
             
-            return MsgEnum::SUCESO;
+            return MsgEnum::SUCESSO;
             
         } else{
             

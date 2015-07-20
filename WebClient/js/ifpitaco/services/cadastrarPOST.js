@@ -14,7 +14,7 @@
             var formData = new FormData($(this)[0]);
             $.ajax({
                 type: "POST",
-                url: "../WebService/postUsuario",
+                url: "services/cadastrar.php",
                 contentType: false,
                 processData: false,
                 data: formData,
@@ -31,7 +31,7 @@
                         window.location.assign("index.php");
                 }, error: function (data) {
 
-                    bootbox.alert("Faça o upload corretamente! Escolha uma imagem válida ou uma imagem menor que 5000 x 5000.", function () {
+                    bootbox.alert(data, function () {
                         window.location.assign('cadastrar.php');
                     });
 

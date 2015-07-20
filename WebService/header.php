@@ -6,3 +6,4 @@ require_once 'MsgEnum.php';
 require_once 'Proposta.php';
 require_once 'Image.php';
 require_once 'Fiscalizacao.php';
+require_once 'Usuario.php';

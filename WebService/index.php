@@ -118,116 +118,14 @@ function sendToCloudinary120_120($path, $x, $y, $w, $h){
 
 
 function postFiscalizacao(){
-    return (new Fiscalizacao())->post();
+    echo (new Fiscalizacao())->post();
 }
 
-/*Verifica se o usuário com o seguinte email existe.*/
-function usuarioExiste ($email){
-	
-	$sql = "SELECT * FROM (tb_usuario) WHERE email = :email";
-	$conn = getConn();
-	$stmt = $conn->prepare ($sql);
-	$stmt->bindParam("email", $email);
-	$stmt->execute();
-	$result = $stmt->fetch();
-	
-	if ($result) return true; else return false;
-	$conn = null;
-}
 
-/* Salva a foto ao cadastrar um usuário */
-function saveFotoFromPostUsuario($email){
-	
-	$id = getIdByEmail($email);
-	//Default
-	$novo_nome = 'http://res.cloudinary.com/hikttgesy/image/upload/v1423353982/default_o5gzqs.jpg';
-	
-	if(!empty($_FILES))
-	if ($_FILES['foto']['name']){
-		if (isset($_POST['x']) && isset($_POST['y']) && isset($_POST['w']) && isset($_POST['h']) ){
-			list($width, $height) = getimagesize($_FILES['foto']['tmp_name']);
-			$novo_nome = sendToCloudinary120_120($_FILES['foto']['tmp_name'], $_POST['x'] * $width, $_POST['y'] * $height, $_POST['w'] * $width, $_POST['h'] * $height);
-		}	
-	}
-
-	$sql = "INSERT INTO tb_imagem_usuario (usuario_id, perfil) values (:id, :perfil)";
-	$conn = getConn();
-	
-	$stmt = $conn->prepare($sql);
-	
-	
-	$stmt->bindParam("id", $id);
-	$stmt->bindParam("perfil", $novo_nome);
-	
-	$stmt->execute();
-	$conn = null;
-}
-
-/*Cadastra um usuário
- * 
- * POST:
- * 	'nm_usuario'
- * 	'senha'
- * 	'email'
- * FILES:
- * 	'foto'
- * */
 function postUsuario(){
 	
-	$name = $_POST['nm_usuario'];
-	$senha = $_POST['senha'];
-	$email = $_POST['email'];
-	
-	$usuario_tipo = $_POST['usuario_tipo'];
-	$curso = '';
-	$ano_periodo = '';
-	$grau_academico = '';
-	
-	if(isset($_POST['curso']))
-		$curso = $_POST['curso'];
-	
-	if(isset($_POST['ano_periodo']))
-		$ano_periodo = $_POST['ano_periodo'];
+    echo (new Usuario())->post();
 
-	if(isset($_POST['grau_academico']))
-		$grau_academico = $_POST['grau_academico'];
-	
-	if (strlen($name) == 0 || strlen($senha) == 0 || strlen($email) == 0){
-		echo MsgEnum::STRING_VAZIA;
-		return;
-	}
-	
-	if (strlen($senha) < 6){
-		echo MsgEnum::SENHA_INVALIDA;
-		return;
-	}
-	
-	if (usuarioExiste ($email)){ echo MsgEnum::EMAIL_EXISTENTE; return; }
-	
-	$sql = "INSERT INTO tb_usuario (nm_usuario, senha, email, usuario_tipo, curso, ano_periodo, grau_academico) 
-			values (:nm_usuario, :senha, :email, :usuario_tipo, :curso, :ano_periodo, :grau_academico)";
-
-	$conn = getConn();
-	
-	$stmt = $conn->prepare($sql);
-
-	
-	$stmt->bindParam("nm_usuario", $name);
-	$stmt->bindParam("senha", $senha);
-	$stmt->bindParam("email", $email);
-	
-	$stmt->bindParam("usuario_tipo", $usuario_tipo);
-	$stmt->bindParam("curso", $curso);
-	$stmt->bindParam("ano_periodo", $ano_periodo);
-	$stmt->bindParam("grau_academico", $grau_academico);
-	
-	if ($stmt->execute()){
-		saveFotoFromPostUsuario($email);
-		echo MsgEnum::SUCESSO; 
-	}
-		else 
-			echo MsgEnum::ERRO;
-	$conn = null;
 }
 
 /*
@@ -286,19 +184,6 @@ function getNomeById($id){
 	$conn = null;
 }
 
-function getIdByEmail($email){
-	$sql = "SELECT id_usuario FROM tb_usuario WHERE email=:email";
-	$conn = getConn();
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam("email", $email);
-	
-	$stmt->execute();
-	
-	$result = $stmt->fetch();
-	
-	return $result['id_usuario'];
-	$conn = null;
-}
 
 //Conexão com o banco
 function getConn(){
