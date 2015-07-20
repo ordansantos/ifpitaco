@@ -22,28 +22,36 @@ class Image{
         
     }
     
-    private static function convertToJpg ($img_path){
+    private static function convertToJpg ($img_path, $x_percent = 0, 
+            $y_percent = 0, $w_percent = 1, $h_percent = 1){
         
-        $dst = $img_path . '.jpg';
             
         if (($img_info = getimagesize($img_path)) === FALSE){
             return false;
         }
-
-        $width = $img_info[0];
-        $height = $img_info[1];
 
         switch ($img_info[2]) {
           case IMAGETYPE_GIF  : $src = imagecreatefromgif($img_path);  break;
           case IMAGETYPE_JPEG : $src = imagecreatefromjpeg($img_path); break;
           case IMAGETYPE_PNG  : $src = imagecreatefrompng($img_path);  break;
           default : return false;
-              
         }
+        
+        $width = $img_info[0];
+        $height = $img_info[1];
+        
+        $new_x = intval($x_percent * $width);
+        $new_y = intval($y_percent * $height);
+        $new_width = intval($w_percent * $width);
+        $new_height = intval($h_percent * $height);
 
-        $tmp = imagecreatetruecolor($width, $height);
-        imagecopyresampled($tmp, $src, 0, 0, 0, 0, $width, $height, $width, $height);
-        imagejpeg($tmp, $dst);
+        
+        $tmp = imagecreatetruecolor($new_width, $new_height);
+        
+        imagecopyresampled($tmp, $src, $new_x, $new_y, 0, 0, $new_width, 
+                $new_height, $width, $height);
+        
+        imagejpeg($tmp, $img_path . '.jpg');
         
         return true;
     }
