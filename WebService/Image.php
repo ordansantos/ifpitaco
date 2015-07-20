@@ -2,9 +2,13 @@
 
 class Image{
     
-    private static function base64_to_file ($base64_string){
+    private static $path = '../storage/';
+
+    private static function base64ToFile ($base64_string){
         
-        $output_file = '../storage/' . md5(uniqid(""));
+        $img_name = md5(uniqid(""));
+        
+        $output_file = self::$path . $img_name;
 
         $ifp = fopen($output_file, "wb"); 
 
@@ -18,11 +22,46 @@ class Image{
         
     }
     
+    private static function convertToJpg ($img_path){
+        
+        $dst = $img_path . '.jpg';
+            
+        if (($img_info = getimagesize($img_path)) === FALSE){
+            return false;
+        }
+
+        $width = $img_info[0];
+        $height = $img_info[1];
+
+        switch ($img_info[2]) {
+          case IMAGETYPE_GIF  : $src = imagecreatefromgif($img_path);  break;
+          case IMAGETYPE_JPEG : $src = imagecreatefromjpeg($img_path); break;
+          case IMAGETYPE_PNG  : $src = imagecreatefrompng($img_path);  break;
+          default : return false;
+              
+        }
+
+        $tmp = imagecreatetruecolor($width, $height);
+        imagecopyresampled($tmp, $src, 0, 0, 0, 0, $width, $height, $width, $height);
+        imagejpeg($tmp, $dst);
+        
+        return true;
+    }
+    
     public static function save ($base64_string){
         
-        return self::base64_to_file($base64_string);
-
+        $img_path =  self::base64ToFile($base64_string);
         
+        if (self::convertToJpg($img_path) == false){
+            unlink($img_path);
+            return false;
+        }
+        
+        unlink($img_path);
+        
+        return self::$path . $img_path . '.jpg';
     }
+    
+
     
 }
