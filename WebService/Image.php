@@ -3,7 +3,11 @@
 class Image{
     
     private static $path = '../storage/';
-
+    
+    private static $thumbnail_width = 120;
+    
+    private static $thumbnail_height = 120;
+    
     private static function base64ToFile ($base64_string){
         
         $img_name = md5(uniqid(""));
@@ -22,9 +26,35 @@ class Image{
         
     }
     
-    private static function convertToJpg ($img_path, $x_percent = 0, 
-            $y_percent = 0, $w_percent = 1, $h_percent = 1){
+    private static function convertToJpg ($img_path){
         
+            
+        if (($img_info = getimagesize($img_path)) === false){
+            return false;
+        }
+
+        switch ($img_info[2]) {
+          case IMAGETYPE_GIF  : $src = imagecreatefromgif($img_path);  break;
+          case IMAGETYPE_JPEG : $src = imagecreatefromjpeg($img_path); break;
+          case IMAGETYPE_PNG  : $src = imagecreatefrompng($img_path);  break;
+          default : return false;
+        }
+        
+        $width = $img_info[0];
+        $height = $img_info[1];
+   
+        $tmp = imagecreatetruecolor($width, $height);
+        
+        imagecopyresampled($tmp, $src, 0, 0, 0, 0, $width, 
+                $height, $width, $height);
+        
+        imagejpeg($tmp, $img_path . '.jpg');
+        
+        return true;
+    }
+    
+    private static function convertToJpg_Thumbnail ($img_path, $x_percent, 
+            $y_percent, $w_percent, $h_percent){
             
         if (($img_info = getimagesize($img_path)) === FALSE){
             return false;
@@ -40,27 +70,37 @@ class Image{
         $width = $img_info[0];
         $height = $img_info[1];
         
-        $new_x = intval($x_percent * $width);
-        $new_y = intval($y_percent * $height);
-        $new_width = intval($w_percent * $width);
-        $new_height = intval($h_percent * $height);
+        $x = intval($x_percent * $width); // Crop Start X position in original image
+        $y = intval($y_percent * $height); // Crop Srart Y position in original image
+        $w = intval($w_percent * $width); //  width
+        $h = intval($h_percent * $height); // height
 
         
-        $tmp = imagecreatetruecolor($new_width, $new_height);
+        $new_image = imagecreatetruecolor($w, $h);
         
-        imagecopyresampled($tmp, $src, $new_x, $new_y, 0, 0, $new_width, 
-                $new_height, $width, $height);
+        imagecopyresampled($new_image, $src, 0, 0, $x, $y, $w, $h, $w, $h);
         
-        imagejpeg($tmp, $img_path . '.jpg');
+        // imagejpeg(self::toThumbnail($new_image, $w, $h), $img_path . '.jpg');
+        
+        imagejpeg($new_image, $img_path . '.jpg');
         
         return true;
+    }
+    
+    public static function toThumbnail ($src, $w, $h){
+        
+        $thumbnail = imagecreatetruecolor(self::$thumbnail_width, self::$thumbnail_height);
+        
+        imagecopyresampled($thumbnail, $src, 0, 0, 0, 0, 120, 120, $w, $h);
+        
+        return $thumbnail;
     }
     
     public static function save ($base64_string){
         
         $img_path =  self::base64ToFile($base64_string);
-        
-        if (self::convertToJpg($img_path) == false){
+                
+        if (self::convertToJpg($img_path) === false){
             unlink($img_path);
             return false;
         }
@@ -70,6 +110,21 @@ class Image{
         return self::$path . $img_path . '.jpg';
     }
     
-
+    public static function saveThumbnail ($base64_string, $x_percent, $y_percent, 
+            $w_percent, $h_percent){
+        
+        $img_path =  self::base64ToFile($base64_string);
+        
+        if (self::convertToJpg_Thumbnail($img_path, $x_percent, $y_percent,
+                $w_percent, $h_percent) === false){
+            unlink($img_path);
+            return false;
+        }
+        
+        unlink($img_path);
+        
+        return self::$path . $img_path . '.jpg';
+        
+    }
     
 }
