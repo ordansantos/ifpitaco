@@ -1,20 +1,20 @@
 
 <?php
 
-	include("getRoot.php");
-	$url = getRoot();
-	
-	include ('redirect.php');
-	
-	session_start();
-	
-	if ($_SESSION['id_usuario'] == '') {
-		echo '0';
-		exit(0);
-	}
+include("getRoot.php");
+$url = getRoot();
 
-	$_POST["usuario_id"] = trim($_SESSION['id_usuario']);
+include ('redirect.php');
 
-	echo redirectPost($url.'WebService/postComentario');
+session_start();
+
+if ($_SESSION['id_usuario'] == '') {
+        echo '0';
+        exit(0);
+}
+
+$_POST["usuario_id"] = trim($_SESSION['id_usuario']);
+
+echo redirectPost($url.'WebService/postComentario');
 
 ?>

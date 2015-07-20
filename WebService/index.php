@@ -116,75 +116,9 @@ function sendToCloudinary120_120($path, $x, $y, $w, $h){
 	return $img['url'];
 }
 
-/*Envia uma imagem para o cloudinary.*/
 
-function sendToCloudinary($path){
-	require 'cloudinary_src/Cloudinary.php';
-	require 'cloudinary_src/Uploader.php';
-	require 'cloudinary_src/Api.php';
-	
-	\Cloudinary::config(array(
-			"cloud_name" => "hikttgesy",
-			"api_key" => "259727914439314",
-			"api_secret" => "zCpYfezoRI9Zd8rRW6A9ITAsMVA"
-	));
-	
-	
-	$img = \Cloudinary\Uploader::upload($path);
-	
-	/*On heroku: return $img['secure_url'];*/
-	return $img['url'];
-}
-
-/*Salva a imagem da fiscalizacao.*/
-
-function saveFiscalizacaoImage($id){
-	
-	if(empty($_FILES)) return '';
-	
-	if ($_FILES['imagem']['name']){
-		$nome = sendToCloudinary($_FILES['imagem']['tmp_name']);
-		return $nome;
-	}
-	
-	return '';
-}
-
-/*
- * Envia uma fiscalização.
-POST:
-	comentario, usuario_id, ramo_id, tipo
-FILES
-	imagem
-*/
 function postFiscalizacao(){
-
-	$sql = "INSERT INTO tb_post (comentario, usuario_id, ramo_id, tipo) values (:comentario, :usuario_id, :ramo_id, 1)";
-
-	$conn = getConn();
-	$stmt = $conn->prepare($sql);
-	
-	$stmt->bindParam("comentario", $_POST['comentario']);
-	$stmt->bindParam("usuario_id", $_POST['usuario_id']);
-	$stmt->bindParam("ramo_id", $_POST['ramo_id']);
-
-	if ($stmt->execute()){
-		
-		$post_id = $conn->lastInsertId('post_id');
-		$url_img = saveFiscalizacaoImage($post_id);
-		if ($url_img != ''){
-			$sql = "UPDATE tb_post SET tipo = 2, imagem = :img WHERE post_id = :post_id";
-			$stmt = $conn->prepare ($sql);
-			$stmt->bindParam ('post_id', $post_id);
-			$stmt->bindParam ('img', $url_img);
-			$stmt->execute();
-		}
-		
-		echo MsgEnum::SUCESSO;
-	} else 
-		echo MsgEnum::ERRO;
-	
-	$conn = null;
+    return (new Fiscalizacao())->post();
 }
 
 /*Verifica se o usuário com o seguinte email existe.*/

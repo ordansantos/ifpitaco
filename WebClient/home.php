@@ -261,7 +261,6 @@ $user = redirectGet($url . 'WebService/getNomeById/' . $id);
                                 <li><img id="img_fiscalizar" src="" /></li>
 
                             </ul>
-                            <input type="hidden" name="usuario_id" value="<?php echo $id ?>" />
                         </form>
 
                     </div>
