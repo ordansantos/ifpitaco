@@ -89,8 +89,7 @@ class Usuario{
     
     public function saveFotoPerfil($email){
         
-	//Default
-	$novo_nome = $this->getFotoPath();
+	$path = $this->getFotoPath();
 
 	$sql = "INSERT INTO tb_imagem_usuario (usuario_id, perfil) values (:id, :perfil)";
         
@@ -102,7 +101,7 @@ class Usuario{
 
 	$stmt->bindParam("id", $id);
         
-	$stmt->bindParam("perfil", $novo_nome);
+	$stmt->bindParam("perfil", $path);
 	
 	$stmt->execute();
         
