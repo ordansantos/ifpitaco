@@ -4,7 +4,7 @@
 class Fiscalizacao{
     
     
-    public function post (){
+    public function post ($fiscalizacao){
         
         $conn = getConn();
         
@@ -13,13 +13,13 @@ class Fiscalizacao{
 
 	$stmt = $conn->prepare($sql);
 	
-	$stmt->bindParam("comentario", filter_input(INPUT_POST, 'comentario'));
-	$stmt->bindParam("usuario_id", filter_input(INPUT_POST, 'usuario_id'));
-	$stmt->bindParam("ramo_id", filter_input(INPUT_POST, 'ramo_id'));
+	$stmt->bindParam("comentario", $fiscalizacao->comentario);
+	$stmt->bindParam("usuario_id", $fiscalizacao->usuario_id);
+	$stmt->bindParam("ramo_id", $fiscalizacao->ramo_id);
 
 	if ($stmt->execute()) {
             
-            if ($this->trySaveImage($conn) === false){
+            if ($this->trySaveImage($conn, $fiscalizacao->base64_string) === false){
                 return MsgEnum::IMAGEM_INVALIDA;
             }
             
@@ -32,20 +32,18 @@ class Fiscalizacao{
         }
     }
     
-    private function trySaveImage ($conn){
-        
-        $base64_string = filter_input(INPUT_POST, 'imagem');
+    private function trySaveImage ($conn, $base64_string){
         
         if ($base64_string == ''){
             return true;
         }
-
+           
         $url_img = Image::save($base64_string);
         
         if ($url_img === false){
             return false;
         }
-        
+    
         if ($url_img != ''){
                 $post_id = $conn->lastInsertId('post_id');
                 $sql = "UPDATE tb_post SET tipo = 2, imagem = :img WHERE post_id = :post_id";

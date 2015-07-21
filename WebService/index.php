@@ -75,15 +75,15 @@ $app->get('/getLastAccess/:id', 'getLastAccess');
 $app->run();
 
 
-/*
- * Envia uma proposta.
-Post:
-	'comentario'
-	'usuario_id'
-	'ramo_id'
-*/
 function postProposta (){
-    echo (new Proposta())->post();
+    
+    $proposta = new stdClass();
+    
+    $proposta->comentario = filter_input(INPUT_POST, 'comentario');
+    $proposta->usuario_id = filter_input(INPUT_POST, 'usuario_id');
+    $proposta->ramo_id = filter_input(INPUT_POST, 'ramo_id');
+    
+    echo (new Proposta())->post($proposta);
 }
 
 /*Envia uma imagem para o cloudinary.*/
@@ -118,45 +118,53 @@ function sendToCloudinary120_120($path, $x, $y, $w, $h){
 
 
 function postFiscalizacao(){
-    echo (new Fiscalizacao())->post();
+    
+    $fiscalizacao = new stdClass();
+    
+    $fiscalizacao->comentario = filter_input(INPUT_POST, 'comentario');
+    $fiscalizacao->usuario_id = filter_input(INPUT_POST, 'usuario_id');
+    $fiscalizacao->ramo_id = filter_input(INPUT_POST, 'ramo_id');
+    $fiscalizacao->base64_string = filter_input(INPUT_POST, 'imagem');
+    
+    echo (new Fiscalizacao())->post($fiscalizacao);
 }
 
 
 function postUsuario(){
-	
-    echo (new Usuario())->post();
+    
+    $usuario = new stdClass();
+    
+    $usuario->name = filter_input(INPUT_POST, 'nm_usuario');
+    $usuario->senha = filter_input(INPUT_POST, 'senha');
+    $usuario->email = filter_input(INPUT_POST, 'email');
+
+    $usuario->usuario_tipo = filter_input(INPUT_POST, 'usuario_tipo');
+    $usuario->curso = filter_input(INPUT_POST, 'curso');
+    $usuario->ano_periodo = filter_input(INPUT_POST, 'ano_periodo');
+    $usuario->grau_academico = filter_input(INPUT_POST, 'grau_academico');
+    
+    $foto = new stdClass();
+    
+    $foto->base64_string = filter_input(INPUT_POST, 'imagem');
+    $foto->x_percent = filter_input(INPUT_POST, 'x');
+    $foto->y_percent = filter_input(INPUT_POST, 'y');
+    $foto->w_percent = filter_input(INPUT_POST, 'w');
+    $foto->h_percent = filter_input(INPUT_POST, 'h');
+    
+    echo (new Usuario())->post($usuario, $foto);
 
 }
 
-/*
- * Faz o login do usuário
-POST
-	'email'
-	'senha'
-
-*/
 function postLogin(){
-
-	//Fazendo o select no banco com as informações enviadas
-	$sql = "SELECT id_usuario FROM tb_usuario WHERE email = :email AND senha = :senha";
-	$conn = getConn();
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam("email", $_POST['email']);
-	$stmt->bindParam("senha", $_POST['senha']);
-	$stmt->execute();
-	$result = $stmt->fetch();
-	if (!$result) echo MsgEnum::ERRO; else{ echo $result['id_usuario']; updateLastAccess($result['id_usuario']); }
-	$conn = null;
+    
+    $login = new stdClass();
+    
+    $login->email = filter_input(INPUT_POST, 'email');
+    $login->senha = filter_input(INPUT_POST, 'senha');
+    
+    echo (new Usuario())->login($login);
 }
 
-
-/*
-Json(Array) a Receber:
-
-{"ramos":[
-	{"nm_ramo":"","id_ramo":""}
-]}
-*/
 function getRamos(){
 	
 	$stmt = getConn()->query("SELECT * FROM tb_ramo");
@@ -790,66 +798,18 @@ function curiarEnquete($id){
 }
 
 function postUpdateLastAccess(){
-	
-	$id = $_POST['usuario_id'];
-	updateLastAccess($id);
-}
+    
+    $id = filter_input(INPUT_POST, 'usuario_id');
+    
+    (new Usuario())->updateLastAccess($id);
 
-function updateLastAccess($id){
-
-	$sql = 'SELECT time FROM tb_last_access WHERE usuario_id = :id';
-	$conn = getConn();
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam('id', $id);
-	$stmt->execute();
-	$time = $stmt->fetch(PDO::FETCH_OBJ);
-	if (!$time){
-		$sql = 'INSERT INTO tb_last_access (usuario_id) VALUES (:id)';
-		$stmt = $conn->prepare($sql);
-		$stmt->bindParam('id', $id);
-		$stmt->execute();
-		$conn = null;
-		return;
-	}
-	
-	$sql = 'UPDATE tb_last_access SET time = now() WHERE usuario_id = :id';
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam('id', $id);
-	$stmt->execute();
-	$conn = null;
 }
 
 function getLastAccess($id){
-	$sql = 'SELECT time FROM tb_last_access WHERE usuario_id = :id';
-	$conn = getConn();
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam('id', $id);
-	$stmt->execute();
-	$time = $stmt->fetch(PDO::FETCH_OBJ);
-	if (!$time){
-		$sql = 'INSERT INTO tb_last_access (usuario_id) VALUES (:id)';
-		$stmt = $conn->prepare($sql);
-		$stmt->bindParam('id', $id);
-		$stmt->execute();
-		getLastAccess($id);
-		$conn = null;
-		return;
-	}
-        
 
-	$check = utf8_encode(json_encode(isOnline($time->time)));
-        
-	echo $check;
-        
+    echo (new Usuario())->getLastAccess($id);
 
 }
 
-function isOnline ($time){
-    
-    $now = new DateTime();
-    $access = new DateTime($time);
-    
-    return ['check' => ($now->getTimestamp() - $access->getTimestamp()) <= 120? 'online' : 'offline'];
-}
 
 

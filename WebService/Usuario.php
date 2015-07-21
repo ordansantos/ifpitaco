@@ -4,11 +4,9 @@
 
 class Usuario{
     
-    public function post (){
-    
-        $user = $this->createUser();
+    public function post ($usuario, $foto){
 
-        $check = $this->check($user);
+        $check = $this->check($usuario);
 
         if ($check !== true) {
             return $check;
@@ -22,49 +20,39 @@ class Usuario{
 	
 	$stmt = $conn->prepare($sql);
 
-	$stmt->bindParam("nm_usuario", $user->name);
-	$stmt->bindParam("senha", $user->senha);
-	$stmt->bindParam("email", $user->email);
-	$stmt->bindParam("usuario_tipo", $user->usuario_tipo);
-	$stmt->bindParam("curso", $user->curso);
-	$stmt->bindParam("ano_periodo", $user->ano_periodo);
-	$stmt->bindParam("grau_academico", $user->grau_academico);
+	$stmt->bindParam("nm_usuario", $usuario->name);
+	$stmt->bindParam("senha", $usuario->senha);
+	$stmt->bindParam("email", $usuario->email);
+	$stmt->bindParam("usuario_tipo", $usuario->usuario_tipo);
+	$stmt->bindParam("curso", $usuario->curso);
+	$stmt->bindParam("ano_periodo", $usuario->ano_periodo);
+	$stmt->bindParam("grau_academico", $usuario->grau_academico);
 
 	if ($stmt->execute()) {
-            $this->saveFotoPerfil($user->email);
+            
+            $id = $this->getIdByEmail($usuario->email);
+            
+            $this->saveFotoPerfil($id, $foto);
+            
+            $this->addUserToTbLastAccess($id);
+            
             return MsgEnum::SUCESSO;
         } else {
             return MsgEnum::ERRO;
         }
     }
     
-    private function createUser (){
+    private function check ($usuario){
         
-        $user = new stdClass();
-        
-	$user->name = filter_input(INPUT_POST, 'nm_usuario');
-	$user->senha = filter_input(INPUT_POST, 'senha');
-	$user->email = filter_input(INPUT_POST, 'email');
-        
-	$user->usuario_tipo = filter_input(INPUT_POST, 'usuario_tipo');
-	$user->curso = filter_input(INPUT_POST, 'curso');
-	$user->ano_periodo = filter_input(INPUT_POST, 'ano_periodo');
-        $user->grau_academico = filter_input(INPUT_POST, 'grau_academico');
-        
-        return $user;
-    }
-    
-    private function check ($user){
-        
-        if (strlen($user->name) == 0 || strlen($user->senha) == 0 || strlen($user->email) == 0){
+        if (strlen($usuario->name) == 0 || strlen($usuario->senha) == 0 || strlen($usuario->email) == 0){
             return MsgEnum::STRING_VAZIA;
         }
 	
-	if (strlen($user->senha) < 6){
+	if (strlen($usuario->senha) < 6){
             return MsgEnum::SENHA_INVALIDA;
 	}
         
-        if ($this->existente($user) === true){
+        if ($this->existente($usuario) === true){
            
             return MsgEnum::EMAIL_EXISTENTE;
         }
@@ -72,11 +60,11 @@ class Usuario{
         return true;
     }
     
-    private function existente($user){
+    private function existente($usuario){
 	$sql = "SELECT * FROM (tb_usuario) WHERE email = :email";
 	$conn = getConn();
 	$stmt = $conn->prepare ($sql);
-	$stmt->bindParam("email", $user->email);
+	$stmt->bindParam("email", $usuario->email);
 	$stmt->execute();
 	$result = $stmt->fetch();
         
@@ -87,51 +75,26 @@ class Usuario{
         }
     }
     
-    public function saveFotoPerfil($email){
+    public function saveFotoPerfil($id, $foto){
         
-	$path = $this->getFotoPath();
-
+	$path = $this->getFotoPath($foto);
 	$sql = "INSERT INTO tb_imagem_usuario (usuario_id, perfil) values (:id, :perfil)";
-        
 	$conn = Database::getConn();
-	
 	$stmt = $conn->prepare($sql);
-        
-        $id = $this->getIdByEmail($email);
-
 	$stmt->bindParam("id", $id);
-        
 	$stmt->bindParam("perfil", $path);
-	
 	$stmt->execute();
         
     }
     
-    private function getFotoPath (){
+    private function getFotoPath ($foto){
         
         $default = '../storage/default';
         
-	if (($base64_string = filter_input(INPUT_POST, 'imagem')) != ''){
+	if ($foto->base64_string != ''){
 
-            if (($x_percent = filter_input(INPUT_POST, 'x')) === false){
-                return $default;
-            }
-            
-            if (($y_percent = filter_input(INPUT_POST, 'y')) === false){
-                return $default;
-            }
-            
-            if (($w_percent = filter_input(INPUT_POST, 'w')) === false){
-                return $default;
-            }
-            
-            if (($h_percent = filter_input(INPUT_POST, 'h')) === false){
-                return $default;
-            }
-            
-
-            return Image::saveThumbnail($base64_string, $x_percent, 
-                    $y_percent, $w_percent, $h_percent);                            
+            return Image::saveThumbnail($foto->base64_string, $foto->x_percent, 
+                    $foto->y_percent, $foto->w_percent, $foto->h_percent);                            
 	}
         
         return $default;
@@ -152,6 +115,68 @@ class Usuario{
             
     }
     
+    public function login($login){
+
+	$sql = "SELECT id_usuario FROM tb_usuario WHERE email = :email AND senha = :senha";
+	$conn = getConn();
+	$stmt = $conn->prepare($sql);
+	$stmt->bindParam("email", $login->email);
+	$stmt->bindParam("senha", $login->senha);
+	$stmt->execute();
+	$result = $stmt->fetch();
+	if (!$result) {
+            return MsgEnum::ERRO;
+        } else {
+            
+            $this->updateLastAccess($result['id_usuario']);
+            return $result['id_usuario'];
+            
+        }
+    }
+    
+    public function updateLastAccess($id){
+        
+            $conn = Database::getConn();
+            $sql = 'UPDATE tb_last_access SET time = now() WHERE usuario_id = :id';
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam('id', $id);
+            $stmt->execute();
+            
+    }
+    
+    private function addUserToTbLastAccess ($id){
+        
+        $conn = Database::getConn();
+        $sql = 'INSERT INTO tb_last_access (usuario_id) VALUES (:id)';
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam('id', $id);
+        $stmt->execute();
+        
+    }
+    
+    public function getLastAccess ($id){
+       
+	$sql = 'SELECT time FROM tb_last_access WHERE usuario_id = :id';
+	$conn = getConn();
+	$stmt = $conn->prepare($sql);
+	$stmt->bindParam('id', $id);
+	$stmt->execute();
+	$time = $stmt->fetch(PDO::FETCH_OBJ);
+
+	$check = utf8_encode(json_encode($this->isOnline($time->time)));
+        
+	return $check;
+        
+    }
+    
+    private function isOnline ($time){
+
+        $now = new DateTime();
+        $access = new DateTime($time);
+
+        return ['check' => ($now->getTimestamp() - $access->getTimestamp()) <= 120? 'online' : 'offline'];
+    }
+
     
 }
 

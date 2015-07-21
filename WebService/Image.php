@@ -107,7 +107,7 @@ class Image{
         
         unlink($img_path);
         
-        return self::$path . $img_path . '.jpg';
+        return $img_path . '.jpg';
     }
     
     public static function saveThumbnail ($base64_string, $x_percent, $y_percent, 
@@ -123,7 +123,7 @@ class Image{
         
         unlink($img_path);
         
-        return self::$path . $img_path . '.jpg';
+        return $img_path . '.jpg';
         
     }
     

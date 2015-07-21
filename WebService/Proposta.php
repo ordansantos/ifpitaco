@@ -4,7 +4,7 @@ require_once 'header.php';
 
 class Proposta {
 
-    public function post() {
+    public function post($proposta) {
 
         $sql = "INSERT INTO tb_post (comentario, usuario_id, ramo_id, tipo) " .
                 "values (:comentario, :usuario_id, :ramo_id, 0)";
@@ -14,11 +14,11 @@ class Proposta {
         $stmt = $conn->prepare($sql);
         
 
-        $stmt->bindParam("comentario", filter_input(INPUT_POST, 'comentario'));
+        $stmt->bindParam("comentario", $proposta->comentario);
         
-        $stmt->bindParam("usuario_id", filter_input(INPUT_POST, 'usuario_id'));
+        $stmt->bindParam("usuario_id", $proposta->usuario_id);
         
-        $stmt->bindParam("ramo_id", filter_input(INPUT_POST, 'ramo_id'));
+        $stmt->bindParam("ramo_id", $proposta->ramo_id);
 
         if ($stmt->execute()) {
             
