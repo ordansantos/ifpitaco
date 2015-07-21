@@ -113,7 +113,7 @@ SEARCH = (function () {
         if (text == '')
             return false;
 
-        getUsersFromBusca(text, function (usuariosFromBusca) {
+        search.getUsersFromBusca(text, function (usuariosFromBusca) {
             if (usuariosFromBusca.length == 0)
                 return;
 
