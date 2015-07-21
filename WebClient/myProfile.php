@@ -103,7 +103,8 @@ $grau_academico = $usuario->grau_academico;
                     <form  role="search" onsubmit="return SEARCH.doSearchSubmitted()" id="search_form">
                         <div class="inner-addon right-addon">
                             <i class="glyphicon glyphicon-search"></i>	
-                            <input type="text" id='search_input' class="navbar-left form-control" placeholder="Procurar Usuário"  onkeyup="SEARCH.doSearch(this.value)">
+                            <input type="text" id='search_input' class="navbar-left form-control" placeholder="Procurar Usuário"  onkeyup="SEARCH.doSearch(this.value)"
+                                   autocomplete="off">
                         </div>
                     </form>
                 </div>
