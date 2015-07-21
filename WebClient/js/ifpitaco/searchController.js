@@ -55,7 +55,7 @@ SEARCH = (function () {
         if (search.gettingUsers)
             return;
         search.gettingUsers = true;
-
+ 
         if (text == '') {
             $('#search_list').remove();
             $('#search_form')[0].reset();
@@ -94,7 +94,7 @@ SEARCH = (function () {
                     $(this).css('background-color', 'white');
                 });
                 $('#search_list_old').remove();
-                gettingUsers = false;
+                search.gettingUsers = false;
             });
 
 
@@ -105,7 +105,7 @@ SEARCH = (function () {
     // Quando usuário pesquisa e aperta Enter
     search.doSearchSubmitted = function () {
 
-        text = $('#search_input')[0].value;
+        var text = $('#search_input')[0].value;
 
         if (/[^a-zA-Z]/.test(text))
             return false;
