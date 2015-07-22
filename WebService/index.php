@@ -229,10 +229,9 @@ function getNPostsLessThanMid($n, $m){
 //Ordenado do menor para o maior
 function getAllPostsGreaterThanNid($n){
 
-    (new Publicacao())->getAllPostsGreaterThanNid($n);
+    echo (new Publicacao())->getAllPostsGreaterThanNid($n);
     
 }
-
 
 //Ordenado do Maior para o menor
 function getNPosts($n){
