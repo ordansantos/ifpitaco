@@ -166,32 +166,12 @@ function postLogin(){
 }
 
 function getRamos(){
-	
-	$stmt = getConn()->query("SELECT * FROM tb_ramo");
-	
-	$result = $stmt->fetchAll(PDO::FETCH_OBJ);
-	
-	echo '{"ramos":'.utf8_encode(json_encode($result))."}";	
+    echo (new Publicacao())->getRamos();
 }
 
-/*
- * Envia id e retorna o nome de usuário
- */
 function getNomeById($id){
-	
-	$sql = "SELECT nm_usuario FROM tb_usuario WHERE id_usuario=:id";
-	$conn = getConn();
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam("id", $id);
-	
-	$stmt->execute();
-	
-	$result = $stmt->fetch();
-	
-	echo $result['nm_usuario'];
-	$conn = null;
+    echo (new Usuario())->getNomeById($id);
 }
-
 
 //Conexão com o banco
 function getConn(){
@@ -199,113 +179,44 @@ function getConn(){
 	array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
 }
 
-
 function getFotoPerfilById($id){
-	
-	$sql = "
-	SELECT perfil FROM tb_imagem_usuario, tb_usuario
-	WHERE tb_imagem_usuario.usuario_id = tb_usuario.id_usuario AND tb_usuario.id_usuario = :id";
-	$conn = getConn();
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam("id", $id);
-	
-	$stmt->execute();
-	
-	$result = $stmt->fetch();
-	
-	echo $result['perfil'];
-	$conn = null;
+    echo (new Usuario())->getFotoPerfilById($id);
 }
 
 function postComentario (){
-	
-	$usuario_id = $_POST['usuario_id'];
-	$post_id = $_POST['post_id'];
-	$comentario = $_POST['comentario'];
-	
-	if (strlen($comentario) == 0 || trim($comentario) == ''){
-		echo ERRO_STRING_VAZIA;
-		return;
-	}
-	
-	$sql = "INSERT INTO tb_comentario_post (usuario_id, post_id, comentario) values (:usuario_id, :post_id, :comentario)";
-	
-	$conn = getConn();
-	
-	$stmt = $conn->prepare($sql);
-	
-	$stmt->bindParam("usuario_id", $usuario_id);
-	$stmt->bindParam("post_id", $post_id);
-	$stmt->bindParam("comentario", $comentario);
-	
-	if ($stmt->execute())
-		echo MsgEnum::SUCESSO;
-	else
-		echo MsgEnum::ERRO;
-	$conn = null;
-}
-
-function postExists ($id){
-	$conn = getConn();
-	$sql = "SELECT EXISTS(SELECT 1 FROM tb_post WHERE post_id = :id) as cnt";
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam ('id', $id);
-	$stmt->execute();
-	$result = $stmt->fetch();
-	return $result['cnt'];
-	$conn = null;
+        
+        $comentario = new stdClass();
+        
+	$comentario->usuario_id = filter_input(INPUT_POST, 'usuario_id');
+	$comentario->post_id = filter_input(INPUT_POST, 'post_id');
+	$comentario->comentario = filter_input(INPUT_POST, 'comentario');
+        
+        echo (new Comentario())->post($comentario);
 }
 
 function getComentariosById ($id){
 
-	if (postExists($id) == 0){
-		echo '{"flag":"0"}';
-		return;
-	}
-	
-	$conn = getConn();
-	
-	$sql = "SELECT nm_usuario, id_usuario, 
-			comentario, CONVERT_TZ(`data_hora`, @@session.time_zone, '+00:00') as data_hora, comentario_post_id, perfil FROM tb_usuario,
-			tb_comentario_post, tb_imagem_usuario WHERE tb_comentario_post.usuario_id = id_usuario 
-			AND tb_imagem_usuario.usuario_id = id_usuario AND post_id = :id ORDER BY comentario_post_id";
-	
-	$stmt = $conn->prepare($sql);
-	
-	$stmt->bindParam ('id', $id);
-	
-	$stmt->execute();
-	$result = $stmt->fetchAll(PDO::FETCH_OBJ);
-	echo '{ "flag": "1", "comentarios":'.utf8_encode(json_encode($result))."}";
-	$conn = null;
+    echo (new Comentario())->getComentariosById($id);
+    
 }
-
-
 
 function postDeleteComentario (){
 	
-	$conn = getConn();
-	$sql = "DELETE FROM tb_comentario_post WHERE comentario_post_id = :comentario_post_id";
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam ('comentario_post_id', $_POST['comentario_post_id']);
-	
-	if ($stmt->execute())
-		echo MsgEnum::SUCESSO;
-	else 	
-		echo MsgEnum::ERRO;
-	
-	$conn = null;
+        $comentario = new stdClass();
+        
+        $comentario->comentario_post_id = filter_input(INPUT_POST, 'comentario_post_id');
+        
+        (new Comentario())->delete($comentario);
 }
 
 function getUsuarioByComentarioPostId($comentario_post_id){
-	$conn = getConn();
-	$sql = "SELECT usuario_id FROM tb_comentario_post WHERE comentario_post_id = :id";
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam ('id', $comentario_post_id);
-	$stmt->execute();
-	$result = $stmt->fetch();
-	echo $result['usuario_id'];
-	$conn = null;
+    
+    $comentario = new stdClass();
+    
+    $comentario->comentario_post_id = $comentario_post_id;
+    
+    echo (new Comentario())->getUsuarioByComentarioPostId($comentario);
+    
 }
 
 //Ordenado do Maior para o menor

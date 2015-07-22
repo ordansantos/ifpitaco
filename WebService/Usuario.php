@@ -177,6 +177,35 @@ class Usuario{
         return ['check' => ($now->getTimestamp() - $access->getTimestamp()) <= 120? 'online' : 'offline'];
     }
 
+    public function getNomeById($id){
+	$sql = "SELECT nm_usuario FROM tb_usuario WHERE id_usuario=:id";
+	$conn = Database::getConn();
+	$stmt = $conn->prepare($sql);
+	$stmt->bindParam("id", $id);
+	
+	$stmt->execute();
+	
+	$result = $stmt->fetch();
+	
+	return $result['nm_usuario'];
+    }
+    
+    public function getFotoPerfilById($id){
+	$sql = "
+	SELECT perfil FROM tb_imagem_usuario, tb_usuario
+	WHERE tb_imagem_usuario.usuario_id = 
+        tb_usuario.id_usuario AND tb_usuario.id_usuario = :id";
+	
+        $conn = Database::getConn();
+	$stmt = $conn->prepare($sql);
+	$stmt->bindParam("id", $id);
+	
+	$stmt->execute();
+	
+	$result = $stmt->fetch();
+	
+	return $result['perfil'];
+    }
     
 }
 
