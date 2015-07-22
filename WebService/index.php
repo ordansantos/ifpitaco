@@ -185,13 +185,13 @@ function getFotoPerfilById($id){
 
 function postComentario (){
         
-        $comentario = new stdClass();
-        
-	$comentario->usuario_id = filter_input(INPUT_POST, 'usuario_id');
-	$comentario->post_id = filter_input(INPUT_POST, 'post_id');
-	$comentario->comentario = filter_input(INPUT_POST, 'comentario');
-        
-        echo (new Comentario())->post($comentario);
+    $comentario = new stdClass();
+
+    $comentario->usuario_id = filter_input(INPUT_POST, 'usuario_id');
+    $comentario->post_id = filter_input(INPUT_POST, 'post_id');
+    $comentario->comentario = filter_input(INPUT_POST, 'comentario');
+
+    echo (new Comentario())->post($comentario);
 }
 
 function getComentariosById ($id){
@@ -202,11 +202,11 @@ function getComentariosById ($id){
 
 function postDeleteComentario (){
 	
-        $comentario = new stdClass();
-        
-        $comentario->comentario_post_id = filter_input(INPUT_POST, 'comentario_post_id');
-        
-        (new Comentario())->delete($comentario);
+    $comentario = new stdClass();
+
+    $comentario->comentario_post_id = filter_input(INPUT_POST, 'comentario_post_id');
+
+    echo (new Comentario())->delete($comentario);
 }
 
 function getUsuarioByComentarioPostId($comentario_post_id){
@@ -222,80 +222,21 @@ function getUsuarioByComentarioPostId($comentario_post_id){
 //Ordenado do Maior para o menor
 function getNPostsLessThanMid($n, $m){
 	
-	$conn = getConn();
-	
-	//Linha utilizada para usar o LIMIT
-	$conn->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
+    echo (new Publicacao())->getNPostsLessThanMid($n, $m);
 
-	
-	$sql = "SELECT comentario, imagem, nm_usuario, nm_ramo, CONVERT_TZ(`data_hora`, @@session.time_zone, '+00:00') as data_hora, post_id, perfil, tb_post.usuario_id as usuario_id, tipo
-			FROM tb_post, tb_usuario, tb_ramo, tb_imagem_usuario
-			WHERE ramo_id = id_ramo AND tb_post.usuario_id = tb_usuario.id_usuario AND 
-			tb_post.usuario_id = tb_imagem_usuario.usuario_id 
-			AND post_id < :m ORDER BY post_id DESC LIMIT :n";
-	
-	$stmt = $conn->prepare($sql);
-	
-	$stmt->bindParam('n', $n);
-	$stmt->bindParam('m', $m);
-	 
-    $stmt->execute();
-	
-	$posts = $stmt->fetchAll(PDO::FETCH_OBJ);
-
-	echo '{"posts":'.utf8_encode(json_encode($posts))."}";
-	$conn = null;
 }
 
 //Ordenado do menor para o maior
 function getAllPostsGreaterThanNid($n){
 
-	$conn = getConn();
-
-	$sql = "SELECT comentario, imagem, nm_usuario, nm_ramo, CONVERT_TZ(`data_hora`, @@session.time_zone, '+00:00') as data_hora, post_id, perfil, tb_post.usuario_id as usuario_id, tipo
-			FROM tb_post, tb_usuario, tb_ramo, tb_imagem_usuario
-			WHERE ramo_id = id_ramo AND tb_post.usuario_id = tb_usuario.id_usuario AND
-			tb_post.usuario_id = tb_imagem_usuario.usuario_id
-			AND post_id > :n ORDER BY post_id";
-
-	$stmt = $conn->prepare($sql);
-
-	$stmt->bindParam('n', $n);
-
-	$stmt->execute();
-
-	$posts = $stmt->fetchAll(PDO::FETCH_OBJ);
-
-	echo '{"posts":'.utf8_encode(json_encode($posts))."}";
-	$conn = null;
+    (new Publicacao())->getAllPostsGreaterThanNid($n);
+    
 }
 
 
 //Ordenado do Maior para o menor
 function getNPosts($n){
-	
-	$conn = getConn();
-	
-	//Linha utilizada para usar o LIMIT
-	$conn->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
-
-	
-	$sql = "SELECT comentario, imagem, nm_usuario, nm_ramo, CONVERT_TZ(`data_hora`, @@session.time_zone, '+00:00') as data_hora, post_id, perfil, tb_post.usuario_id as usuario_id, tipo
-			FROM tb_post, tb_usuario, tb_ramo, tb_imagem_usuario
-			WHERE ramo_id = id_ramo AND tb_post.usuario_id = tb_usuario.id_usuario AND 
-			tb_post.usuario_id = tb_imagem_usuario.usuario_id 
-			ORDER BY post_id DESC LIMIT :n";
-	
-	$stmt = $conn->prepare($sql);
-	
-	$stmt->bindParam('n', $n, PDO::PARAM_INT);
-	 
-    $stmt->execute();
-	
-	$posts = $stmt->fetchAll(PDO::FETCH_OBJ);
-
-	echo '{"posts":'.utf8_encode(json_encode($posts))."}";
-	$conn = null;
+    echo (new Publicacao())->getNPosts($n);
 }
 
 function deleteLaike(){
