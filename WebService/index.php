@@ -221,78 +221,39 @@ function getUsuarioByComentarioPostId($comentario_post_id){
 
 //Ordenado do Maior para o menor
 function getNPostsLessThanMid($n, $m){
-	
     echo (new Publicacao())->getNPostsLessThanMid($n, $m);
-
 }
 
-//Ordenado do menor para o maior
 function getAllPostsGreaterThanNid($n){
-
     echo (new Publicacao())->getAllPostsGreaterThanNid($n);
-    
 }
 
-//Ordenado do Maior para o menor
 function getNPosts($n){
     echo (new Publicacao())->getNPosts($n);
-}
-
-function deleteLaike(){
-	$conn = getConn();
-	$sql = "DELETE FROM tb_laikar WHERE post_id = :post_id AND usuario_id = :usuario_id";
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam ('usuario_id', $_POST['usuario_id']);
-	$stmt->bindParam ('post_id', $_POST['post_id']);
-	
-	if ($stmt->execute())
-		return MsgEnum::SUCESSO;
-	else 	
-		return MsgEnum::ERRO;
-	$conn = null;
 }
 
 //Se enviar um post de like existente, o mesmo é apagado
 function postLaike (){
 	
-	$conn = getConn();
-	
-	$sql = "INSERT INTO tb_laikar (usuario_id, post_id) values (:usuario_id, :post_id)";
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam ('usuario_id', $_POST['usuario_id']);
-	$stmt->bindParam ('post_id', $_POST['post_id']);
-
-	if ($stmt->execute())
-		echo MsgEnum::SUCESSO;
-	else 	
-		echo deleteLaike();
-	$conn = null;
-}
-
-//Flag responde se usuário curtiu
-
-function doesUserLaike($usuario_id, $post_id){
-	$conn = getConn();
-	$sql = "SELECT EXISTS(SELECT 1 FROM tb_laikar WHERE post_id = :post_id AND usuario_id = :usuario_id) as cnt";
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam ('post_id', $post_id);
-	$stmt->bindParam ('usuario_id', $usuario_id);
-	$stmt->execute();
-	$result = $stmt->fetch();
-	return $result['cnt'];
-	$conn = null;
+    $laike = new stdClass();
+    
+    $laike->usuario_id = filter_input(INPUT_POST, 'usuario_id');
+    
+    $laike->post_id = filter_input(INPUT_POST, 'post_id');
+    
+    echo (new Laike())->post($laike);
+    
 }
 
 function getCntLaikesAndUserFlagByPostIdAndUserId ($post_id, $usuario_id){
-	
-	$conn = getConn();
-	$sql = "SELECT COUNT(*) as cnt FROM tb_laikar WHERE post_id = :post_id";
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam ('post_id', $post_id);
-	$stmt->execute();
-	$result = $stmt->fetch();
-	echo '{"flag":"'.doesUserLaike($usuario_id, $post_id).'", "cnt":"'.$result['cnt'].'"}';
-	$conn = null;
+    
+    $laike = new stdClass();
+    
+    $laike->usuario_id = $usuario_id;
+    
+    $laike->post_id = $post_id;
+    
+    echo (new Laike())->getCntLaikesAndUserFlagByPostIdAndUserId($laike);
 }
 
 function getUsuarioByPostId($post_id){

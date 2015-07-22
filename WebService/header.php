@@ -9,3 +9,4 @@ require_once 'Fiscalizacao.php';
 require_once 'Usuario.php';
 require_once 'Publicacao.php';
 require_once 'Comentario.php';
+require_once 'Laike.php';
