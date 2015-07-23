@@ -4,6 +4,8 @@ class Image{
     
     private static $path = '../storage/';
     
+    private static $default = 'default';
+    
     private static $thumbnail_width = 120;
     
     private static $thumbnail_height = 120;
@@ -125,6 +127,10 @@ class Image{
         
         return $img_path . '.jpg';
         
+    }
+    
+    public static function getDefaultPath (){
+        return self::$path . self::$default;
     }
     
 }

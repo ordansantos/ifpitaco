@@ -89,15 +89,13 @@ class Usuario{
     
     private function getFotoPath ($foto){
         
-        $default = '../storage/default';
-        
 	if ($foto->base64_string != ''){
 
             return Image::saveThumbnail($foto->base64_string, $foto->x_percent, 
                     $foto->y_percent, $foto->w_percent, $foto->h_percent);                            
 	}
         
-        return $default;
+        return Image::getDefaultPath();
     }
     
     private function getIdByEmail($email){
