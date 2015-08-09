@@ -26,10 +26,12 @@ $user = redirectGet($url . 'WebService/getNomeById/' . $id);
         <link rel="shortcut icon" href="images/favicon.png">
         <title>IFPitaco</title>
 
-        <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
-        <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
-        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+        <!-- JQuery -->
+        <script src="jquery/jquery-1.11.3.min.js"></script>
+
+        <!-- Bootstrap -->
+        <link href="bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet">
+        <script src="bootstrap-3.3.5/js/bootstrap.min.js"></script>
 
 
         <script src="js/ifpitaco/tools/htmlentities.js"></script>
