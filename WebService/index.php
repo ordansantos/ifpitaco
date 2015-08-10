@@ -205,7 +205,9 @@ function postDeleteComentario (){
     $comentario = new stdClass();
 
     $comentario->comentario_post_id = filter_input(INPUT_POST, 'comentario_post_id');
-
+    
+    $comentario->id_usuario = filter_input(INPUT_POST, 'id_usuario');
+    
     echo (new Comentario())->delete($comentario);
 }
 
@@ -270,34 +272,6 @@ function postDeletePublicacao (){
     
     echo (new Publicacao())->delete($delete);
 }
-
-
-function deleteComentarioByPost ($post_id){
-
-	$conn = getConn();
-	$sql = "DELETE FROM tb_comentario_post WHERE post_id = :post_id";
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam ('post_id', $_POST['post_id']);
-
-	if ($stmt->execute())
-		return MsgEnum::SUCESSO;
-	$conn = null;
-	return	ERRO;
-}
-
-function deleteLaikeByPost ($post_id){
-
-	$conn = getConn();
-	$sql = "DELETE FROM tb_laikar WHERE post_id = :post_id";
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam ('post_id', $_POST['post_id']);
-
-	if ($stmt->execute())
-		return MsgEnum::SUCESSO;
-	$conn = null;
-	return	ERRO;
-}
-
 
 function saveEnqueteImage($id){
 	

@@ -30,15 +30,26 @@ class Comentario {
     
     public function delete ($comentario){
         
-        $conn = Database::getConn();
-	$sql = "DELETE FROM tb_comentario_post WHERE comentario_post_id = :comentario_post_id";
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam ('comentario_post_id', $comentario->comentario_post_id);
-	
-	if ($stmt->execute()) {
-            return MsgEnum::SUCESSO;
-        } else {
+        $usuario_comentario = $this->getUsuarioByComentarioPostId($comentario);
+        
+        if ($comentario->id_usuario != $usuario_comentario){
             return MsgEnum::ERRO;
+        } else{
+        
+            $conn = Database::getConn();
+
+            $sql = "UPDATE tb_comentario_post SET deletado = 1 WHERE "
+                    . "comentario_post_id = :comentario_post_id";
+            
+            $stmt = $conn->prepare($sql);
+            
+            $stmt->bindParam ('comentario_post_id', $comentario->comentario_post_id);
+
+            if ($stmt->execute()) {
+                echo MsgEnum::SUCESSO;
+            } else {
+                echo MsgEnum::ERRO;
+            }
         }
     }
     
@@ -56,7 +67,8 @@ class Comentario {
 			tb_comentario_post, tb_imagem_usuario WHERE 
                         tb_comentario_post.usuario_id = id_usuario 
 			AND tb_imagem_usuario.usuario_id = id_usuario 
-                        AND post_id = :id ORDER BY comentario_post_id";
+                        AND post_id = :id AND deletado = 0
+                        ORDER BY comentario_post_id";
 	
 	$stmt = $conn->prepare($sql);
 	

@@ -16,8 +16,8 @@ function comentarioDELETE(id) {
 
                     $('#c' + id).remove();
                     $.param({comentario_post_id: id});
-                    $.post("services/deletarComentario.php", {comentario_post_id: id});
-
+                    var response = $.post("services/deletarComentario.php", {comentario_post_id: id});
+                    console.log (response);
                 }
             }
 
