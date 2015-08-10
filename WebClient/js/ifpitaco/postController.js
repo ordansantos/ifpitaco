@@ -31,7 +31,7 @@ POST = (function () {
         postObject.postLoad();
 
         setInterval(function () {
-            postObject.postReload();
+            postObject.postsReload();
         }, 5000);
         setInterval(function () {
             postObject.newPost();
@@ -46,13 +46,15 @@ POST = (function () {
     });
 
     postObject.postsReload = function () {
-        for (p in postObject.postArray)
-            postObject.postReload(p);
+        for (var p in postObject.postArray)
+            postObject.postReload(postObject.postArray[p]);
     };
 
     postObject.postReload = function (post) {
-        if (document.getElementById(post) == null || !$('#' + post).visible(true))
+
+        if (document.getElementById(post) === null || !$('#' + post).visible(true))
             return;
+
         COMENTARIO.load(post);
         LAIKES.load(post);
     };
