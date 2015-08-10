@@ -2,31 +2,31 @@
 ENQUETE = (function () {
 
     var enqueteObject = {};
-    
+
     enqueteObject.lastEnquete = 0;
     enqueteObject.number_votes_enquete = 0;
     enqueteObject.data_enquete = 0;
     enqueteObject.isVoting = false;
-    
+
     enqueteObject.opts_spin = {
-            lines: 9, // The number of lines to draw
-            length: 6, // The length of each line
-            width: 4, // The line thickness
-            radius: 8, // The radius of the inner circle
-            corners: 1, // Corner roundness (0..1)
-            rotate: 0, // The rotation offset
-            direction: 1, // 1: clockwise, -1: counterclockwise
-            color: '#000', // #rgb or #rrggbb or array of colors
-            speed: 1.6, // Rounds per second
-            trail: 39, // Afterglow percentage
-            shadow: false, // Whether to render a shadow
-            hwaccel: false, // Whether to use hardware acceleration
-            className: 'spinner', // The CSS class to assign to the spinner
-            zIndex: 2e9, // The z-index (defaults to 2000000000)
-            top: '50%', // Top position relative to parent
-            left: '50%' // Left position relative to parent
-        };
-    
+        lines: 9, // The number of lines to draw
+        length: 6, // The length of each line
+        width: 4, // The line thickness
+        radius: 8, // The radius of the inner circle
+        corners: 1, // Corner roundness (0..1)
+        rotate: 0, // The rotation offset
+        direction: 1, // 1: clockwise, -1: counterclockwise
+        color: '#000', // #rgb or #rrggbb or array of colors
+        speed: 1.6, // Rounds per second
+        trail: 39, // Afterglow percentage
+        shadow: false, // Whether to render a shadow
+        hwaccel: false, // Whether to use hardware acceleration
+        className: 'spinner', // The CSS class to assign to the spinner
+        zIndex: 2e9, // The z-index (defaults to 2000000000)
+        top: '50%', // Top position relative to parent
+        left: '50%' // Left position relative to parent
+    };
+
     $(document).ready(function () {
         $("#proxima_enquete").show();
         setInterval(function () {
@@ -34,9 +34,9 @@ ENQUETE = (function () {
         }, 5000);
         enqueteObject.getEnquete();
     });
-    
 
-    
+
+
     enqueteObject.createEnqueteForm = function (data) {
 
         var opts = [data.opt_1, data.opt_2, data.opt_3, data.opt_4, data.opt_5];
@@ -90,8 +90,8 @@ ENQUETE = (function () {
     };
 
     enqueteObject.getEnquete = function () {
-        
-        
+
+
         var target = document.getElementById('spin');
         var spinner = new Spinner(enqueteObject.opts_spin).spin();
         if (enqueteObject.lastEnquete !== 0) // on Page load    
@@ -103,7 +103,8 @@ ENQUETE = (function () {
             dataType: 'json',
             cache: false,
             success: function (data) {
-                if (data.is_there == 0) return;
+                if (data.is_there == 0)
+                    return;
                 enqueteObject.lastEnquete = data.data.id_enquete;
                 if (data.to_vote == 1) {
                     enqueteObject.createEnqueteForm(data.data);
@@ -115,24 +116,25 @@ ENQUETE = (function () {
             }
         });
     };
-    
-    enqueteObject.voted = function (){
+
+    enqueteObject.voted = function () {
         enqueteObject.isVoting = false;
         enqueteObject.update();
     };
-    
-    enqueteObject.voting = function (){
+
+    enqueteObject.voting = function () {
         enqueteObject.isVoting = true;
         enqueteObject.number_votes_enquete = 0;
     };
-    
-    enqueteObject.reset = function (){
-       enqueteObject.lastEnquete = 0;
+
+    enqueteObject.reset = function () {
+        enqueteObject.lastEnquete = 0;
     };
-    
+
     enqueteObject.update = function () {
-        if (enqueteObject.isVoting === true || enqueteObject.lastEnquete == 0) return;
-        
+        if (enqueteObject.isVoting === true || enqueteObject.lastEnquete == 0)
+            return;
+
         $.ajax({
             type: 'GET',
             url: '../WebService/getEnqueteById/' + enqueteObject.lastEnquete,
@@ -140,13 +142,13 @@ ENQUETE = (function () {
             dataType: 'json',
             cache: false,
             success: function (data) {
-                
+
                 if (data.length == 0)
                     return;
-                
+
                 var sum = parseInt(data.qtd_opt_1) + parseInt(data.qtd_opt_2) + parseInt(data.qtd_opt_3) + parseInt(data.qtd_opt_4) + parseInt(data.qtd_opt_5);
-                
-                if (enqueteObject.number_votes_enquete < sum) 
+
+                if (enqueteObject.number_votes_enquete < sum)
                     enqueteObject.createEnqueteVisualizacao(data);
 
             }
