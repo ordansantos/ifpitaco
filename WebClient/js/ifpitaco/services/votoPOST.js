@@ -14,8 +14,9 @@ function votoPost(id) {
             bootbox.alert("Faça login para votar!", function () {
                 window.location.assign("index.php");
             });
-        else
-            ENQUETE.afterPostVoto(id);
+        else{
+            ENQUETE.voted();
+        }
 
     });
 }

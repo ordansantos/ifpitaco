@@ -18,7 +18,7 @@ function enquetePost() {
 
             if (data.trim() != '0') {
 
-                ENQUETE.novaEnqueteForm(data);
+                ENQUETE.getEnquete();
             }
 
         }, error: function (data) {
@@ -26,5 +26,5 @@ function enquetePost() {
         }
     });
 
-    ENQUETEFORM.resetNewEnquete();
+    ENQUETE.reset();
 }

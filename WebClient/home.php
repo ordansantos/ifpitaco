@@ -175,7 +175,7 @@ $user = redirectGet($url . 'WebService/getNomeById/' . $id);
                 <div class="col-md-3" id="left">
                     <span title="próxima" data-toggle="tooltip" data-placement="bottom"
                           class="btn-lg btn pull-right" id="proxima_enquete"
-                          onClick="ENQUETE.proximaEnquete()"> <span id="next"
+                          onClick="ENQUETE.getEnquete()"> <span id="next"
                                                               class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></span>
                     <div id="spin"></div>
 

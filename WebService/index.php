@@ -7,7 +7,10 @@ $app = new \Slim\Slim();
 //$app->response()->header('Content-Type', 'application/json;charset=utf-8');
 
 $app->get('/', function () { 
-	echo "It's working";
+        
+	
+        print_r (getBestId(1, 8));
+   
 });
 
 //Envia uma proposta
@@ -55,9 +58,13 @@ $app->get('/getNPosts/:n', 'getNPosts');
 $app->get('/getCntLaikesAndUserFlagByPostIdAndUserId/:post_id/:usuario_id', getCntLaikesAndUserFlagByPostIdAndUserId);
 //Retorna o usuário que criou o post
 $app->get('/getUsuarioByPostId/:post_id', 'getUsuarioByPostId');
+//Retorna uma enquete
+$app->get('/getEnquete/:usuario_id/:last_enquete_id', 'getEnquete');
 //Retorna uma enquete pelo id
-$app->get('/getEnquete/:enquete_id', 'getEnquete');
+
+$app->get('/getEnqueteById/:enquete_id', 'getEnqueteById');
 //Retorna o id de todas as enquetes
+
 $app->get('/getEnqueteIds/', 'getEnqueteIds');
 //Retorna as enquetes que o usuário não votou
 $app->get('/getEnqueteIdsWhereUserDidNotVote/:usuario_id', 'getEnqueteIdsWhereUserDidNotVote');
@@ -329,7 +336,7 @@ function postEnquete(){
 	$con = null;
 }
 
-function getEnquete($id){
+function getEnqueteById($enquete_id){
 	
 	$sql = "
 		SELECT 
@@ -352,11 +359,49 @@ function getEnquete($id){
 	
 	$conn = getConn();
 	$stmt = $conn->prepare($sql);
-	$stmt->bindParam("id", $id);
+	$stmt->bindParam("id", $enquete_id);
 	$stmt->execute();
-	$enquete = $stmt->fetchAll(PDO::FETCH_OBJ);
+	$enquete = $stmt->fetchAll(PDO::FETCH_OBJ)[0];
 	echo utf8_encode(json_encode($enquete));
 	$conn = null;
+}
+
+function getEnquete($usuario_id, $last_enquete_id){
+	
+        $enquete = getBest($usuario_id, $last_enquete_id);
+        
+        if ($enquete->is_there === 0){
+            echo '{ "is_there": "0" } ';
+        }
+        
+	$sql = "
+		SELECT 
+		e.qtd_opt, e.opt_1, e.opt_2, e.opt_3, e.opt_4, e.opt_5, e.titulo, e.id_enquete, e.usuario_id, 
+		CONVERT_TZ(`data_hora`, @@session.time_zone, '+00:00') as data_hora,
+		i_e.imagem as e_imagem, u.nm_usuario,
+		iu.perfil,
+		
+		(SELECT COUNT(*) FROM tb_enquete_voto WHERE enquete_id = :id AND voto = 1) as qtd_opt_1,
+		(SELECT COUNT(*) FROM tb_enquete_voto WHERE enquete_id = :id AND voto = 2) as qtd_opt_2,
+		(SELECT COUNT(*) FROM tb_enquete_voto WHERE enquete_id = :id AND voto = 3) as qtd_opt_3,
+		(SELECT COUNT(*) FROM tb_enquete_voto WHERE enquete_id = :id AND voto = 4) as qtd_opt_4,
+		(SELECT COUNT(*) FROM tb_enquete_voto WHERE enquete_id = :id AND voto = 5) as qtd_opt_5
+		
+		FROM tb_enquete as e, tb_imagem_enquete as i_e, tb_usuario as u, tb_imagem_usuario as iu
+		
+		WHERE i_e.enquete_id = e.id_enquete AND u.id_usuario = e.usuario_id AND iu.usuario_id = e.usuario_id 
+		AND e.id_enquete = :id ORDER BY e.id_enquete
+			";
+	
+	$conn = getConn();
+	$stmt = $conn->prepare($sql);
+	$stmt->bindParam("id", $enquete->id);
+	$stmt->execute();
+	$data = utf8_encode (json_encode($stmt->fetchAll(PDO::FETCH_OBJ)[0]));
+	
+        echo '{"is_there":"1", "to_vote":"'.$enquete->to_vote.'", "data":'.$data.'}';
+	
+        $conn = null;
 }
 
 function postVoto(){
@@ -376,28 +421,57 @@ function postVoto(){
 	$conn = null;
 }
 
+function getBest($usuario_id, $last_enquete){
+    
+    $enquete = new stdClass();
+    
+    $enquete->is_there = $enquete->id =  $enquete->to_vote = 0;
+    
+    $enquetes_sem_voto = getEnqueteIdsWhereUserDidNotVote($usuario_id);
+    
+    foreach ($enquetes_sem_voto as $i){
+        if ($last_enquete == 0 || $enquete->is_there == 0 || $i->id_enquete < $last_enquete){
+            $enquete->is_there = $enquete->to_vote = 1;
+            $enquete->id = $i->id_enquete;
+        }
+    }
+    
+    if ($enquete->is_there !== 0){
+        return $enquete;
+    }
+    
+    $enquetes_com_voto = getEnqueteIds($usuario_id);
+    
+    foreach ($enquetes_com_voto as $i) {
+        if ($last_enquete == 0 || $enquete->is_there == 0 || $i->id_enquete < $last_enquete){
+            $enquete->is_there = 1;
+            $enquete->id = $i->id_enquete;
+        }
+    }
+    
+    return $enquete;
+}
+
 function getEnqueteIds(){
-	
 	$sql = "SELECT id_enquete FROM tb_enquete";
 	$conn = getConn();
 	$stmt = $conn->prepare($sql);
 	$stmt->execute();
 	$ids = $stmt->fetchAll(PDO::FETCH_OBJ);
-	echo '{"ids":'.utf8_encode(json_encode($ids))."}";
-	$conn = null;
+	return $ids;
 }
 
 function getEnqueteIdsWhereUserDidNotVote($id){
 	
 	$sql = "SELECT id_enquete FROM tb_enquete WHERE id_enquete NOT IN (
-			SELECT enquete_id FROM tb_enquete_voto WHERE usuario_id = :id)";
+		SELECT enquete_id FROM tb_enquete_voto WHERE usuario_id = :id)";
 	$conn = getConn();
 	$stmt = $conn->prepare($sql);
 	$stmt->bindParam('id', $id);
 	$stmt->execute();
 	$ids = $stmt->fetchAll(PDO::FETCH_OBJ);
-	echo '{"ids":'.utf8_encode(json_encode($ids))."}";
-	$conn = null;
+	return $ids;
+	
 }
 
 function getUsuarioById($id){
