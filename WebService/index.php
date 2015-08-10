@@ -257,31 +257,18 @@ function getCntLaikesAndUserFlagByPostIdAndUserId ($post_id, $usuario_id){
 }
 
 function getUsuarioByPostId($post_id){
-	$conn = getConn();
-	$sql = "SELECT usuario_id FROM tb_post WHERE post_id = :id";
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam ('id', $post_id);
-	$stmt->execute();
-	$result = $stmt->fetch();
-	echo $result['usuario_id'];
-	$conn = null;
+    echo (new Publicacao())->getUsuarioByPostId($post_id);
 }
 
 function postDeletePublicacao (){
 	
-	$conn = getConn();
-	$sql = "DELETE FROM tb_post WHERE post_id = :post_id";
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam ('post_id', $_POST['post_id']);
-	
-	if ($stmt->execute())
-		if (deleteComentarioByPost($_POST['post_id'])){
-			echo deleteLaikeByPost($_POST['post_id']);
-			return;
-		}
-	
-	echo MsgEnum::ERRO;
-
+    $delete = new stdClass();
+           
+    $delete->usuario_id = filter_input(INPUT_POST, 'id_usuario');
+    
+    $delete->post_id = filter_input(INPUT_POST, 'post_id');
+    
+    echo (new Publicacao())->delete($delete);
 }
 
 

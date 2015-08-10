@@ -19,7 +19,7 @@ function postDELETE(sender) {
                     $('#' + id).remove();
                     $.param({post_id: id});
                     var a = $.post("services/deletarPost.php", {post_id: id});
-
+                    console.log (a);
                 }
             }
 
