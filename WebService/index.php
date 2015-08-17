@@ -65,10 +65,6 @@ $app->get('/getEnquete/:usuario_id/:last_enquete_id', 'getEnquete');
 $app->get('/getEnqueteById/:enquete_id', 'getEnqueteById');
 //Retorna o id de todas as enquetes
 
-$app->get('/getEnqueteIds/', 'getEnqueteIds');
-//Retorna as enquetes que o usuário não votou
-$app->get('/getEnqueteIdsWhereUserDidNotVote/:usuario_id', 'getEnqueteIdsWhereUserDidNotVote');
-//Retorna as informações de um usuário
 $app->get('/getUsuarioById/:usuario_id', 'getUsuarioById');
 //Busca um usuário em relação a um nome
 $app->get('/getBuscaUsuario/:nome', 'getBuscaUsuario');
@@ -280,198 +276,41 @@ function postDeletePublicacao (){
     echo (new Publicacao())->delete($delete);
 }
 
-function saveEnqueteImage($id){
-	
-	$path = '';
-	
-	if(!empty($_FILES))
-	if ($_FILES['imagem']['name'])
-		$path = sendToCloudinary($_FILES['imagem']['tmp_name']);
-	
-	$sql = "INSERT INTO tb_imagem_enquete (enquete_id, imagem) values (:id, :imagem)";
-	$conn = getConn();
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam("id", $id);
-	$stmt->bindParam("imagem", $path);
-	
-	$conn = null;
-	if ($stmt->execute()) return true;
-	
-	return false;
-}
-
-
 function postEnquete(){
-	
-	$conn = getConn();
-	
-	$sql = "INSERT INTO tb_enquete
-			(usuario_id, titulo, opt_1, opt_2, opt_3, opt_4, opt_5, qtd_opt)
-			VALUES (:usuario_id, :titulo, :opt_1, :opt_2, :opt_3, :opt_4, :opt_5, :qtd_opt)";
-	
-	$opt = array ("", "", "", "", "", "");
-	
-	for ($i = 0; $i < $_POST['qtd_opt']; $i++)
-		$opt[$i] = $_POST['opt_'.($i + 1)];
-	
-	$stmt = $conn->prepare($sql);
-	
-	$stmt->bindParam('usuario_id', $_POST['usuario_id']);
-	$stmt->bindParam('titulo', $_POST['titulo']);
-	$stmt->bindParam('qtd_opt', $_POST['qtd_opt']);
-	
-	for ($i = 0; $i < $_POST['qtd_opt']; $i++)
-		$opt[$i] = $_POST['opt_'.($i + 1)];
-	
-	for ($i = 1; $i <= 5; $i++)
-		$stmt->bindParam('opt_'.$i, $opt[$i-1]);	
-	
-	if ($stmt->execute()){
-		$id_enquete = $conn->lastInsertId('id_enquete');
-		saveEnqueteImage($id_enquete);
-		echo $id_enquete;
-	}
-	else 
-		echo MsgEnum::ERRO;
-	$con = null;
+    
+    $enquete = new stdClass();
+    $enquete->opt = array ("", "", "", "", "", "");
+    
+    $enquete->qtd_opt = filter_input(INPUT_POST, 'qtd_opt');
+    
+    for ($i = 1; $i <= $enquete->qtd_opt; $i++){
+        $enquete->opt[$i] = filter_input(INPUT_POST, 'opt_'.$i);
+    }
+    
+    $enquete->usuario_id = filter_input(INPUT_POST, 'id_usuario');
+    $enquete->titulo = filter_input(INPUT_POST, 'titulo');
+    $enquete->base64_string = filter_input(INPUT_POST, 'imagem');
+    
+    echo (new Enquete())->post($enquete);
+    
 }
 
 function getEnqueteById($enquete_id){
-	
-	$sql = "
-		SELECT 
-		e.qtd_opt, e.opt_1, e.opt_2, e.opt_3, e.opt_4, e.opt_5, e.titulo, e.id_enquete, e.usuario_id, 
-		CONVERT_TZ(`data_hora`, @@session.time_zone, '+00:00') as data_hora,
-		i_e.imagem as e_imagem, u.nm_usuario,
-		iu.perfil,
-		
-		(SELECT COUNT(*) FROM tb_enquete_voto WHERE enquete_id = :id AND voto = 1) as qtd_opt_1,
-		(SELECT COUNT(*) FROM tb_enquete_voto WHERE enquete_id = :id AND voto = 2) as qtd_opt_2,
-		(SELECT COUNT(*) FROM tb_enquete_voto WHERE enquete_id = :id AND voto = 3) as qtd_opt_3,
-		(SELECT COUNT(*) FROM tb_enquete_voto WHERE enquete_id = :id AND voto = 4) as qtd_opt_4,
-		(SELECT COUNT(*) FROM tb_enquete_voto WHERE enquete_id = :id AND voto = 5) as qtd_opt_5
-		
-		FROM tb_enquete as e, tb_imagem_enquete as i_e, tb_usuario as u, tb_imagem_usuario as iu
-		
-		WHERE i_e.enquete_id = e.id_enquete AND u.id_usuario = e.usuario_id AND iu.usuario_id = e.usuario_id 
-		AND e.id_enquete = :id ORDER BY e.id_enquete
-			";
-	
-	$conn = getConn();
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam("id", $enquete_id);
-	$stmt->execute();
-	$enquete = $stmt->fetchAll(PDO::FETCH_OBJ)[0];
-	echo utf8_encode(json_encode($enquete));
-	$conn = null;
+    echo (new Enquete())->getById($enquete_id);
 }
 
 function getEnquete($usuario_id, $last_enquete_id){
-	
-        $enquete = getBest($usuario_id, $last_enquete_id);
-        
-        if ($enquete->is_there === 0){
-            echo '{ "is_there": "0" } ';
-        }
-        
-	$sql = "
-		SELECT 
-		e.qtd_opt, e.opt_1, e.opt_2, e.opt_3, e.opt_4, e.opt_5, e.titulo, e.id_enquete, e.usuario_id, 
-		CONVERT_TZ(`data_hora`, @@session.time_zone, '+00:00') as data_hora,
-		i_e.imagem as e_imagem, u.nm_usuario,
-		iu.perfil,
-		
-		(SELECT COUNT(*) FROM tb_enquete_voto WHERE enquete_id = :id AND voto = 1) as qtd_opt_1,
-		(SELECT COUNT(*) FROM tb_enquete_voto WHERE enquete_id = :id AND voto = 2) as qtd_opt_2,
-		(SELECT COUNT(*) FROM tb_enquete_voto WHERE enquete_id = :id AND voto = 3) as qtd_opt_3,
-		(SELECT COUNT(*) FROM tb_enquete_voto WHERE enquete_id = :id AND voto = 4) as qtd_opt_4,
-		(SELECT COUNT(*) FROM tb_enquete_voto WHERE enquete_id = :id AND voto = 5) as qtd_opt_5
-		
-		FROM tb_enquete as e, tb_imagem_enquete as i_e, tb_usuario as u, tb_imagem_usuario as iu
-		
-		WHERE i_e.enquete_id = e.id_enquete AND u.id_usuario = e.usuario_id AND iu.usuario_id = e.usuario_id 
-		AND e.id_enquete = :id ORDER BY e.id_enquete
-			";
-	
-	$conn = getConn();
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam("id", $enquete->id);
-	$stmt->execute();
-	$data = utf8_encode (json_encode($stmt->fetchAll(PDO::FETCH_OBJ)[0]));
-	
-        echo '{"is_there":"1", "to_vote":"'.$enquete->to_vote.'", "data":'.$data.'}';
-	
-        $conn = null;
+    echo (new Enquete())->get($usuario_id, $last_enquete_id);
 }
 
 function postVoto(){
 
-	$sql = "INSERT INTO tb_enquete_voto (usuario_id, enquete_id, voto) VALUES (:usuario_id, :enquete_id, :voto)";
+    $voto = new stdClass();
+    $voto->usuario_id = filter_input(INPUT_POST, 'usuario_id');
+    $voto->enquete_id = filter_input(INPUT_POST, 'enquete_id');
+    $voto->voto = filter_input(INPUT_POST, 'voto');
 	
-	$conn = getConn();
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam ('usuario_id', $_POST['usuario_id']);
-	$stmt->bindParam ('enquete_id', $_POST['enquete_id']);
-	$stmt->bindParam ('voto', $_POST['voto']);
-	
-	if ($stmt->execute())
-		echo MsgEnum::SUCESSO;
-	else 
-		echo MsgEnum::ERRO;
-	$conn = null;
-}
-
-function getBest($usuario_id, $last_enquete){
-    
-    $enquete = new stdClass();
-    
-    $enquete->is_there = $enquete->id =  $enquete->to_vote = 0;
-    
-    $enquetes_sem_voto = getEnqueteIdsWhereUserDidNotVote($usuario_id);
-    
-    foreach ($enquetes_sem_voto as $i){
-        if ($last_enquete == 0 || $enquete->is_there == 0 || $i->id_enquete < $last_enquete){
-            $enquete->is_there = $enquete->to_vote = 1;
-            $enquete->id = $i->id_enquete;
-        }
-    }
-    
-    if ($enquete->is_there !== 0){
-        return $enquete;
-    }
-    
-    $enquetes_com_voto = getEnqueteIds($usuario_id);
-    
-    foreach ($enquetes_com_voto as $i) {
-        if ($last_enquete == 0 || $enquete->is_there == 0 || $i->id_enquete < $last_enquete){
-            $enquete->is_there = 1;
-            $enquete->id = $i->id_enquete;
-        }
-    }
-    
-    return $enquete;
-}
-
-function getEnqueteIds(){
-	$sql = "SELECT id_enquete FROM tb_enquete";
-	$conn = getConn();
-	$stmt = $conn->prepare($sql);
-	$stmt->execute();
-	$ids = $stmt->fetchAll(PDO::FETCH_OBJ);
-	return $ids;
-}
-
-function getEnqueteIdsWhereUserDidNotVote($id){
-	
-	$sql = "SELECT id_enquete FROM tb_enquete WHERE id_enquete NOT IN (
-		SELECT enquete_id FROM tb_enquete_voto WHERE usuario_id = :id)";
-	$conn = getConn();
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam('id', $id);
-	$stmt->execute();
-	$ids = $stmt->fetchAll(PDO::FETCH_OBJ);
-	return $ids;
-	
+    echo (new Enquete())->postVoto($voto);
 }
 
 function getUsuarioById($id){

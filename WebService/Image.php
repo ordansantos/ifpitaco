@@ -82,24 +82,13 @@ class Image{
         
         imagecopyresampled($new_image, $src, 0, 0, $x, $y, $w, $h, $w, $h);
         
-        // imagejpeg(self::toThumbnail($new_image, $w, $h), $img_path . '.jpg');
-        
         imagejpeg($new_image, $img_path . '.jpg');
         
         return true;
     }
     
-    public static function toThumbnail ($src, $w, $h){
-        
-        $thumbnail = imagecreatetruecolor(self::$thumbnail_width, self::$thumbnail_height);
-        
-        imagecopyresampled($thumbnail, $src, 0, 0, 0, 0, 120, 120, $w, $h);
-        
-        return $thumbnail;
-    }
-    
     public static function save ($base64_string){
-        
+
         $img_path =  self::base64ToFile($base64_string);
                 
         if (self::convertToJpg($img_path) === false){

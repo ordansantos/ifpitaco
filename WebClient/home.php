@@ -315,7 +315,6 @@ $user = redirectGet($url . 'WebService/getNomeById/' . $id);
                                            id="opt_2" placeholder="2ª Opção"></li>
 
                             </ul>
-                            <input type="hidden" name="usuario_id" value="<?php echo $id ?>" />
                             <input type="hidden" id="qtd_opt" name="qtd_opt" value="2" />
                         </form>
 
