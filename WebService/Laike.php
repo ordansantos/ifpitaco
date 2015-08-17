@@ -58,4 +58,19 @@ class Laike{
             return $result['cnt'];
     }
     
+    public function getLaikes($id_post){
+	$sql = 'SELECT u.id_usuario, i.perfil, u.nm_usuario, u.usuario_tipo 
+		FROM tb_usuario as u, tb_imagem_usuario as i, tb_laikar as l
+		WHERE u.id_usuario = i.usuario_id AND post_id = :id 
+                AND u.id_usuario = l.usuario_id';
+        
+	$conn = getConn();
+	$stmt = $conn->prepare($sql);
+	$stmt->bindParam('id', $id_post);
+	
+	$stmt->execute();
+	$usuario = $stmt->fetchAll(PDO::FETCH_OBJ);
+	return utf8_encode(json_encode($usuario));
+    }
+    
 }

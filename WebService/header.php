@@ -11,3 +11,5 @@ require_once 'Publicacao.php';
 require_once 'Comentario.php';
 require_once 'Laike.php';
 require_once 'Enquete.php';
+require_once 'Busca.php';
+require_once 'Curiar.php';

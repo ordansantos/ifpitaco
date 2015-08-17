@@ -234,4 +234,41 @@ class Enquete{
 
     }
     
+    public function getVotos ($id_enquete){
+        
+        $sql = 'SELECT u.id_usuario, i.perfil, u.nm_usuario, u.usuario_tipo, voto
+                FROM tb_usuario as u, tb_imagem_usuario as i, tb_enquete_voto as e
+                WHERE u.id_usuario = i.usuario_id AND e.usuario_id = u.id_usuario
+                AND e.enquete_id = :id';
+
+        $conn = Database::getConn();
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam('id', $id_enquete);
+        $stmt->execute();
+        $votos = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        return '"usuarios":'.utf8_encode(json_encode($votos));
+            
+    }
+    
+    public function getOpts ($id_enquete){
+        
+        $conn = Database::getConn();
+        
+        $sql = 'SELECT e.qtd_opt, e.opt_1, e.opt_2, e.opt_3, e.opt_4, e.opt_5
+                FROM tb_enquete as e
+                WHERE id_enquete = :id';
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam('id', $id_enquete);
+        $stmt->execute();
+        $opts = $stmt->fetch(PDO::FETCH_OBJ);
+        $opts = utf8_encode(json_encode($opts));
+    
+        $opts = str_replace('{', "", $opts);
+        $opts = str_replace('}', "", $opts);
+        
+        return $opts;
+    }
+    
 }

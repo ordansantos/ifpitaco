@@ -7,10 +7,7 @@ $app = new \Slim\Slim();
 //$app->response()->header('Content-Type', 'application/json;charset=utf-8');
 
 $app->get('/', function () { 
-        
-	
-        print_r (getBestId(1, 8));
-   
+   echo 'Web Service is working...';
 });
 
 //Envia uma proposta
@@ -34,7 +31,7 @@ $app->post('/postEnquete/', 'postEnquete');
 //Envia o voto de uma enquete
 $app->post('/postVoto/', 'postVoto');
 
-$app->post('/alterarDados/', 'alterarDados');
+//$app->post('/alterarDados/', 'alterarDados');
 
 $app->post('/postUpdateLastAccess/', 'postUpdateLastAccess');
 
@@ -88,37 +85,6 @@ function postProposta (){
     
     echo (new Proposta())->post($proposta);
 }
-
-/*Envia uma imagem para o cloudinary.*/
-function sendToCloudinary120_120($path, $x, $y, $w, $h){
-	
-	$w = intval($w);
-	$h = intval($h);
-	$x = intval($x);
-	$y = intval($y);
-	require 'cloudinary_src/Cloudinary.php';
-	require 'cloudinary_src/Uploader.php';
-	require 'cloudinary_src/Api.php';
-	
-	\Cloudinary::config(array(
-			"cloud_name" => "hikttgesy",
-			"api_key" => "259727914439314",
-			"api_secret" => "zCpYfezoRI9Zd8rRW6A9ITAsMVA"
-	));
-	
-	
-	$img = \Cloudinary\Uploader::upload($path,
-		array(
-		   array("crop" => "crop",
-			"width" => $w, "height" => $h, "x" => $x, "y" => $y),
-			array("crop" => "fill",
-				"width" => 120, "height" => 120)
-		));
-	
-	/*On heroku: return $img['secure_url'];*/
-	return $img['url'];
-}
-
 
 function postFiscalizacao(){
     
@@ -319,30 +285,12 @@ function getUsuarioById($id){
 
 
 function getBuscaUsuario ($nome){
-	
-	$sql = 'SELECT nm_usuario, id_usuario, usuario_tipo, perfil
-			FROM tb_usuario, tb_imagem_usuario
-			WHERE usuario_id = id_usuario';
-	
-	$conn = getConn();
-	$stmt = $conn->prepare($sql);
-	$stmt->execute();
-	$usuarios = $stmt->fetchAll(PDO::FETCH_OBJ);
-	$conn = null;
-	
-	$t = strlen($nome);
-	$nome = strtolower($nome);
-	usort ($usuarios, function($a, $b) use ($nome, $t){
-		return  levenshtein($nome, substr(strtolower($a->nm_usuario), 0, $t)) - levenshtein($nome, substr(strtolower($b->nm_usuario), 0, $t));
-	});
-	
-	$usuarios = array_slice($usuarios, 0, 5);
-	
-	echo '{"usuarios":'.utf8_encode(json_encode($usuarios))."}";
-	
+    echo (new Busca())->get($nome);
 }
 
+
 /* Salva a foto ao cadastrar um usuário */
+/*
 function alteraFotoUsuario($id){
 
 
@@ -424,54 +372,14 @@ function alterarDados(){
 	
 	$conn = null;
 }
+*/
 
 function curiarPost($id){
-	$sql = 'SELECT u.id_usuario, i.perfil, u.nm_usuario, u.usuario_tipo 
-			FROM tb_usuario as u, tb_imagem_usuario as i, tb_laikar as l
-			WHERE u.id_usuario = i.usuario_id AND post_id = :id AND u.id_usuario = l.usuario_id';
-	$conn = getConn();
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam('id', $id);
-	
-	$stmt->execute();
-	$usuario = $stmt->fetchAll(PDO::FETCH_OBJ);
-	echo utf8_encode(json_encode($usuario));
-	$conn = null;
+    echo (new Curiar())->post($id);
 }
 
 function curiarEnquete($id){
-	
-	$sql = '
-			SELECT u.id_usuario, i.perfil, u.nm_usuario, u.usuario_tipo, voto
-			FROM tb_usuario as u, tb_imagem_usuario as i, tb_enquete_voto as e
-			WHERE u.id_usuario = i.usuario_id AND e.usuario_id = u.id_usuario
-			AND e.enquete_id = :id';
-	
-	$conn = getConn();
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam('id', $id);
-	$stmt->execute();
-	$votos = $stmt->fetchAll(PDO::FETCH_OBJ);
-
-	$votos =  '"usuarios":'.utf8_encode(json_encode($votos));
-
-	$sql = '
-			SELECT e.qtd_opt, e.opt_1, e.opt_2, e.opt_3, e.opt_4, e.opt_5
-			FROM tb_enquete as e
-			WHERE id_enquete = :id';
-	
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam('id', $id);
-	$stmt->execute();
-	$opts = $stmt->fetch(PDO::FETCH_OBJ);
-	$opts = utf8_encode(json_encode($opts));
-
-	$opts = str_replace('{', "", $opts);
-	$opts = str_replace('}', "", $opts);
-
-	$json = '{'.$opts.','.$votos.'}';
-	echo $json;
-	$conn = null;
+    echo (new Curiar())->enquete($id);
 }
 
 function postUpdateLastAccess(){
