@@ -21,7 +21,7 @@ class Usuario{
 	$stmt = $conn->prepare($sql);
 
 	$stmt->bindParam("nm_usuario", $usuario->name);
-	$stmt->bindParam("senha", $usuario->senha);
+	$stmt->bindParam("senha", $this->cryptographPass($usuario->senha));
 	$stmt->bindParam("email", $usuario->email);
 	$stmt->bindParam("usuario_tipo", $usuario->usuario_tipo);
 	$stmt->bindParam("curso", $usuario->curso);
@@ -40,6 +40,25 @@ class Usuario{
         } else {
             return MsgEnum::ERRO;
         }
+    }
+    
+    public function cryptographPass ($password){
+        
+        // A higher "cost" is more secure but consumes more processing power
+        $cost = 10;
+        
+        // Create a random salt
+        $salt = strtr(base64_encode(mcrypt_create_iv(16, MCRYPT_DEV_URANDOM)), '+', '.');
+        
+        // Prefix information about the hash so PHP knows how to verify it later.
+        // "$2a$" Means we're using the Blowfish algorithm. The following two digits are the cost parameter.
+        $salt = sprintf("$2a$%02d$", $cost) . $salt;
+        
+        // Hash the password with the salt
+        $hash = crypt($password, $salt);
+        
+        return $hash;
+        
     }
     
     private function check ($usuario){
@@ -114,22 +133,31 @@ class Usuario{
     }
     
     public function login($login){
-
-	$sql = "SELECT id_usuario FROM tb_usuario WHERE email = :email AND senha = :senha";
+  
+	$sql = "SELECT senha, id_usuario FROM tb_usuario WHERE email = :email";
+        
 	$conn = getConn();
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam("email", $login->email);
-	$stmt->bindParam("senha", $login->senha);
-	$stmt->execute();
-	$result = $stmt->fetch();
-	if (!$result) {
+	
+        $stmt = $conn->prepare($sql);
+	
+        $stmt->bindParam("email", $login->email);
+	
+        $stmt->execute();
+	
+        $usuario = $stmt->fetch(PDO::FETCH_OBJ);
+	
+        if (!$usuario){
             return MsgEnum::ERRO;
-        } else {
-            
-            $this->updateLastAccess($result['id_usuario']);
-            return $result['id_usuario'];
-            
         }
+           
+        // Hashing the password with its hash as the salt returns the same hash
+        if (hash_equals($usuario->senha, crypt($login->senha, $usuario->senha))){
+            $this->updateLastAccess($usuario->id_usuario);
+            return $usuario->id_usuario;
+        }
+        
+        return MsgEnum::ERRO;
+    
     }
     
     public function updateLastAccess($id){

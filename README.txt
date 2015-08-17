@@ -1,5 +1,5 @@
 
-IFPITACO
+IFPITACO (PHP 5 >= 5.6.0)
 
 Configurações:
 
