@@ -314,16 +314,7 @@ function postVoto(){
 }
 
 function getUsuarioById($id){
-	$sql = "SELECT nm_usuario, usuario_tipo, curso, ano_periodo, grau_academico, perfil
-			FROM tb_usuario, tb_imagem_usuario
-			WHERE usuario_id = :id AND id_usuario = :id";
-	$conn = getConn();
-	$stmt = $conn->prepare($sql);
-	$stmt->bindParam("id", $id);
-	$stmt->execute();
-	$usuario = $stmt->fetchAll(PDO::FETCH_OBJ);
-	echo utf8_encode(json_encode($usuario));
-	$conn = null;
+	echo (new Usuario())->getUsuarioById($id);
 }
 
 
