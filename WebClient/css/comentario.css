@@ -16,8 +16,16 @@
 	color: #0E816A;
 }
 
+.post > .top > div > a > h6{
+	color: #9197a3;
+}
+
 .post > .top > div > h6{
 	color: #9197a3;
+}
+
+.post > .top > div > a {
+    text-decoration: none;
 }
 
 #comentario_input{

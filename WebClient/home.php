@@ -67,6 +67,7 @@ if ($_SESSION['id_usuario'] == '') {
 
         <script src="js/ifpitaco/postForm.js"></script>
         <script src="js/ifpitaco/tempoController.js"></script>
+        <script src="js/ifpitaco/tools/tempoPassado.js"></script>
         <script src="js/ifpitaco/enqueteForm.js"></script>
         <script src="js/ifpitaco/services/enquetePOST.js"></script>
 
@@ -125,7 +126,7 @@ if ($_SESSION['id_usuario'] == '') {
                     </div>
                     <a href="userProfile.php?id=<?php echo $_SESSION['id_usuario'] ?>">
                         <h3>
-<?php echo htmlentities($_SESSION['name']) ?>
+                        <?php echo htmlentities($_SESSION['name']) ?>
                         </h3>
                     </a>
                     <div class='left_options'>

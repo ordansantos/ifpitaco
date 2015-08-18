@@ -201,7 +201,7 @@ POST = (function () {
                 '<img class="pull-left f45x45" src="' + post.perfil + '" >' +
                 '<div>' +
                 '<h4><a  href="userProfile.php?id=' + post.usuario_id + '">' + htmlentitiesJS(post.nm_usuario) + '</a></h4>' +
-                '<h6><span id="ptime_' + post.post_id + '">' + TEMPO.tempoPassado(post.data_hora) + '</span>&nbsp' + post.nm_ramo + '</h6>' +
+                '<a href="publicacao.php?id='+form.id+'"><h6><span id="ptime_' + post.post_id + '">' + TEMPO.tempoPassado(post.data_hora) + '</span>&nbsp' + post.nm_ramo + '</h6></a>' +
                 '</div>' +
                 '</div>' +
                 '<div class="content">' + htmlentitiesJS(post.comentario) + '</div>' +
