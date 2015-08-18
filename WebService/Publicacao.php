@@ -100,6 +100,30 @@ class Publicacao{
     
     }
     
+    public function getPostById($id){
+        
+        $conn = Database::getConn();
+        
+        $sql = "SELECT comentario, imagem, nm_usuario, nm_ramo, 
+                CONVERT_TZ(`data_hora`, @@session.time_zone, '+00:00') as data_hora, post_id, perfil, tb_post.usuario_id as usuario_id, tipo
+                FROM tb_post, tb_usuario, tb_ramo, tb_imagem_usuario
+                WHERE ramo_id = id_ramo AND tb_post.usuario_id = tb_usuario.id_usuario AND 
+                tb_post.usuario_id = tb_imagem_usuario.usuario_id AND tb_post.post_id = :id
+                AND tb_post.deletado = 0";
+        
+        $stmt = $conn->prepare($sql);
+        
+        $stmt->bindParam('id', $id);
+        
+        $stmt->execute();
+        
+        $posts = $stmt->fetch(PDO::FETCH_OBJ);
+        
+        return utf8_encode(json_encode($posts));
+    }
+    
+    //public function getAllPosts
+    
     public function getUsuarioByPostId($post_id){
         $conn = Database::getConn();
 	$sql = "SELECT usuario_id FROM tb_post WHERE post_id = :id";
@@ -133,4 +157,5 @@ class Publicacao{
             }
         }
     }
+    
 }

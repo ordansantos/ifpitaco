@@ -51,6 +51,11 @@ $app->get('/getNPostsLessThanMid/:n/:m/:g', 'getNPostsLessThanMid');
 $app->get('/getAllPostsGreaterThanNid/:n/:g', 'getAllPostsGreaterThanNid');
 //Retorna os N últimos Posts
 $app->get('/getNPosts/:n/:g', 'getNPosts');
+
+$app->get('/getAllPosts', 'getAllPosts');
+
+$app->get('/getPostById/:id', 'getPostById');
+
 //Retorna a quantidade de likes do post e uma flag, que responde se o usuário curtiu
 $app->get('/getCntLaikesAndUserFlagByPostIdAndUserId/:post_id/:usuario_id', getCntLaikesAndUserFlagByPostIdAndUserId);
 //Retorna o usuário que criou o post
@@ -403,3 +408,10 @@ function getGrupos(){
     echo Database::getGrupos();
 }
 
+function getAllPosts(){
+    
+}
+
+function getPostById($id){
+    echo (new Publicacao())->getPostById($id);
+}
