@@ -160,7 +160,25 @@
                     <input type="hidden" id="crop_y" name="y" value="1"/>
                     <input type="hidden" id="crop_w" name="w" value="1"/>
                     <input type="hidden" id="crop_h" name="h" value="1"/>
-
+                    
+                    <select class="form-control" name="grupo">
+                        
+                        <?php
+                            require_once './services/redirect.php';
+                            require_once './services/getRoot.php';
+                            $url = getRoot();
+                            $grupos = redirectGet($url . 'WebService/getGrupos');
+                            $grupos = json_decode($grupos);
+                    
+                            foreach ($grupos->grupos as $g){
+                             
+                                echo '<option value="' . $g->id_grupo . '">'.$g->nm_grupo.'</option>';
+                            }
+                            
+                        ?>
+                        
+                    </select>
+                    
                 </form> 
                 <br/>
                 <div class="alert alert-danger" role="alert" id="error" style="display: none"></div>

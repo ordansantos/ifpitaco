@@ -13,8 +13,8 @@ class Usuario{
         }
 
 	$sql = "INSERT INTO tb_usuario (nm_usuario, senha, email, usuario_tipo, 
-                curso, ano_periodo, grau_academico) values (:nm_usuario, :senha, 
-                :email, :usuario_tipo, :curso, :ano_periodo, :grau_academico)";
+                curso, ano_periodo, grau_academico, grupo) values (:nm_usuario, :senha, 
+                :email, :usuario_tipo, :curso, :ano_periodo, :grau_academico, :grupo)";
 
 	$conn = Database::getConn();
 	
@@ -27,7 +27,8 @@ class Usuario{
 	$stmt->bindParam("curso", $usuario->curso);
 	$stmt->bindParam("ano_periodo", $usuario->ano_periodo);
 	$stmt->bindParam("grau_academico", $usuario->grau_academico);
-
+        $stmt->bindParam("grupo", $usuario->grupo);
+        
 	if ($stmt->execute()) {
             
             $id = $this->getIdByEmail($usuario->email);

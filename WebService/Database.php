@@ -17,5 +17,25 @@ class Database {
                         [PDO::MYSQL_ATTR_INIT_COMMAND =>
                         "SET NAMES utf8"]);
     }
+  
+   public static function getRamos(){
+       
+       	$stmt = getConn()->query("SELECT * FROM tb_ramo");
+	
+	$result = $stmt->fetchAll(PDO::FETCH_OBJ);
+	
+	return '{"ramos":'.utf8_encode(json_encode($result))."}";	
+        
+   }
 
+   public static function getGrupos(){
+       
+       	$stmt = getConn()->query("SELECT * FROM tb_grupos");
+	
+	$result = $stmt->fetchAll(PDO::FETCH_OBJ);
+	
+	return '{"grupos":'.utf8_encode(json_encode($result))."}";	
+        
+   }
+   
 }

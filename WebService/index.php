@@ -72,6 +72,8 @@ $app->get('/curiarEnquete/:id', 'curiarEnquete');
 
 $app->get('/getLastAccess/:id', 'getLastAccess');
 
+$app->get('/getGrupos', 'getGrupos');
+
 $app->run();
 
 
@@ -106,7 +108,7 @@ function postUsuario(){
     $usuario->name = filter_input(INPUT_POST, 'nm_usuario');
     $usuario->senha = filter_input(INPUT_POST, 'senha');
     $usuario->email = filter_input(INPUT_POST, 'email');
-    $$usuario->grupo = filter_input(INPUT_POST, 'grupo');
+    $usuario->grupo = filter_input(INPUT_POST, 'grupo');
     
     $usuario->usuario_tipo = filter_input(INPUT_POST, 'usuario_tipo');
     $usuario->curso = filter_input(INPUT_POST, 'curso');
@@ -136,7 +138,7 @@ function postLogin(){
 }
 
 function getRamos(){
-    echo (new Publicacao())->getRamos();
+    echo Database::getRamos();
 }
 
 function getNomeById($id){
@@ -397,5 +399,7 @@ function getLastAccess($id){
 
 }
 
-
+function getGrupos(){
+    echo Database::getGrupos();
+}
 
