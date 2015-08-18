@@ -153,7 +153,7 @@ class Usuario{
         // Hashing the password with its hash as the salt returns the same hash
         if (hash_equals($usuario->senha, crypt($login->senha, $usuario->senha))){
             $this->updateLastAccess($usuario->id_usuario);
-            return $usuario->id_usuario;
+            return getUsuarioById($usuario->id_usuario);
         }
         
         return MsgEnum::ERRO;
@@ -234,7 +234,8 @@ class Usuario{
     }
     
     public function getUsuarioById($id){
-        $sql = "SELECT nm_usuario, usuario_tipo, curso, ano_periodo, grau_academico, perfil
+
+        $sql = "SELECT id_usuario, nm_usuario, usuario_tipo, curso, ano_periodo, grau_academico, perfil, grupo
                 FROM tb_usuario, tb_imagem_usuario
                 WHERE usuario_id = :id AND id_usuario = :id";
 
@@ -242,7 +243,7 @@ class Usuario{
         $stmt = $conn->prepare($sql);
         $stmt->bindParam("id", $id);
         $stmt->execute();
-        $usuario = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $usuario = $stmt->fetch(PDO::FETCH_OBJ);
         return utf8_encode(json_encode($usuario));
     }
     

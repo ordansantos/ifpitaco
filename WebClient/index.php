@@ -6,8 +6,6 @@ if ($_SESSION['id_usuario'] != '') {
     header("location: home.php");
 }
 
-$user = $_SESSION['nm_usuario'];
-$foto = $_SESSION['foto'];
 ?>
 
 <!DOCTYPE html>

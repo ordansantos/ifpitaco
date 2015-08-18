@@ -64,7 +64,7 @@ POST = (function () {
 
         $.ajax({
             type: 'GET',
-            url: '../WebService/getNPosts/5',
+            url: '../WebService/getNPosts/5/' + SESSION.getGrupo(),
             data: {get_param: 'value'},
             dataType: 'json',
             cache: false,
@@ -102,7 +102,7 @@ POST = (function () {
 
         $.ajax({
             type: 'GET',
-            url: '../WebService/getNPostsLessThanMid/3/' + postObject.last_id_post,
+            url: '../WebService/getNPostsLessThanMid/3/' + postObject.last_id_post + '/' + SESSION.getGrupo(),
             data: {get_param: 'value'},
             dataType: 'json',
             cache: false,
@@ -134,7 +134,7 @@ POST = (function () {
 
         $.ajax({
             type: 'GET',
-            url: '../WebService/getAllPostsGreaterThanNid/' + postObject.first_id_post,
+            url: '../WebService/getAllPostsGreaterThanNid/' + postObject.first_id_post + '/' + SESSION.getGrupo(),
             data: {get_param: 'value'},
             dataType: 'json',
             cache: false,

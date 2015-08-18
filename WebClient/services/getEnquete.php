@@ -12,5 +12,10 @@ if ($_SESSION['id_usuario'] == '') {
         return;
 }
 
-echo redirectGet($url.'WebService/getEnquete/'.trim($_SESSION['id_usuario']).'/'.$_GET['last_enquete_id']);
+echo redirectGet(
+                $url.'WebService/getEnquete/'.
+                $_SESSION['id_usuario'].'/'.
+                $_GET['last_enquete_id'] .'/'. 
+                $_SESSION['grupo']
+                );
 

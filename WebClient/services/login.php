@@ -7,12 +7,19 @@
 
 	$url = getRoot();
 
-	$id = redirectPost($url."WebService/postLogin");
+	$usuario = redirectPost($url."WebService/postLogin");
 
-	if ($id != '0'){
+	if ($usuario != '0'){
 		session_start();
-		$_SESSION['id_usuario'] = $id;
-	} 
+                $usuario = json_decode($usuario);
+		$_SESSION['id_usuario'] = $usuario->id_usuario;
+                $_SESSION['foto'] = $usuario->perfil;
+                $_SESSION['name'] = $usuario->nm_usuario;
+                $_SESSION['grupo'] = $usuario->grupo;
+                echo '1';
+	}else{
+            echo '0';
+        }
 	
-	echo $id;
+	
 ?>

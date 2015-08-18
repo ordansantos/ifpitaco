@@ -5,23 +5,18 @@ if ($_SESSION['id_usuario'] == '') {
     header("location: index.php");
 }
 
-include("services/redirect.php");
-include("services/getRoot.php");
-$url = getRoot();
-$id = $_SESSION['id_usuario'];
-$foto = redirectGet($url . 'WebService/getFotoPerfilById/' . $id);
-$user = redirectGet($url . 'WebService/getNomeById/' . $id);
 ?>
 
 <?php
-$json = redirectGet($url . 'WebService/getUsuarioById/' . $_GET['id']);
 
+require_once './services/redirect.php';
+require_once './services/getRoot.php';
+$url = getRoot();
+$json = redirectGet($url . 'WebService/getUsuarioById/' . $_GET['id']);
 $usuario = json_decode($json);
 
 if (sizeof($usuario) == 0)
     header("location: index.php");
-
-$usuario = $usuario[0];
 
 $nome = $usuario->nm_usuario;
 $tipo = $usuario->usuario_tipo;
@@ -92,9 +87,9 @@ $status = json_decode(redirectGet($url . 'WebService/getLastAccess/' . $_GET['id
                 <!-- Profile -->
                 <div class="col-md-2 text-center " id="profile">
                     <div class="img-thumbnail">
-                        <a href="userProfile.php?id=<?php echo $id ?>"><img src="<?php echo $foto ?>"  alt="..." class="f120x120"></a>
+                        <a href="userProfile.php?id=<?php echo $_SESSION['id_usuario'] ?>"><img src="<?php echo $_SESSION['foto'] ?>"  alt="..." class="f120x120"></a>
                     </div>
-                    <a href="userProfile.php?id=<?php echo $id ?>"><h3><?php echo htmlentities($user) ?></h3></a>
+                    <a href="userProfile.php?id=<?php echo $_SESSION['id_usuario'] ?>"><h3><?php echo htmlentities($_SESSION['name'] ) ?></h3></a>
 
                 </div>
 

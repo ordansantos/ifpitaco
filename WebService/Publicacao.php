@@ -24,7 +24,7 @@ class Publicacao{
     }
     
     //Ordenado do Maior para o menor
-    public function getNPostsLessThanMid($n, $m){
+    public function getNPostsLessThanMid($n, $m, $g){
 
         $conn = Database::getConn();
 
@@ -38,13 +38,14 @@ class Publicacao{
                 FROM tb_post, tb_usuario, tb_ramo, tb_imagem_usuario
                 WHERE ramo_id = id_ramo AND tb_post.usuario_id = tb_usuario.id_usuario AND 
                 tb_post.usuario_id = tb_imagem_usuario.usuario_id AND tb_post.deletado = 0
-                AND post_id < :m ORDER BY post_id DESC LIMIT :n";
+                AND post_id < :m AND tb_usuario.grupo = :g ORDER BY post_id DESC LIMIT :n";
 
         $stmt = $conn->prepare($sql);
 
         $stmt->bindParam('n', $n);
         $stmt->bindParam('m', $m);
-
+        $stmt->bindParam('g', $g);
+        
         $stmt->execute();
 
         $posts = $stmt->fetchAll(PDO::FETCH_OBJ);
@@ -54,7 +55,7 @@ class Publicacao{
     }
     
     //Ordenado do menor para o maior
-    public function getAllPostsGreaterThanNid($n){
+    public function getAllPostsGreaterThanNid($n, $g){
 
             $conn = Database::getConn();
 
@@ -64,11 +65,12 @@ class Publicacao{
                     FROM tb_post, tb_usuario, tb_ramo, tb_imagem_usuario
                     WHERE ramo_id = id_ramo AND tb_post.usuario_id = tb_usuario.id_usuario AND
                     tb_post.usuario_id = tb_imagem_usuario.usuario_id AND tb_post.deletado = 0
-                    AND post_id > :n ORDER BY post_id";
+                    AND post_id > :n AND tb_usuario.grupo = :g ORDER BY post_id";
 
             $stmt = $conn->prepare($sql);
 
             $stmt->bindParam('n', $n);
+            $stmt->bindParam('g', $g);
 
             $stmt->execute();
 
@@ -79,7 +81,7 @@ class Publicacao{
     }
 
     //Ordenado do Maior para o menor
-    public function getNPosts($n){
+    public function getNPosts($n, $g){
 
         $conn = Database::getConn();
 
@@ -92,11 +94,13 @@ class Publicacao{
                 FROM tb_post, tb_usuario, tb_ramo, tb_imagem_usuario
                 WHERE ramo_id = id_ramo AND tb_post.usuario_id = tb_usuario.id_usuario AND 
                 tb_post.usuario_id = tb_imagem_usuario.usuario_id  AND tb_post.deletado = 0
+                AND tb_usuario.grupo = :g
                 ORDER BY post_id DESC LIMIT :n";
 
         $stmt = $conn->prepare($sql);
 
         $stmt->bindParam('n', $n, PDO::PARAM_INT);
+        $stmt->bindParam('g', $g);
 
         $stmt->execute();
 

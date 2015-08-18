@@ -3,16 +3,11 @@
 
 <?php
 session_start();
+
 if ($_SESSION['id_usuario'] == '') {
     header("location: index.php");
 }
 
-include("services/redirect.php");
-include("services/getRoot.php");
-$url = getRoot();
-$id = $_SESSION['id_usuario'];
-$foto = redirectGet($url . 'WebService/getFotoPerfilById/' . $id);
-$user = redirectGet($url . 'WebService/getNomeById/' . $id);
 ?>
 
 
@@ -58,7 +53,7 @@ $user = redirectGet($url . 'WebService/getNomeById/' . $id);
 
         <script src="js/ifpitaco/sessionController.js"></script>
 
-        <script>SESSION = Session(<?php echo $id ?>);</script>
+        <script>SESSION = Session(<?php echo $_SESSION['id_usuario'] ?>, <?php echo $_SESSION['grupo'] ?>);</script>
 
         <script src="js/ifpitaco/postController.js"></script>
         <script src="js/ifpitaco/services/comentarioDELETE.js"></script>
@@ -125,12 +120,12 @@ $user = redirectGet($url . 'WebService/getNomeById/' . $id);
                 <!-- Profile -->
                 <div class="col-md-2 text-center" id="profile">
                     <div class="img-thumbnail">
-                        <a href="userProfile.php?id=<?php echo $id ?>"><img
-                                src="<?php echo $foto ?>" alt="..." class="f120x120"></a>
+                        <a href="userProfile.php?id=<?php echo $_SESSION['id_usuario'] ?>"><img
+                                src="<?php echo $_SESSION['foto'] ?>" alt="..." class="f120x120"></a>
                     </div>
-                    <a href="userProfile.php?id=<?php echo $id ?>">
+                    <a href="userProfile.php?id=<?php echo $_SESSION['id_usuario'] ?>">
                         <h3>
-<?php echo htmlentities($user) ?>
+<?php echo htmlentities($_SESSION['name']) ?>
                         </h3>
                     </a>
                     <div class='left_options'>

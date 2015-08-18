@@ -102,9 +102,9 @@ class Enquete{
 	return utf8_encode(json_encode($enquete));
     }
     
-    public function get($usuario_id, $last_enquete_id){
+    public function get($usuario_id, $last_enquete_id, $g){
 
-        $enquete = $this->getBestEnquete ($usuario_id, $last_enquete_id);
+        $enquete = $this->getBestEnquete ($usuario_id, $last_enquete_id, $g);
 
         if ($enquete == false){
             return '{ "is_there": "0" } ';
@@ -138,16 +138,16 @@ class Enquete{
         return '{"is_there":"1", "to_vote":"'.$enquete->to_vote.'", "data":'.$data.'}';
     }
     
-    private function getBestEnquete ($usuario_id, $last_enquete){
+    private function getBestEnquete ($usuario_id, $last_enquete, $g){
 
-        $enquete_to_vote = $this->getBestToVote($usuario_id, $last_enquete);
+        $enquete_to_vote = $this->getBestToVote($usuario_id, $last_enquete, $g);
         
         if ($enquete_to_vote != false){
             $enquete_to_vote->to_vote = 1;
             return $enquete_to_vote;
         }
         
-        $enquete_voted = $this->getBestVoted($usuario_id, $last_enquete);
+        $enquete_voted = $this->getBestVoted($last_enquete, $g);
 
         if ($enquete_voted != false){
             $enquete_voted->to_vote = 0;
@@ -157,9 +157,9 @@ class Enquete{
         return false;
     }
     
-    private function getBestToVote($usuario_id, $last_enquete){
+    private function getBestToVote($usuario_id, $last_enquete, $g){
         
-        $enquetes_sem_voto = $this->getEnqueteIdsToVote($usuario_id);
+        $enquetes_sem_voto = $this->getEnqueteIdsToVote($usuario_id, $g);
         
         if (!count($enquetes_sem_voto)){
             return false;
@@ -185,9 +185,9 @@ class Enquete{
         return $enquete;
     }
     
-    private function getBestVoted($usuario_id, $last_enquete){
+    private function getBestVoted($last_enquete, $g){
         
-        $enquetes_com_voto = $this->getEnqueteIds($usuario_id);
+        $enquetes_com_voto = $this->getEnqueteIds($g);
         
         if (!count($enquetes_com_voto)){
             return false;
@@ -212,22 +212,33 @@ class Enquete{
         
     }
 
-    private function getEnqueteIds(){
-            $sql = "SELECT id_enquete FROM tb_enquete";
+    private function getEnqueteIds($g){
+            $sql = "
+                    SELECT id_enquete FROM tb_enquete, tb_usuario
+                    WHERE tb_enquete.usuario_id = tb_usuario.id_usuario
+                    AND tb_usuario.grupo = :g
+                    ";
             $conn = getConn();
             $stmt = $conn->prepare($sql);
+            $stmt->bindParam('g', $g);
             $stmt->execute();
             $ids = $stmt->fetchAll(PDO::FETCH_OBJ);
             return $ids;
     }
 
-    private function getEnqueteIdsToVote($usuario_id){
+    private function getEnqueteIdsToVote($usuario_id, $g){
 
-            $sql = "SELECT id_enquete FROM tb_enquete WHERE id_enquete NOT IN (
-                    SELECT enquete_id FROM tb_enquete_voto WHERE usuario_id = :id)";
+            $sql = "
+                SELECT id_enquete FROM tb_enquete, tb_usuario 
+                WHERE tb_enquete.usuario_id = tb_usuario.id_usuario
+                AND id_enquete NOT IN (SELECT enquete_id FROM tb_enquete_voto 
+                                       WHERE usuario_id = :id)
+                AND tb_usuario.grupo = :g
+            ";
             $conn = getConn();
             $stmt = $conn->prepare($sql);
             $stmt->bindParam('id', $usuario_id);
+            $stmt->bindParam('g', $g);
             $stmt->execute();
             $ids = $stmt->fetchAll(PDO::FETCH_OBJ);
             return $ids;

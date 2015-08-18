@@ -10,19 +10,14 @@ if ($_SESSION['id_usuario'] == '') {
 include("services/redirect.php");
 include("services/getRoot.php");
 $url = getRoot();
-$id = $_SESSION['id_usuario'];
-$foto = redirectGet($url . 'WebService/getFotoPerfilById/' . $id);
-$user = redirectGet($url . 'WebService/getNomeById/' . $id);
 
 
-$json = redirectGet($url . 'WebService/getUsuarioById/' . $id);
+$json = redirectGet($url . 'WebService/getUsuarioById/' . $_SESSION['id_usuario']);
 
 $usuario = json_decode($json);
 
 if (sizeof($usuario) == 0)
     header("location: index.php");
-
-$usuario = $usuario[0];
 
 $nome = $usuario->nm_usuario;
 $tipo = $usuario->usuario_tipo;
@@ -122,9 +117,9 @@ $grau_academico = $usuario->grau_academico;
                 <!-- Profile -->
                 <div class="col-md-2 text-center " id="profile">
                     <div class="img-thumbnail">
-                        <a href="userProfile.php?id=<?php echo $id ?>"><img src="<?php echo $foto ?>"  alt="..." class="f120x120"></a>
+                        <a href="userProfile.php?id=<?php echo $_SESSION['id_usuario'] ?>"><img src="<?php echo $_SESSION['foto'] ?>"  alt="..." class="f120x120"></a>
                     </div>
-                    <a href="userProfile.php?id=<?php echo $id ?>"><h3><?php echo htmlentities($user) ?></h3></a>
+                    <a href="userProfile.php?id=<?php echo $_SESSION['id_usuario'] ?>"><h3><?php echo htmlentities($_SESSION['name']) ?></h3></a>
 
                 </div>
 
@@ -229,7 +224,7 @@ $grau_academico = $usuario->grau_academico;
                         <input type="hidden" id="crop_y" name="y" value="1"/>
                         <input type="hidden" id="crop_w" name="w" value="1"/>
                         <input type="hidden" id="crop_h" name="h" value="1"/>
-                        <input type="hidden" name="usuario_id" value="<?php echo $id ?>"/>
+                        <input type="hidden" name="usuario_id" value="<?php echo $_SESSION['id_usuario'] ?>"/>
                     </form> 
 
 

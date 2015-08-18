@@ -46,17 +46,17 @@ $app->get('/getComentariosById/:id', 'getComentariosById');
 //Retorna o id do usuário que realizou o comentário
 $app->get('/getUsuarioByComentarioPostId/:comentario_post_id', 'getUsuarioByComentarioPostId');
 //Retorna N posts inseridos antes o id do post M
-$app->get('/getNPostsLessThanMid/:n/:m', 'getNPostsLessThanMid');
+$app->get('/getNPostsLessThanMid/:n/:m/:g', 'getNPostsLessThanMid');
 //Retorna os posts inseridos após o id do post N
-$app->get('/getAllPostsGreaterThanNid/:n', 'getAllPostsGreaterThanNid');
+$app->get('/getAllPostsGreaterThanNid/:n/:g', 'getAllPostsGreaterThanNid');
 //Retorna os N últimos Posts
-$app->get('/getNPosts/:n', 'getNPosts');
+$app->get('/getNPosts/:n/:g', 'getNPosts');
 //Retorna a quantidade de likes do post e uma flag, que responde se o usuário curtiu
 $app->get('/getCntLaikesAndUserFlagByPostIdAndUserId/:post_id/:usuario_id', getCntLaikesAndUserFlagByPostIdAndUserId);
 //Retorna o usuário que criou o post
 $app->get('/getUsuarioByPostId/:post_id', 'getUsuarioByPostId');
 //Retorna uma enquete
-$app->get('/getEnquete/:usuario_id/:last_enquete_id', 'getEnquete');
+$app->get('/getEnquete/:usuario_id/:last_enquete_id/:g', 'getEnquete');
 //Retorna uma enquete pelo id
 
 $app->get('/getEnqueteById/:enquete_id', 'getEnqueteById');
@@ -106,7 +106,8 @@ function postUsuario(){
     $usuario->name = filter_input(INPUT_POST, 'nm_usuario');
     $usuario->senha = filter_input(INPUT_POST, 'senha');
     $usuario->email = filter_input(INPUT_POST, 'email');
-
+    $$usuario->grupo = filter_input(INPUT_POST, 'grupo');
+    
     $usuario->usuario_tipo = filter_input(INPUT_POST, 'usuario_tipo');
     $usuario->curso = filter_input(INPUT_POST, 'curso');
     $usuario->ano_periodo = filter_input(INPUT_POST, 'ano_periodo');
@@ -191,16 +192,16 @@ function getUsuarioByComentarioPostId($comentario_post_id){
 }
 
 //Ordenado do Maior para o menor
-function getNPostsLessThanMid($n, $m){
-    echo (new Publicacao())->getNPostsLessThanMid($n, $m);
+function getNPostsLessThanMid($n, $m, $g){
+    echo (new Publicacao())->getNPostsLessThanMid($n, $m, $g);
 }
 
-function getAllPostsGreaterThanNid($n){
-    echo (new Publicacao())->getAllPostsGreaterThanNid($n);
+function getAllPostsGreaterThanNid($n, $g){
+    echo (new Publicacao())->getAllPostsGreaterThanNid($n, $g);
 }
 
-function getNPosts($n){
-    echo (new Publicacao())->getNPosts($n);
+function getNPosts($n, $g){
+    echo (new Publicacao())->getNPosts($n, $g);
 }
 
 //Se enviar um post de like existente, o mesmo é apagado
@@ -265,8 +266,8 @@ function getEnqueteById($enquete_id){
     echo (new Enquete())->getById($enquete_id);
 }
 
-function getEnquete($usuario_id, $last_enquete_id){
-    echo (new Enquete())->get($usuario_id, $last_enquete_id);
+function getEnquete($usuario_id, $last_enquete_id, $g){
+    echo (new Enquete())->get($usuario_id, $last_enquete_id, $g);
 }
 
 function postVoto(){
@@ -280,7 +281,7 @@ function postVoto(){
 }
 
 function getUsuarioById($id){
-	echo (new Usuario())->getUsuarioById($id);
+    echo (new Usuario())->getUsuarioById($id);
 }
 
 
