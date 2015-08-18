@@ -1,5 +1,8 @@
 <?php
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 require_once 'header.php';
 
 \Slim\Slim::registerAutoloader();
@@ -27,6 +30,9 @@ $app->post('/postLaike/', 'postLaike');
 //Deleta um post
 $app->post('/postDeletePublicacao/', 'postDeletePublicacao');
 //Envia uma nova Enquete
+
+$app->post('/postDeletePublicacaoReverte/', 'postDeletePublicacaoReverte');
+
 $app->post('/postEnquete/', 'postEnquete');
 //Envia o voto de uma enquete
 $app->post('/postVoto/', 'postVoto');
@@ -52,12 +58,14 @@ $app->get('/getAllPostsGreaterThanNid/:n/:g', 'getAllPostsGreaterThanNid');
 //Retorna os N últimos Posts
 $app->get('/getNPosts/:n/:g', 'getNPosts');
 
-$app->get('/getAllPosts', 'getAllPosts');
+$app->get('/getAllPosts/:g', 'getAllPosts');
 
 $app->get('/getPostById/:id', 'getPostById');
 
+$app->get('/adminGetPostById/:id', 'adminGetPostById');
+
 //Retorna a quantidade de likes do post e uma flag, que responde se o usuário curtiu
-$app->get('/getCntLaikesAndUserFlagByPostIdAndUserId/:post_id/:usuario_id', getCntLaikesAndUserFlagByPostIdAndUserId);
+$app->get('/getCntLaikesAndUserFlagByPostIdAndUserId/:post_id/:usuario_id', 'getCntLaikesAndUserFlagByPostIdAndUserId');
 //Retorna o usuário que criou o post
 $app->get('/getUsuarioByPostId/:post_id', 'getUsuarioByPostId');
 //Retorna uma enquete
@@ -250,6 +258,17 @@ function postDeletePublicacao (){
     echo (new Publicacao())->delete($delete);
 }
 
+function postDeletePublicacaoReverte (){
+	
+    $reverte = new stdClass();
+           
+    $reverte->usuario_id = filter_input(INPUT_POST, 'id_usuario');
+    
+    $reverte->post_id = filter_input(INPUT_POST, 'post_id');
+    
+    echo (new Publicacao())->reverte($reverte);
+}
+
 function postEnquete(){
     
     $enquete = new stdClass();
@@ -408,10 +427,14 @@ function getGrupos(){
     echo Database::getGrupos();
 }
 
-function getAllPosts(){
-    
+function getAllPosts($g){
+    echo (new Publicacao())->getAllPosts($g);
 }
 
 function getPostById($id){
     echo (new Publicacao())->getPostById($id);
+}
+
+function adminGetPostById($id){
+    echo (new Publicacao())->adminGetPostById($id);
 }

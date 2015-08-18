@@ -248,5 +248,26 @@ class Usuario{
         return utf8_encode(json_encode($usuario));
     }
     
+    public function isAdmin($id){
+        
+	$sql = "SELECT id_usuario FROM tb_admins WHERE id_usuario = :id";
+        
+	$conn = getConn();
+	
+        $stmt = $conn->prepare($sql);
+	
+        $stmt->bindParam("id", $id);
+	
+        $stmt->execute();
+	
+        $usuario = $stmt->fetch(PDO::FETCH_OBJ);
+	
+        if (!$usuario){
+            return false;
+        } else{
+            return true;
+        }
+    }
+    
 }
 

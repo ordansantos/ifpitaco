@@ -19,6 +19,8 @@ class Comentario {
 	
 	$stmt->bindParam("usuario_id", $comentario->usuario_id);
 	$stmt->bindParam("post_id", $comentario->post_id);
+        
+        $comentario->comentario = StringFilter::getInstance()->filter($comentario->comentario);
 	$stmt->bindParam("comentario", $comentario->comentario);
 	
 	if ($stmt->execute()) {

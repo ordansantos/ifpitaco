@@ -10,10 +10,6 @@
         
         $_POST['id_usuario'] = $_SESSION['id_usuario'];
         
-	echo redirectPost($url.'WebService/postDeletePublicacao');
-
+	echo redirectPost($url.'WebService/postDeletePublicacaoReverte');
 	
 ?>
-
-
-

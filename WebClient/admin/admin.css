@@ -1,0 +1,22 @@
+
+
+table{
+    
+    background-color: #FFFFFF;
+}
+
+body{
+	word-wrap: break-word;
+	background-image:url('../images/pattern-6plj.jpg');
+	font-family: Helvetica,Arial,sans-serif;
+}
+
+td, th{
+    max-width: 120px;
+    overflow: hidden;
+}
+
+td:hover { 
+    overflow: auto;
+}
+
