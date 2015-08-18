@@ -11,10 +11,11 @@ class Proposta {
 
         $conn = Database::getConn();
 
-        $stmt = $conn->prepare($sql);
+        $stmt = $conn->prepare($sql);    
         
-
-        $stmt->bindParam("comentario", $proposta->comentario);
+        $comentario = StringFilter::getInstance()->filter($proposta->comentario);
+        
+        $stmt->bindParam("comentario", $comentario);
         
         $stmt->bindParam("usuario_id", $proposta->usuario_id);
         

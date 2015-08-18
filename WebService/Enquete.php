@@ -13,13 +13,16 @@ class Enquete{
 	$stmt = $conn->prepare($sql);
 	
 	$stmt->bindParam('usuario_id', $enquete->usuario_id);
-	$stmt->bindParam('titulo', $enquete->titulo);
+
+        $titulo = StringFilter::getInstance()->filter($enquete->titulo);
+        
+	$stmt->bindParam('titulo', $titulo);
 	$stmt->bindParam('qtd_opt', $enquete->qtd_opt);
 	
 	for ($i = 1; $i <= 5; $i++){
+            $enquete->opt[$i] = StringFilter::getInstance()->filter($enquete->opt[$i]);
             $stmt->bindParam('opt_'.$i, $enquete->opt[$i]);	
         }
-        
 	
 	if ($stmt->execute()){
             $id_enquete = $conn->lastInsertId('id_enquete');

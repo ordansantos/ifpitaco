@@ -13,3 +13,4 @@ require_once 'Laike.php';
 require_once 'Enquete.php';
 require_once 'Busca.php';
 require_once 'Curiar.php';
+require_once 'StringFilter.php';

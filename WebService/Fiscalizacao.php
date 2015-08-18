@@ -13,7 +13,9 @@ class Fiscalizacao{
 
 	$stmt = $conn->prepare($sql);
 	
-	$stmt->bindParam("comentario", $fiscalizacao->comentario);
+        $comentario = StringFilter::getInstance()->filter($fiscalizacao->comentario);
+        
+	$stmt->bindParam("comentario", $comentario);
 	$stmt->bindParam("usuario_id", $fiscalizacao->usuario_id);
 	$stmt->bindParam("ramo_id", $fiscalizacao->ramo_id);
 
