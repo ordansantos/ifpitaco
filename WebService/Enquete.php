@@ -305,4 +305,62 @@ class Enquete{
         return $opts;
     }
     
+    public function getUsuarioByEnquetetId($id_enquete){
+        $conn = Database::getConn();
+	$sql = "SELECT usuario_id FROM tb_enquete WHERE id_enquete = :id_enquete";
+	$stmt = $conn->prepare($sql);
+	$stmt->bindParam ('id_enquete', $id_enquete);
+	$stmt->execute();
+	$result = $stmt->fetch();
+	return $result['usuario_id'];
+    }
+    
+    public function delete($delete){
+
+        $usuario_enquete = $this->getUsuarioByEnquetetId($delete->enquete_id);
+        
+        if ($delete->usuario_id != $usuario_enquete && !(new Usuario())->isAdmin($delete->usuario_id)){
+            return MsgEnum::ERRO;
+        } else{
+        
+            $conn = Database::getConn();
+
+            $sql = "UPDATE tb_enquete SET deletado = 1 WHERE enquete_id = :enquete_id";
+            
+            $stmt = $conn->prepare($sql);
+            
+            $stmt->bindParam ('enquete_id', $delete->enquete_id);
+
+            if ($stmt->execute()) {
+                echo MsgEnum::SUCESSO;
+            } else {
+                echo MsgEnum::ERRO;
+            }
+        }
+    }
+    
+    public function reverte($reverte){
+
+        $usuario_enquete = $this->getUsuarioByEnquetetId($reverte->enquete_id);
+        
+        if ($reverte->usuario_id != $usuario_enquete && !(new Usuario())->isAdmin($reverte->usuario_id)){
+            return MsgEnum::ERRO;
+        } else{
+        
+            $conn = Database::getConn();
+
+            $sql = "UPDATE tb_enquete SET deletado = 0 WHERE enquete_id = :enquete_id";
+            
+            $stmt = $conn->prepare($sql);
+            
+            $stmt->bindParam ('enquete_id', $reverte->enquete_id);
+
+            if ($stmt->execute()) {
+                echo MsgEnum::SUCESSO;
+            } else {
+                echo MsgEnum::ERRO;
+            }
+        }
+    }
+    
 }
