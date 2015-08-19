@@ -206,7 +206,7 @@ ENQUETE = (function () {
     enqueteObject.atualizaTempo = function () {
 
         if ($('#etime').length > 0) {
-            document.getElementById('etime').innerHTML = TEMPO.tempoPassado(enqueteObject.data_enquete);
+            document.getElementById('etime').innerHTML = tempoPassado(enqueteObject.data_enquete);
         }
     };
 

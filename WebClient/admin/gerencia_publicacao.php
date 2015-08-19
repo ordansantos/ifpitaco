@@ -73,14 +73,14 @@ $comentarios = json_decode($json)->comentarios;
                     <form action="delete_publicacao.php" method="POST">
 
                         <input type="hidden" name="post_id" value="'. $post->post_id .'"/>
-                        <input class="btn btn-lg btn-danger" type="submit" value="Deletar"/>
+                        <input class="btn btn-lg btn-danger" type="submit" value="Deletar Publicação"/>
                     </form>';
                 } else{            
                 echo '
                 <form action="delete_publicacao_reverte.php" method="POST">
                     
                     <input type="hidden" name="post_id" value="'.$post->post_id.'"/>
-                    <input class="btn btn-lg btn-success" type="submit" value="Deletado/Restaurar"/>
+                    <input class="btn btn-lg btn-success" type="submit" value="Restaurar Publicação"/>
                 </form>';
                 }
             ?>
@@ -90,7 +90,7 @@ $comentarios = json_decode($json)->comentarios;
                 <tr>
                     <th>Usuário</th>
                     <th>Comentário</th>
-                    <th>Status</th>
+                    <th>Ação</th>
                 </tr>
                 <?php
                         
@@ -107,7 +107,7 @@ $comentarios = json_decode($json)->comentarios;
 
                                     <input type="hidden" name="post_id" value="'. $post->post_id .'"/>
                                     <input type="hidden" name="comentario_post_id" value="'. $comentario->comentario_post_id .'"/>
-                                    <input class="btn btn-lg btn-danger" type="submit" value="Deletar"/>
+                                    <input class="btn btn-sm btn-danger" type="submit" value="Deletar"/>
                                 </form>';
                             } else{            
                                 echo '
@@ -115,7 +115,7 @@ $comentarios = json_decode($json)->comentarios;
 
                                     <input type="hidden" name="post_id" value="'.$post->post_id.'"/>
                                     <input type="hidden" name="comentario_post_id" value="'. $comentario->comentario_post_id .'"/>
-                                    <input class="btn btn-lg btn-success" type="submit" value="Deletado/Restaurar"/>
+                                    <input class="btn btn-sm btn-success" type="submit" value="Restaurar"/>
                                 </form>';
                             }
                         echo    '</td>
