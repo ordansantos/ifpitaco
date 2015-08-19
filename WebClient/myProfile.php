@@ -1,6 +1,7 @@
 
 
 <?php
+header("location: index.php");
 session_start();
 if ($_SESSION['id_usuario'] == '') {
     header("location: index.php");
