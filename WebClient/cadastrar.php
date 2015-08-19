@@ -72,8 +72,26 @@
                         <label for="senha"><span class="glyphicon glyphicon glyphicon-lock" aria-hidden="true"></span>Senha</label>
                         <input required="required" type="password" class="form-control" id="senha" name="senha" placeholder="Senha">
                     </div>
-
-
+                    
+                    <label><span class="glyphicon glyphicon-education" aria-hidden="true"></span>Instituição de ensino</label>
+                    <select class="form-control" name="grupo">
+                        
+                        <?php
+                            require_once './services/redirect.php';
+                            require_once './services/getRoot.php';
+                            $url = getRoot();
+                            $grupos = redirectGet($url . 'WebService/getGrupos');
+                            $grupos = json_decode($grupos);
+                    
+                            foreach ($grupos->grupos as $g){
+                             
+                                echo '<option value="' . $g->id_grupo . '">'.$g->nm_grupo.'</option>';
+                            }
+                            
+                        ?>
+                        
+                    </select>
+                    <br/>
                     <div class="radios text-center">
                         <label class="radio-inline">
                             <input type="radio" name="usuario_tipo" onClick="option1Click()" id="option1" value="Aluno" checked> Aluno
@@ -161,23 +179,7 @@
                     <input type="hidden" id="crop_w" name="w" value="1"/>
                     <input type="hidden" id="crop_h" name="h" value="1"/>
                     
-                    <select class="form-control" name="grupo">
-                        
-                        <?php
-                            require_once './services/redirect.php';
-                            require_once './services/getRoot.php';
-                            $url = getRoot();
-                            $grupos = redirectGet($url . 'WebService/getGrupos');
-                            $grupos = json_decode($grupos);
-                    
-                            foreach ($grupos->grupos as $g){
-                             
-                                echo '<option value="' . $g->id_grupo . '">'.$g->nm_grupo.'</option>';
-                            }
-                            
-                        ?>
-                        
-                    </select>
+
                     
                 </form> 
                 <br/>
