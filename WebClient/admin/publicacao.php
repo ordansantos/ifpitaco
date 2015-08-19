@@ -1,12 +1,14 @@
 
 
 <?php
-    error_reporting(E_ALL);
-ini_set('display_errors', 1);
+
 session_start();
-if ($_SESSION['id_usuario'] == '') {
-    header("location: index.php");
+if ($_SESSION['id_usuario'] == '' || !$_SESSION['is_admin']) {
+    header("location: ../index.php");
 }
+
+//error_reporting(E_ALL);
+//ini_set('display_errors', 1);
 
 require_once '../services/redirect.php';
 require_once '../services/getRoot.php';
@@ -86,7 +88,7 @@ $posts = json_decode($json)->posts;
                    foreach ($posts as $post){
                        echo '<tr class="'.($post->deletado ? 'danger' : "").'">';
 
-                            echo '<td><a style="color: #337ab7; text-decoration: underline;" href="gerencia_publicacao.php?post_id=' . $post->post_id . '">' . $post->post_id. '</a></td>';
+                            echo '<td><a class="glyphicon glyphicon-pencil" style="color: #337ab7;" href="gerencia_publicacao.php?post_id=' . $post->post_id . '"> ' . $post->post_id. '</a></td>';
                             echo '<td>' . $post->nm_usuario . '/' . $post->usuario_id .'</td>';
                             echo '<td class="' . ($post->tipo == 0? 'success">Proposta' : 'warning">Fiscalização') . '</td>';
                             echo '<td>' . $post->comentario . '</td>';

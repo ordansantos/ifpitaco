@@ -2,8 +2,12 @@
 
 session_start();
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+if ($_SESSION['id_usuario'] == '' || !$_SESSION['is_admin']) {
+    header("location: ../index.php");
+}
+
+//error_reporting(E_ALL);
+//ini_set('display_errors', 1);
 
 require_once '../services/redirect.php';
 require_once '../services/getRoot.php';
@@ -57,6 +61,38 @@ $comentarios = json_decode($json)->comentarios;
         </nav>
         
         <div class="col-md-9 col-md-offset-2 publicacoes_table">
+            <?php
+                if ($post->deletado == 0){
+           
+                    echo '
+                    <form style="display: inline" action="delete_publicacao.php" method="POST">
+
+                        <input type="hidden" name="post_id" value="'. $post->post_id .'"/>
+                        <input class="btn btn-lg btn-danger" type="submit" value="Deletar Publicação"/>
+                    </form>';
+                    
+                    echo '
+                    <a style="display: inline" href ="../publicacao.php?id='.$post->post_id.'" 
+                    class="glyphicon glyphicon-share-alt btn btn-lg btn-primary"
+                    style="margin: 8px"> Acessar</a>
+                    ';
+         
+                } else{            
+                echo '
+                <form style="display: inline" action="delete_publicacao_reverte.php" method="POST">
+                    
+                    <input type="hidden" name="post_id" value="'.$post->post_id.'"/>
+                    <input class="btn btn-lg btn-success" type="submit" value="Restaurar Publicação"/>
+                </form>';
+                }
+                
+                
+            ?>
+            
+            <a style="display: inline" href ="./publicacao.php" 
+            class="glyphicon glyphicon-chevron-left btn btn-lg btn-default pull-right"
+            style="margin: 8px"> Voltar</a>
+            
             <table class="table  table-bordered table-striped table-hover">
                 <tr>
                     <th>Id</th>
@@ -87,23 +123,8 @@ $comentarios = json_decode($json)->comentarios;
                     <td><?php $imagem = explode('/', $post->imagem); echo '<a href="../'.$post->imagem.'">' . $imagem[count($imagem) - 1] . '</a>' ?></td>
                 </tr>
             </table>
-            <?php
-                if ($post->deletado == 0){
-                    echo '
-                    <form action="delete_publicacao.php" method="POST">
 
-                        <input type="hidden" name="post_id" value="'. $post->post_id .'"/>
-                        <input class="btn btn-lg btn-danger" type="submit" value="Deletar Publicação"/>
-                    </form>';
-                } else{            
-                echo '
-                <form action="delete_publicacao_reverte.php" method="POST">
-                    
-                    <input type="hidden" name="post_id" value="'.$post->post_id.'"/>
-                    <input class="btn btn-lg btn-success" type="submit" value="Restaurar Publicação"/>
-                </form>';
-                }
-            ?>
+            <h2 style="color: white">Comentários</h2>
             
             <table class="table  table-bordered table-striped table-hover">
                 
