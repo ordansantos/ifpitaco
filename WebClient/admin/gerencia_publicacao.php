@@ -11,6 +11,10 @@ $url = getRoot();
 $json = redirectGet($url . 'WebService/adminGetPostById/' . $_GET['post_id']);
 $post = json_decode($json);
 
+$json = redirectGet($url . 'WebService/adminGetComentariosById/' . $_GET['post_id']);
+$comentarios = json_decode($json)->comentarios;
+
+
 ?>
 
 <html>
@@ -80,6 +84,52 @@ $post = json_decode($json);
                 </form>';
                 }
             ?>
+            
+            <table class="table  table-bordered table-striped table-hover">
+                
+                <tr>
+                    <th>Usuário</th>
+                    <th>Comentário</th>
+                    <th>Status</th>
+                </tr>
+                <?php
+                        
+                    foreach ($comentarios as $comentario){
+                        echo '
+                            
+                                <tr>
+                                    <td>'. $comentario->nm_usuario . '</td>
+                                    <td>'. $comentario->comentario . '</td>
+                                    <td>';
+                            if ($comentario->deletado == 0){
+                                echo '
+                                <form action="delete_comentario.php" method="POST">
+
+                                    <input type="hidden" name="post_id" value="'. $post->post_id .'"/>
+                                    <input type="hidden" name="comentario_post_id" value="'. $comentario->comentario_post_id .'"/>
+                                    <input class="btn btn-lg btn-danger" type="submit" value="Deletar"/>
+                                </form>';
+                            } else{            
+                                echo '
+                                <form action="delete_comentario_reverte.php" method="POST">
+
+                                    <input type="hidden" name="post_id" value="'.$post->post_id.'"/>
+                                    <input type="hidden" name="comentario_post_id" value="'. $comentario->comentario_post_id .'"/>
+                                    <input class="btn btn-lg btn-success" type="submit" value="Deletado/Restaurar"/>
+                                </form>';
+                            }
+                        echo    '</td>
+                                </tr>'
+
+                        ;
+                    }
+                    
+                ?>
+                <tr>
+                    
+                </tr>
+                
+            </table>
         </div>
     </body>
 </html>

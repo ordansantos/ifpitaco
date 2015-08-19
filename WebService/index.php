@@ -24,8 +24,14 @@ $app->post('/postFiscalizacao/', 'postFiscalizacao');
 //Envia um comentário de um post
 $app->post('/postComentario/', 'postComentario');
 //Delete um comentário específico
+
 $app->post('/postDeleteComentario/', 'postDeleteComentario');
 //Envia um 'laike' de um post
+
+$app->post('/postDeleteComentarioReverte/', 'postDeleteComentarioReverte');
+//Envia um 'laike' de um post
+
+
 $app->post('/postLaike/', 'postLaike');
 //Deleta um post
 $app->post('/postDeletePublicacao/', 'postDeletePublicacao');
@@ -49,6 +55,9 @@ $app->get('/getNomeById/:id', 'getNomeById');
 $app->get('/getFotoPerfilById/:id', 'getFotoPerfilById');
 //Retorna os comentários de um post e também uma flag, que responde se o post foi deletado
 $app->get('/getComentariosById/:id', 'getComentariosById');
+
+$app->get('/adminGetComentariosById/:id', 'adminGetComentariosById');
+
 //Retorna o id do usuário que realizou o comentário
 $app->get('/getUsuarioByComentarioPostId/:comentario_post_id', 'getUsuarioByComentarioPostId');
 //Retorna N posts inseridos antes o id do post M
@@ -185,6 +194,10 @@ function getComentariosById ($id){
     
 }
 
+function adminGetComentariosById($id){
+    echo (new Comentario())->adminGetComentariosById($id);
+}
+
 function postDeleteComentario (){
 	
     $comentario = new stdClass();
@@ -195,6 +208,18 @@ function postDeleteComentario (){
     
     echo (new Comentario())->delete($comentario);
 }
+
+function postDeleteComentarioReverte (){
+	
+    $comentario = new stdClass();
+
+    $comentario->comentario_post_id = filter_input(INPUT_POST, 'comentario_post_id');
+    
+    $comentario->id_usuario = filter_input(INPUT_POST, 'id_usuario');
+    
+    echo (new Comentario())->reverte($comentario);
+}
+
 
 function getUsuarioByComentarioPostId($comentario_post_id){
     
