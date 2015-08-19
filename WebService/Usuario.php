@@ -21,7 +21,8 @@ class Usuario{
 	$stmt = $conn->prepare($sql);
 
 	$stmt->bindParam("nm_usuario", $usuario->name);
-	$stmt->bindParam("senha", $this->cryptographPass($usuario->senha));
+        $usuario->senha = $this->cryptographPass($usuario->senha);
+	$stmt->bindParam("senha", $usuario->senha);
 	$stmt->bindParam("email", $usuario->email);
 	$stmt->bindParam("usuario_tipo", $usuario->usuario_tipo);
 	$stmt->bindParam("curso", $usuario->curso);
