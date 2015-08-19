@@ -59,7 +59,7 @@ ENQUETE = (function () {
 			 <div class='e_top'>\
 				<img class='f45x45 pull-left img-circle' src='" + data.perfil + "'>\
 					<a href='userProfile.php?id=" + data.usuario_id + "'><div class='nome_user'>" + htmlentitiesJS(data.nm_usuario) + "</div></a>\
-					<div class='data'><span id='etime'>" + TEMPO.tempoPassado(data.data_hora) + "</span></div>\
+					<div class='data'><span id='etime'><a href='enquete.php?enquete_id=" + data.id_enquete + "'>" + TEMPO.tempoPassado(data.data_hora) + "</a></span></div>\
 				 </div>\
 				 <div class='titulo'>" + htmlentitiesJS(data.titulo) + "</div>\
 				 " + imagem + "\
@@ -103,6 +103,7 @@ ENQUETE = (function () {
             dataType: 'json',
             cache: false,
             success: function (data) {
+                
                 if (data.is_there == 0)
                     return;
                 enqueteObject.lastEnquete = data.data.id_enquete;
@@ -137,7 +138,7 @@ ENQUETE = (function () {
 
         $.ajax({
             type: 'GET',
-            url: '../WebService/getEnqueteById/' + enqueteObject.lastEnquete,
+            url: '../WebService/getEnqueteById/' + enqueteObject.lastEnquete + '/0', // Não é necessário verificar se o usuário votou
             data: {get_param: 'value'},
             dataType: 'json',
             cache: false,
@@ -178,7 +179,7 @@ ENQUETE = (function () {
    			 <div class='e_top'>\
    				<img class='f45x45 pull-left img-circle' src='" + data.perfil + "'>\
    				<a href='userProfile.php?id=" + data.usuario_id + "'><div class='nome_user'>" + htmlentitiesJS(data.nm_usuario) + "</div></a>\
-   					<div class='data'><span id='etime'>" + TEMPO.tempoPassado(data.data_hora) + "</span></div>\
+   					<div class='data'><span id='etime'><a href='enquete.php?enquete_id=" + data.id_enquete + "'>" + TEMPO.tempoPassado(data.data_hora) + "</a></span></div>\
    				 </div>\
    				 <div class='titulo'>" + htmlentitiesJS(data.titulo) + "</div>\
    				 " + imagem + "\

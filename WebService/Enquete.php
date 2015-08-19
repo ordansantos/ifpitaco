@@ -77,7 +77,7 @@ class Enquete{
         
     }
     
-    public function getById($enquete_id){
+    public function getById($enquete_id, $usuario_id){
 	$sql = "
 		SELECT 
 		e.qtd_opt, e.opt_1, e.opt_2, e.opt_3, e.opt_4, e.opt_5, e.titulo, e.id_enquete, e.usuario_id, 
@@ -101,8 +101,28 @@ class Enquete{
 	$stmt = $conn->prepare($sql);
 	$stmt->bindParam("id", $enquete_id);
 	$stmt->execute();
-	$enquete = $stmt->fetchAll(PDO::FETCH_OBJ)[0];
+	$enquete = $stmt->fetch(PDO::FETCH_OBJ);
+        $enquete->to_vote = $this->voted($usuario_id, $enquete_id)? 0 : 1;
 	return utf8_encode(json_encode($enquete));
+    }
+    
+    public function voted($usuario_id, $enquete_id){
+        $sql = "
+            SELECT id_enquete FROM tb_enquete 
+            WHERE id_enquete NOT IN (SELECT enquete_id FROM tb_enquete_voto WHERE usuario_id = :usuario_id)
+            AND id_enquete = :id_enquete
+        ";
+        $conn = getConn();
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam('usuario_id', $usuario_id);
+        $stmt->bindParam('id_enquete', $enquete_id);
+        $stmt->execute();
+        $enquete = $stmt->fetch(PDO::FETCH_OBJ);
+        if (!$enquete){
+            return true;
+        } else{
+            return false;
+        }
     }
     
     public function get($usuario_id, $last_enquete_id, $g){

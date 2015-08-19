@@ -81,7 +81,7 @@ $app->get('/getUsuarioByPostId/:post_id', 'getUsuarioByPostId');
 $app->get('/getEnquete/:usuario_id/:last_enquete_id/:g', 'getEnquete');
 //Retorna uma enquete pelo id
 
-$app->get('/getEnqueteById/:enquete_id', 'getEnqueteById');
+$app->get('/getEnqueteById/:enquete_id/:usuario_id', 'getEnqueteById');
 //Retorna o id de todas as enquetes
 
 $app->get('/getUsuarioById/:usuario_id', 'getUsuarioById');
@@ -313,8 +313,8 @@ function postEnquete(){
     
 }
 
-function getEnqueteById($enquete_id){
-    echo (new Enquete())->getById($enquete_id);
+function getEnqueteById($enquete_id, $usuario_id){
+    echo (new Enquete())->getById($enquete_id, $usuario_id);
 }
 
 function getEnquete($usuario_id, $last_enquete_id, $g){

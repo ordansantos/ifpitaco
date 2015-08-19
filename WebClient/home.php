@@ -369,8 +369,7 @@ if ($_SESSION['id_usuario'] == '') {
 
                     <div class="modal-footer">
 
-                        <button type="button" class="btn btn-default"
-                                onClick="ENQUETEFORM.resetNewEnquete()" data-dismiss="modal">Fechar</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
                     </div>
 
                 </div>

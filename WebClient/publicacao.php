@@ -241,7 +241,39 @@ if ($_SESSION['id_usuario'] == '') {
 
 
 
+        <!-- MODAL List People Laike-->
 
+
+        <!-- Modal-->
+        <div class="modal fade" id="list_people_laike" tabindex="-1"
+             role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+            <div class="modal-dialog list_people_laike">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            <span style="cursor: initial;" id='p_list_people_laike_titulo'>Curiar</span>
+                        </h4>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <div id="list_people_laike_div"></div>
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
 
     </body>
 
