@@ -246,6 +246,7 @@ class Usuario{
         $stmt->bindParam("id", $id);
         $stmt->execute();
         $usuario = $stmt->fetch(PDO::FETCH_OBJ);
+        $usuario->is_admin = ($this->isAdmin($id)) ? 1 : 0;
         return utf8_encode(json_encode($usuario));
     }
     

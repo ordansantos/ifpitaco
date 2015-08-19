@@ -31,11 +31,31 @@ $comentarios = json_decode($json)->comentarios;
         <!-- Bootstrap -->
         <link href="../bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet">
         <script src="../bootstrap-3.3.5/js/bootstrap.min.js"></script>
-        
+        <link rel="stylesheet" type="text/css" href="../css/home.css">
         <link href="admin.css" rel="stylesheet">
     </head>
     
     <body>
+        
+        <nav id="bar" class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="../home.php">
+                        <img alt="Brand" src="../images/logo2.png" id="logo">
+                    </a>
+                </div>
+
+                <div>
+                         <button onClick="parent.location = '../services/logout.php'"
+                            type="submit" class="glyphicon glyphicon-log-out btn btn-default navbar-right"
+                            style="margin: 8px"> Sair</button>
+                            
+                </div>
+
+
+            </div>
+        </nav>
+        
         <div class="col-md-9 col-md-offset-2 publicacoes_table">
             <table class="table  table-bordered table-striped table-hover">
                 <tr>

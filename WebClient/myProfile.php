@@ -93,7 +93,16 @@ $grau_academico = $usuario->grau_academico;
                 </div>
 
                 <div>
-                    <button onClick="parent.location = 'services/logout.php'" type="submit" class="btn btn-default navbar-right" style="margin: 8px">Sair</button>
+                    <button onClick="parent.location = 'services/logout.php'"
+                            type="submit" class="glyphicon glyphicon-log-out btn btn-default navbar-right"
+                            style="margin: 8px"> Sair</button>
+                            
+                    <?php
+                       if ($_SESSION['is_admin']) 
+                            echo '<button  onClick="parent.location = \'admin/publicacao.php\'"
+                            type="submit" class=" glyphicon glyphicon-wrench btn btn-default navbar-right"
+                            style="margin: 8px"> Admin</button>';
+                    ?>
                 </div>
 
                 <!-- Inline block -->

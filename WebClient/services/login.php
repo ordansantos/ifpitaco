@@ -16,6 +16,7 @@
                 $_SESSION['foto'] = $usuario->perfil;
                 $_SESSION['name'] = $usuario->nm_usuario;
                 $_SESSION['grupo'] = $usuario->grupo;
+                $_SESSION['is_admin'] = $usuario->is_admin;
                 echo '1';
 	}else{
             echo '0';
