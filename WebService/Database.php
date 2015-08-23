@@ -12,7 +12,8 @@ class Database {
     
     public static function getConn() {
         
-        return new PDO('mysql:host='.Database::$host.';dbname='.Database::$db_name, 
+       
+		return new PDO('mysql:host='.Database::$host.';dbname='.Database::$db_name, 
                         Database::$username, Database::$password, 
                         [PDO::MYSQL_ATTR_INIT_COMMAND =>
                         "SET NAMES utf8"]);
@@ -20,17 +21,17 @@ class Database {
   
    public static function getRamos(){
        
-       	$stmt = getConn()->query("SELECT * FROM tb_ramo");
+       	$stmt = Database::getConn()->query("SELECT * FROM tb_ramo");
 	
-	$result = $stmt->fetchAll(PDO::FETCH_OBJ);
+		$result = $stmt->fetchAll(PDO::FETCH_OBJ);
 	
-	return '{"ramos":'.utf8_encode(json_encode($result))."}";	
+		return '{"ramos":'.utf8_encode(json_encode($result))."}";	
         
    }
 
    public static function getGrupos(){
        
-       	$stmt = getConn()->query("SELECT * FROM tb_grupos");
+       	$stmt = Database::getConn()->query("SELECT * FROM tb_grupos");
 	
 	$result = $stmt->fetchAll(PDO::FETCH_OBJ);
 	
