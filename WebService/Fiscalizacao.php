@@ -6,7 +6,7 @@ class Fiscalizacao{
     
     public function post ($fiscalizacao){
         
-        $conn = getConn();
+        $conn = Database::getConn();
         
         $sql = "INSERT INTO tb_post (comentario, usuario_id, ramo_id, tipo) " .
                 "values (:comentario, :usuario_id, :ramo_id, 1)";

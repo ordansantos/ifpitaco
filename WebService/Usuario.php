@@ -83,7 +83,7 @@ class Usuario{
     
     private function existente($usuario){
 	$sql = "SELECT * FROM (tb_usuario) WHERE email = :email";
-	$conn = getConn();
+	$conn = Database::getConn();
 	$stmt = $conn->prepare ($sql);
 	$stmt->bindParam("email", $usuario->email);
 	$stmt->execute();
@@ -138,7 +138,7 @@ class Usuario{
   
 	$sql = "SELECT senha, id_usuario FROM tb_usuario WHERE email = :email";
         
-	$conn = getConn();
+	$conn = Database::getConn();
 	
         $stmt = $conn->prepare($sql);
 	
@@ -185,7 +185,7 @@ class Usuario{
     public function getLastAccess ($id){
        
 	$sql = 'SELECT time FROM tb_last_access WHERE usuario_id = :id';
-	$conn = getConn();
+	$conn = Database::getConn();
 	$stmt = $conn->prepare($sql);
 	$stmt->bindParam('id', $id);
 	$stmt->execute();
@@ -254,7 +254,7 @@ class Usuario{
         
 	$sql = "SELECT id_usuario FROM tb_admins WHERE id_usuario = :id";
         
-	$conn = getConn();
+	$conn = Database::getConn();
 	
         $stmt = $conn->prepare($sql);
 	

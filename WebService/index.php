@@ -167,12 +167,6 @@ function getNomeById($id){
     echo (new Usuario())->getNomeById($id);
 }
 
-//Conexão com o banco
-function getConn(){
-	return new PDO('mysql:host=localhost;dbname=bd_ifpitaco', 'ifpitaco', 'ifpitacopass', 
-	array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
-}
-
 function getFotoPerfilById($id){
     echo (new Usuario())->getFotoPerfilById($id);
 }

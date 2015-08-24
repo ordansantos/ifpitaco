@@ -112,7 +112,7 @@ class Enquete{
             WHERE id_enquete NOT IN (SELECT enquete_id FROM tb_enquete_voto WHERE usuario_id = :usuario_id)
             AND id_enquete = :id_enquete
         ";
-        $conn = getConn();
+        $conn = Database::getConn();
         $stmt = $conn->prepare($sql);
         $stmt->bindParam('usuario_id', $usuario_id);
         $stmt->bindParam('id_enquete', $enquete_id);
@@ -241,7 +241,7 @@ class Enquete{
                     WHERE tb_enquete.usuario_id = tb_usuario.id_usuario
                     AND tb_usuario.grupo = :g
                     ";
-            $conn = getConn();
+            $conn = Database::getConn();
             $stmt = $conn->prepare($sql);
             $stmt->bindParam('g', $g);
             $stmt->execute();
@@ -258,7 +258,7 @@ class Enquete{
                                        WHERE usuario_id = :id)
                 AND tb_usuario.grupo = :g
             ";
-            $conn = getConn();
+            $conn = Database::getConn();
             $stmt = $conn->prepare($sql);
             $stmt->bindParam('id', $usuario_id);
             $stmt->bindParam('g', $g);

@@ -64,7 +64,7 @@ class Laike{
 		WHERE u.id_usuario = i.usuario_id AND post_id = :id 
                 AND u.id_usuario = l.usuario_id';
         
-	$conn = getConn();
+	$conn = Database::getConn();
 	$stmt = $conn->prepare($sql);
 	$stmt->bindParam('id', $id_post);
 	
