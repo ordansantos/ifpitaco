@@ -1,14 +1,15 @@
 <?php
 
-session_start();
-
-$_POST['id_usuario'] = $_SESSION['id_usuario'];
-
 require_once '../services/redirect.php';
 require_once '../services/getRoot.php';
+include_once '../services/prepareAuth.php';
 
-$url = getRoot();
 
-redirectPost($url . 'WebService/postDeleteComentarioReverte/');
+if (!prepare()) {
+    header("Location: ../home.php");
+} else{
 
-header('Location: gerencia_publicacao.php?post_id='. $_POST['post_id']);
+    redirectPost(getRoot() . 'WebService/postDeleteComentarioReverte/');
+
+    header('Location: gerencia_publicacao.php?post_id='. $_POST['post_id']);
+}

@@ -181,7 +181,7 @@ class Publicacao{
         $usuario_post = $this->getUsuarioByPostId($delete->post_id);
         
         if ($delete->usuario_id != $usuario_post && !(new Usuario())->isAdmin($delete->usuario_id)){
-            return MsgEnum::ERRO;
+            return MsgEnum::JSON_ERROR;
         } else{
         
             $conn = Database::getConn();
@@ -193,9 +193,9 @@ class Publicacao{
             $stmt->bindParam ('post_id', $delete->post_id);
 
             if ($stmt->execute()) {
-                echo MsgEnum::SUCESSO;
+                echo MsgEnum::JSON_SUCCESS;
             } else {
-                echo MsgEnum::ERRO;
+                echo MsgEnum::JSON_ERROR;
             }
         }
     }

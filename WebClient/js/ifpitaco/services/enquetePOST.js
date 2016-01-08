@@ -15,9 +15,14 @@ function enquetePost() {
         processData: false,
         data: formData,
         success: function (data) {
-                console.log (data);
-            if (data.trim() != '0') {
-              
+           
+            data = $.parseJSON(data);
+                        
+            if (data.status === "unauthorized") {
+                bootbox.alert("Faça login para continuar!", function () {
+                    location.reload();
+                });
+            } else{
                 ENQUETE.getEnquete();
             }
 

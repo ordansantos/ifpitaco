@@ -2,16 +2,15 @@
 
 
 <?php
-	include("getRoot.php");
-	
-	$url = getRoot();
-	
-	include ('redirect.php');
-	
-	session_start();
 
-	$_POST["usuario_id"] = trim($_SESSION['id_usuario']); 
-	
-	echo redirectPost($url.'WebService/postProposta');
-	
+include_once ("getRoot.php");
+include_once ('redirect.php');
+include_once 'prepareAuth.php';
+
+if (!prepare()) {
+    echo '{"status":"unauthorized"}';
+} else {
+    echo redirectPost(getRoot() . 'WebService/postProposta');
+}
+
 ?>

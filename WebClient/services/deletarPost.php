@@ -1,19 +1,14 @@
 
 <?php
-	include("getRoot.php");
-        
-	$url = getRoot();
-        
-	include ('redirect.php');
-        
-	session_start();
-        
-        $_POST['id_usuario'] = $_SESSION['id_usuario'];
-        
-	echo redirectPost($url.'WebService/postDeletePublicacao');
-
+include_once("getRoot.php");
+include_once('redirect.php');
+include_once 'prepareAuth.php';
 	
-?>
+if (!prepare()) {
+    echo '{"status":"unauthorized"}';
+}else{
+    echo redirectPost(getRoot().'WebService/postDeletePublicacao');
+}
 
 
 

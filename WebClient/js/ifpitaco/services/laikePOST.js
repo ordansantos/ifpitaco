@@ -1,8 +1,6 @@
 /**
  * 
  */
-
-
 //Envio de 'Laike'
 function laikePOST(id) {
 
@@ -10,11 +8,14 @@ function laikePOST(id) {
     $("#nl" + id).tooltip('hide');
 
     $.post("services/laikar.php", {post_id: id}, function (data) {
-        if (data.trim() == '0')
-            bootbox.alert("Faça login para laikar!", function () {
-                window.location.assign("index.php");
+        data = $.parseJSON(data);
+            
+        if (data.status === "unauthorized") {
+            bootbox.alert("Faça login para continuar!", function () {
+                location.reload();
             });
-        else
+
+        } else
             LAIKES.load(id);
     });
 

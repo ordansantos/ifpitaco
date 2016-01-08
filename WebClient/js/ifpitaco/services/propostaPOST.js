@@ -13,10 +13,16 @@ function propostaPOST() {
         data: values,
         async: false,
         success: function (data) {
-            if ($.trim(data) != '1')
-                alert("Faça login antes de propor!");
-            else
-                document.getElementById("comentariop").value = "";
+            
+            data = $.parseJSON(data);
+            
+            if (data.status === "unauthorized"){
+                bootbox.alert("Faça login para continuar!", function () {
+                    location.reload();
+                });
+            }
+            
+            document.getElementById("comentariop").value = "";
             POST.newPost();
 
         },

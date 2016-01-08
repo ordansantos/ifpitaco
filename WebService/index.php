@@ -9,6 +9,8 @@ require_once 'header.php';
 $app = new \Slim\Slim();
 //$app->response()->header('Content-Type', 'application/json;charset=utf-8');
 
+date_default_timezone_set('America/Recife');
+
 $app->get('/', function () { 
    echo 'Web Service is working...';
 });
@@ -17,8 +19,6 @@ $app->get('/', function () {
 $app->post('/postProposta/', 'postProposta' );
 //Verifica se o login está correto
 $app->post('/postLogin/', 'postLogin');
-//Cadastra um novo usuário
-$app->post('/postUsuario/', 'postUsuario');
 //Envia uma fiscalização
 $app->post('/postFiscalizacao/', 'postFiscalizacao');
 //Envia um comentário de um post
@@ -46,6 +46,12 @@ $app->post('/postVoto/', 'postVoto');
 //$app->post('/alterarDados/', 'alterarDados');
 
 $app->post('/postUpdateLastAccess/', 'postUpdateLastAccess');
+
+$app->post('/systemCadastroPost/', 'systemCadastroPost');
+
+$app->post('/completarCadastro/', 'completarCadastro');
+
+$app->post('/getStatus/', 'getStatus');
 
 //Retorna os ramos
 $app->get('/getRamos/', 'getRamos');
@@ -101,10 +107,16 @@ $app->run();
 
 function postProposta (){
     
-    $proposta = new stdClass();
+    $id = (new Auth)->Authorization();
     
+    if ($id == false){
+        echo MsgEnum::JSON_UNAUTHORIZED;
+        return;
+    }
+    
+    $proposta = new stdClass();
     $proposta->comentario = filter_input(INPUT_POST, 'comentario');
-    $proposta->usuario_id = filter_input(INPUT_POST, 'usuario_id');
+    $proposta->usuario_id = $id;
     $proposta->ramo_id = filter_input(INPUT_POST, 'ramo_id');
     
     echo (new Proposta())->post($proposta);
@@ -112,24 +124,46 @@ function postProposta (){
 
 function postFiscalizacao(){
     
+    $id = (new Auth)->Authorization();
+    
+    if ($id == false){
+        echo MsgEnum::JSON_UNAUTHORIZED;
+        return;
+    }
+    
     $fiscalizacao = new stdClass();
     
     $fiscalizacao->comentario = filter_input(INPUT_POST, 'comentario');
-    $fiscalizacao->usuario_id = filter_input(INPUT_POST, 'usuario_id');
+    $fiscalizacao->usuario_id = $id;
     $fiscalizacao->ramo_id = filter_input(INPUT_POST, 'ramo_id');
     $fiscalizacao->base64_string = filter_input(INPUT_POST, 'imagem');
     
     echo (new Fiscalizacao())->post($fiscalizacao);
 }
 
-
-function postUsuario(){
-    
+function systemCadastroPost(){
+ 
     $usuario = new stdClass();
-    
+     
     $usuario->name = filter_input(INPUT_POST, 'nm_usuario');
     $usuario->senha = filter_input(INPUT_POST, 'senha');
     $usuario->email = filter_input(INPUT_POST, 'email');
+    
+    echo (new Usuario())->cadastrar($usuario);
+}
+
+function completarCadastro(){
+    
+    $id = (new Auth)->Authorization();
+    
+    if ($id == false){
+        echo MsgEnum::JSON_UNAUTHORIZED;
+        return;
+    }
+    
+    $usuario = new stdClass();
+    $usuario->id_usuario = $id;
+    
     $usuario->grupo = filter_input(INPUT_POST, 'grupo');
     
     $usuario->usuario_tipo = filter_input(INPUT_POST, 'usuario_tipo');
@@ -138,25 +172,23 @@ function postUsuario(){
     $usuario->grau_academico = filter_input(INPUT_POST, 'grau_academico');
     
     $foto = new stdClass();
-    
+
     $foto->base64_string = filter_input(INPUT_POST, 'imagem');
     $foto->x_percent = filter_input(INPUT_POST, 'x');
     $foto->y_percent = filter_input(INPUT_POST, 'y');
     $foto->w_percent = filter_input(INPUT_POST, 'w');
     $foto->h_percent = filter_input(INPUT_POST, 'h');
-    
-    echo (new Usuario())->post($usuario, $foto);
-
+ 
+    echo (new Usuario())->completar($usuario, $foto);
 }
 
 function postLogin(){
-    
     $login = new stdClass();
     
     $login->email = filter_input(INPUT_POST, 'email');
     $login->senha = filter_input(INPUT_POST, 'senha');
     
-    echo (new Usuario())->login($login);
+    echo (new Auth())->system_login($login);
 }
 
 function getRamos(){
@@ -172,10 +204,17 @@ function getFotoPerfilById($id){
 }
 
 function postComentario (){
-        
+
+    $id = (new Auth)->Authorization();
+    
+    if ($id == false){
+        echo MsgEnum::JSON_UNAUTHORIZED;
+        return;
+    }
+    
     $comentario = new stdClass();
 
-    $comentario->usuario_id = filter_input(INPUT_POST, 'usuario_id');
+    $comentario->usuario_id = $id;
     $comentario->post_id = filter_input(INPUT_POST, 'post_id');
     $comentario->comentario = filter_input(INPUT_POST, 'comentario');
 
@@ -193,23 +232,37 @@ function adminGetComentariosById($id){
 }
 
 function postDeleteComentario (){
-	
+    
+    $id = (new Auth)->Authorization();
+    
+    if ($id == false){
+        echo MsgEnum::JSON_UNAUTHORIZED;
+        return;
+    }
+    
     $comentario = new stdClass();
 
     $comentario->comentario_post_id = filter_input(INPUT_POST, 'comentario_post_id');
     
-    $comentario->id_usuario = filter_input(INPUT_POST, 'id_usuario');
+    $comentario->id_usuario = $id;
     
     echo (new Comentario())->delete($comentario);
 }
 
 function postDeleteComentarioReverte (){
-	
+    
+    $id = (new Auth)->Authorization();
+    
+    if ($id == false){
+        echo MsgEnum::JSON_UNAUTHORIZED;
+        return;
+    }    
+    
     $comentario = new stdClass();
 
     $comentario->comentario_post_id = filter_input(INPUT_POST, 'comentario_post_id');
     
-    $comentario->id_usuario = filter_input(INPUT_POST, 'id_usuario');
+    $comentario->id_usuario = $id;
     
     echo (new Comentario())->reverte($comentario);
 }
@@ -240,10 +293,17 @@ function getNPosts($n, $g){
 
 //Se enviar um post de like existente, o mesmo é apagado
 function postLaike (){
-	
+    
+    $id = (new Auth)->Authorization();
+    
+    if ($id == false){
+        echo MsgEnum::JSON_UNAUTHORIZED;
+        return;
+    }    
+    
     $laike = new stdClass();
     
-    $laike->usuario_id = filter_input(INPUT_POST, 'usuario_id');
+    $laike->usuario_id = $id;
     
     $laike->post_id = filter_input(INPUT_POST, 'post_id');
     
@@ -267,10 +327,17 @@ function getUsuarioByPostId($post_id){
 }
 
 function postDeletePublicacao (){
-	
+    
+    $id = (new Auth)->Authorization();
+    
+    if ($id == false){
+        echo MsgEnum::JSON_UNAUTHORIZED;
+        return;
+    }    
+    
     $delete = new stdClass();
            
-    $delete->usuario_id = filter_input(INPUT_POST, 'id_usuario');
+    $delete->usuario_id = $id;
     
     $delete->post_id = filter_input(INPUT_POST, 'post_id');
     
@@ -278,10 +345,17 @@ function postDeletePublicacao (){
 }
 
 function postDeletePublicacaoReverte (){
-	
+   
+    $id = (new Auth)->Authorization();
+    
+    if ($id == false){
+        echo MsgEnum::JSON_UNAUTHORIZED;
+        return;
+    }    
+    
     $reverte = new stdClass();
            
-    $reverte->usuario_id = filter_input(INPUT_POST, 'id_usuario');
+    $reverte->usuario_id = $id;
     
     $reverte->post_id = filter_input(INPUT_POST, 'post_id');
     
@@ -289,6 +363,13 @@ function postDeletePublicacaoReverte (){
 }
 
 function postEnquete(){
+    
+    $id = (new Auth)->Authorization();
+    
+    if ($id == false){
+        echo MsgEnum::JSON_UNAUTHORIZED;
+        return;
+    }    
     
     $enquete = new stdClass();
     $enquete->opt = array ("", "", "", "", "", "");
@@ -299,7 +380,7 @@ function postEnquete(){
         $enquete->opt[$i] = filter_input(INPUT_POST, 'opt_'.$i);
     }
     
-    $enquete->usuario_id = filter_input(INPUT_POST, 'id_usuario');
+    $enquete->usuario_id = $id;
     $enquete->titulo = filter_input(INPUT_POST, 'titulo');
     $enquete->base64_string = filter_input(INPUT_POST, 'imagem');
     
@@ -316,9 +397,16 @@ function getEnquete($usuario_id, $last_enquete_id, $g){
 }
 
 function postVoto(){
-
+    
+    $id = (new Auth)->Authorization();
+    
+    if ($id == false){
+        echo MsgEnum::JSON_UNAUTHORIZED;
+        return;
+    }    
+    
     $voto = new stdClass();
-    $voto->usuario_id = filter_input(INPUT_POST, 'usuario_id');
+    $voto->usuario_id = $id;
     $voto->enquete_id = filter_input(INPUT_POST, 'enquete_id');
     $voto->voto = filter_input(INPUT_POST, 'voto');
 	
@@ -334,92 +422,6 @@ function getBuscaUsuario ($nome){
     echo (new Busca())->get($nome);
 }
 
-
-/* Salva a foto ao cadastrar um usuário */
-/*
-function alteraFotoUsuario($id){
-
-
-	if(!empty($_FILES))
-		if ($_FILES['foto']['name']){
-			if (isset($_POST['x']) && isset($_POST['y']) && isset($_POST['w']) && isset($_POST['h']) ){
-				list($width, $height) = getimagesize($_FILES['foto']['tmp_name']);
-				$url = sendToCloudinary120_120($_FILES['foto']['tmp_name'], $_POST['x'] * $width, $_POST['y'] * $height, $_POST['w'] * $width, $_POST['h'] * $height);
-			
-				$sql = "UPDATE tb_imagem_usuario
-						SET perfil = :img
-						WHERE usuario_id = :id
-						";
-				$conn = getConn();
-				$stmt = $conn->prepare($sql);
-				$stmt->bindParam("id", $id);
-				$stmt->bindParam("img", $url);
-				$stmt->execute();
-				$conn = null;
-			}
-	}
-
-	
-	
-}
-
-function alterarDados(){
-
-	$name = $_POST['nm_usuario'];
-
-	$usuario_tipo = $_POST['usuario_tipo'];
-
-	$id = $_POST['usuario_id'];
-
-	$curso = '';
-	$ano_periodo = '';
-	$grau_academico = '';
-	
-	if(isset($_POST['curso']))
-		$curso = $_POST['curso'];
-
-	if(isset($_POST['ano_periodo']))
-		$ano_periodo = $_POST['ano_periodo'];
-
-	if(isset($_POST['grau_academico']))
-		$grau_academico = $_POST['grau_academico'];
-
-	if (strlen($name) == 0){
-		echo MsgEnum::STRING_VAZIA;
-		return;
-	}
-	
-	$sql = "UPDATE tb_usuario 
-			SET  nm_usuario = :nm_usuario, usuario_tipo = :usuario_tipo, 
-			curso = :curso, ano_periodo = :ano_periodo, grau_academico = :grau_academico
-			WHERE id_usuario = :id";
-	
-	$conn = getConn();
-	
-	$stmt = $conn->prepare($sql);
-	
-	
-	$stmt->bindParam("nm_usuario", $name);
-
-	$stmt->bindParam("usuario_tipo", $usuario_tipo);
-	$stmt->bindParam("curso", $curso);
-	$stmt->bindParam("ano_periodo", $ano_periodo);
-	$stmt->bindParam("grau_academico", $grau_academico);
-	$stmt->bindParam("id", $id);
-	
-
-	if ($stmt->execute()){
-		alteraFotoUsuario($id);
-		echo MsgEnum::SUCESSO;
-	}
-	
-	else
-		echo MsgEnum::ERRO;
-	
-	$conn = null;
-}
-*/
-
 function curiarPost($id){
     echo (new Curiar())->post($id);
 }
@@ -430,7 +432,11 @@ function curiarEnquete($id){
 
 function postUpdateLastAccess(){
     
-    $id = filter_input(INPUT_POST, 'usuario_id');
+    $id = (new Auth)->Authorization();
+    
+    if ($id == false){
+        return;
+    }    
     
     (new Usuario())->updateLastAccess($id);
 
@@ -456,4 +462,17 @@ function getPostById($id){
 
 function adminGetPostById($id){
     echo (new Publicacao())->adminGetPostById($id);
+}
+
+function getStatus(){
+    
+    $id = (new Auth)->Authorization();
+    
+    if ($id === false){
+        echo MsgEnum::JSON_UNAUTHORIZED;
+        return;
+    }
+    
+    echo (new Usuario())->getStatus($id);
+    
 }

@@ -2,12 +2,12 @@
 
 
 
+
 body{
-    background-image:url('../images/background_index.jpg');
-    background-attachment:fixed;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: right 40px;
+	word-wrap: break-word;
+	background-image:url('../images/pattern-6plj.jpg');
+	font-family: Helvetica,Arial,sans-serif;
+        color: white;
 }
 
 #bar img{
@@ -24,6 +24,7 @@ max-width: 100%;
 -moz-box-shadow: 0px 0px 20px 4px #888888;
 -webkit-box-shadow: 0px 0px 20px 4px #888888;
 box-shadow: 0px 0px 28px 8px #888888;
+
 }
 
 label > span{
@@ -52,5 +53,9 @@ label > span{
 
 #professor{
 	margin-bottom: 10px;
+}
+
+h1{
+    text-align: center;
 }
 

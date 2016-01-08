@@ -6,7 +6,7 @@ class Comentario {
     public function post($comentario){
 
 	if (strlen($comentario->comentario) == 0 || trim($comentario->comentario) == ''){
-		return MsgEnum::STRING_VAZIA;
+		return MsgEnum::JSON_ERROR;
 	}
 	
 	$sql = "INSERT INTO tb_comentario_post "
@@ -24,9 +24,9 @@ class Comentario {
 	$stmt->bindParam("comentario", $comentario->comentario);
 	
 	if ($stmt->execute()) {
-            return MsgEnum::SUCESSO;
+            return MsgEnum::JSON_SUCCESS;
         } else {
-            return MsgEnum::ERRO;
+            return MsgEnum::JSON_ERROR;
         }
     }
     
@@ -34,8 +34,8 @@ class Comentario {
         
         $usuario_comentario = $this->getUsuarioByComentarioPostId($comentario);
         
-        if ($comentario->id_usuario != $usuario_comentario){
-            return MsgEnum::ERRO;
+        if ($comentario->id_usuario != $usuario_comentario && !(new Usuario())->isAdmin($comentario->id_usuario)){
+            return MsgEnum::JSON_ERROR;
         } else{
         
             $conn = Database::getConn();
@@ -48,9 +48,9 @@ class Comentario {
             $stmt->bindParam ('comentario_post_id', $comentario->comentario_post_id);
 
             if ($stmt->execute()) {
-                echo MsgEnum::SUCESSO;
+                echo MsgEnum::JSON_SUCCESS;
             } else {
-                echo MsgEnum::ERRO;
+                echo MsgEnum::JSON_ERROR;
             }
         }
     }
@@ -60,7 +60,7 @@ class Comentario {
         $usuario_comentario = $this->getUsuarioByComentarioPostId($comentario);
         
         if ($comentario->id_usuario != $usuario_comentario && !(new Usuario())->isAdmin($comentario->id_usuario)){
-            return MsgEnum::ERRO;
+            return MsgEnum::JSON_ERROR;
         } else{
         
             $conn = Database::getConn();
@@ -73,9 +73,9 @@ class Comentario {
             $stmt->bindParam ('comentario_post_id', $comentario->comentario_post_id);
 
             if ($stmt->execute()) {
-                echo MsgEnum::SUCESSO;
+                echo MsgEnum::JSON_SUCCESS;
             } else {
-                echo MsgEnum::ERRO;
+                echo MsgEnum::JSON_ERROR;
             }
         }
     }

@@ -18,7 +18,6 @@ $post = json_decode($json);
 $json = redirectGet($url . 'WebService/adminGetComentariosById/' . $_GET['post_id']);
 $comentarios = json_decode($json)->comentarios;
 
-
 ?>
 
 <html>

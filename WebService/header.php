@@ -14,3 +14,4 @@ require_once 'Enquete.php';
 require_once 'Busca.php';
 require_once 'Curiar.php';
 require_once 'StringFilter.php';
+require_once 'Auth.php';

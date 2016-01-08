@@ -14,15 +14,23 @@
             var formData = new FormData($(this)[0]);
             $.ajax({
                 type: "POST",
-                url: "services/cadastrar.php",
+                url: "services/completar.php",
                 contentType: false,
                 processData: false,
                 data: formData,
                 success: function (data) {
-
-                    if ($.trim(data) != '1') {
+                    
+                    data = $.parseJSON(data);
+                    
+                    if (data.status === "unauthorized"){
+                        bootbox.alert("<span style='color: black'>Faça login para continuar!</span>", function () {
+                            window.location.assign('index.php');
+                        });
+                    }
+                    
+                    if (data.status !== 'success') {
                         $('#error').hide();
-                        document.getElementById("error").innerHTML = data;
+                        document.getElementById("error").innerHTML = data.status;
                         $('#error').fadeIn("fast", function () {
                             $('#submit').attr("disabled", false);
                         });
@@ -31,9 +39,7 @@
                         window.location.assign("index.php");
                 }, error: function (data) {
 
-                    bootbox.alert(data, function () {
-                        window.location.assign('cadastrar.php');
-                    });
+                    console.log ("erro fatal");
 
                 }
             });

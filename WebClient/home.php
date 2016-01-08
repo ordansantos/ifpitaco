@@ -2,11 +2,13 @@
 <!-- TODO: Remover o id do usuário do javascript e deixar apenas no php -->
 
 <?php
-session_start();
 
-if ($_SESSION['id_usuario'] == '') {
-    header("location: index.php");
-}
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+require_once 'services/checkLogin.php';
+
+checkLogin();
 
 ?>
 

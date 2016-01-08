@@ -4,64 +4,76 @@
 
 class Usuario{
     
-    public function post ($usuario, $foto){
+    // em segundos
+    private static $online_interval = 240;
+    
+    public function completar ($usuario, $foto){
 
+
+
+        $sql = "UPDATE tb_usuario
+                SET usuario_tipo = :usuario_tipo,
+                    curso = :curso,
+                    ano_periodo = :ano_periodo,
+                    grau_academico = :grau_academico,
+                    grupo = :grupo
+                WHERE id_usuario = :id_usuario";
+
+	$conn = Database::getConn();
+	
+	$stmt = $conn->prepare($sql);
+
+	$stmt->bindParam("usuario_tipo", $usuario->usuario_tipo);
+	$stmt->bindParam("curso", $usuario->curso);
+	$stmt->bindParam("ano_periodo", $usuario->ano_periodo);
+	$stmt->bindParam("grau_academico", $usuario->grau_academico);
+        $stmt->bindParam("grupo", $usuario->grupo);
+        $stmt->bindParam("id_usuario", $usuario->id_usuario);
+        
+	if ($stmt->execute()) {
+            
+            $this->saveFotoPerfil($usuario->id_usuario, $foto);
+            
+            return '{"status":"success"}';
+        } else {
+            return '{"status":"error"}';
+        }
+    }
+    
+    public function cadastrar($usuario){
         $check = $this->check($usuario);
 
         if ($check !== true) {
-            return $check;
+            return '{"status":"error", "msg":"'.$check.'"}';
         }
-
-	$sql = "INSERT INTO tb_usuario (nm_usuario, senha, email, usuario_tipo, 
-                curso, ano_periodo, grau_academico, grupo) values (:nm_usuario, :senha, 
-                :email, :usuario_tipo, :curso, :ano_periodo, :grau_academico, :grupo)";
+        
+	$sql = "INSERT INTO 
+                tb_usuario (nm_usuario, senha, email) 
+                values (:nm_usuario, :senha, :email)";
 
 	$conn = Database::getConn();
 	
 	$stmt = $conn->prepare($sql);
 
 	$stmt->bindParam("nm_usuario", $usuario->name);
-        $usuario->senha = $this->cryptographPass($usuario->senha);
+        $usuario->senha = (new Auth())->cryptographPass($usuario->senha);
 	$stmt->bindParam("senha", $usuario->senha);
 	$stmt->bindParam("email", $usuario->email);
-	$stmt->bindParam("usuario_tipo", $usuario->usuario_tipo);
-	$stmt->bindParam("curso", $usuario->curso);
-	$stmt->bindParam("ano_periodo", $usuario->ano_periodo);
-	$stmt->bindParam("grau_academico", $usuario->grau_academico);
-        $stmt->bindParam("grupo", $usuario->grupo);
         
 	if ($stmt->execute()) {
             
             $id = $this->getIdByEmail($usuario->email);
             
-            $this->saveFotoPerfil($id, $foto);
-            
             $this->addUserToTbLastAccess($id);
             
-            return MsgEnum::SUCESSO;
+            $token = (new Auth())->createTokenEntry($id);
+            
+            return '{"status":"success", "id_usuario":"'.$id.'", "token":"'.$token.'"}';
         } else {
-            return MsgEnum::ERRO;
+            return '{"status":"error","msg":"erro"}';
         }
     }
-    
-    public function cryptographPass ($password){
-        
-        // A higher "cost" is more secure but consumes more processing power
-        $cost = 10;
-        
-        // Create a random salt
-        $salt = strtr(base64_encode(mcrypt_create_iv(16, MCRYPT_DEV_URANDOM)), '+', '.');
-        
-        // Prefix information about the hash so PHP knows how to verify it later.
-        // "$2a$" Means we're using the Blowfish algorithm. The following two digits are the cost parameter.
-        $salt = sprintf("$2a$%02d$", $cost) . $salt;
-        
-        // Hash the password with the salt
-        $hash = crypt($password, $salt);
-        
-        return $hash;
-        
-    }
+
     
     private function check ($usuario){
         
@@ -134,41 +146,13 @@ class Usuario{
             
     }
     
-    public function login($login){
-  
-	$sql = "SELECT senha, id_usuario FROM tb_usuario WHERE email = :email";
-        
-	$conn = Database::getConn();
-	
-        $stmt = $conn->prepare($sql);
-	
-        $stmt->bindParam("email", $login->email);
-	
-        $stmt->execute();
-	
-        $usuario = $stmt->fetch(PDO::FETCH_OBJ);
-	
-        if (!$usuario){
-            return MsgEnum::ERRO;
-        }
-           
-        // Hashing the password with its hash as the salt returns the same hash
-        if (hash_equals($usuario->senha, crypt($login->senha, $usuario->senha))){
-            $this->updateLastAccess($usuario->id_usuario);
-            return getUsuarioById($usuario->id_usuario);
-        }
-        
-        return MsgEnum::ERRO;
-    
-    }
-    
     public function updateLastAccess($id){
         
-            $conn = Database::getConn();
-            $sql = 'UPDATE tb_last_access SET time = now() WHERE usuario_id = :id';
-            $stmt = $conn->prepare($sql);
-            $stmt->bindParam('id', $id);
-            $stmt->execute();
+        $conn = Database::getConn();
+        $sql = 'UPDATE tb_last_access SET time = now() WHERE usuario_id = :id';
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam('id', $id);
+        $stmt->execute();
             
     }
     
@@ -198,11 +182,11 @@ class Usuario{
     }
     
     private function isOnline ($time){
-
-        $now = new DateTime();
-        $access = new DateTime($time);
-
-        return ['check' => ($now->getTimestamp() - $access->getTimestamp()) <= 120? 'online' : 'offline'];
+     
+        $now = (new DateTime())->getTimestamp() ;
+        $access = (new DateTime($time))->getTimestamp() ;
+       
+        return ['check' => ($now - $access) <= self::$online_interval? "online": "offline"];
     }
 
     public function getNomeById($id){
@@ -269,6 +253,30 @@ class Usuario{
         } else{
             return true;
         }
+    }
+    
+    public function isCadastroCompleto($id){
+        $sql = "SELECT grupo FROM tb_usuario WHERE id_usuario = :id";
+        $conn = Database::getConn();
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam("id", $id);
+        $stmt->execute();
+        $grupo = $stmt->fetch(PDO::FETCH_OBJ);
+        if (!$grupo || $grupo->grupo == 0){
+            return false;
+        }
+        return true;
+    }
+    
+    
+    public function getStatus($id){
+        
+
+        if ((new Usuario())->isCadastroCompleto($id) === false) {
+            return '{"status":"uncomplete"}';
+        }
+
+        return '{"status":"success", "data": ' . $this->getUsuarioById($id) . '}';
     }
     
 }

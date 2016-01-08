@@ -1,25 +1,25 @@
 
 
 <?php
+	error_reporting(E_ALL);
+        ini_set('display_errors', 1);
 	
-	include("redirect.php");
+        include("redirect.php");
 	include("getRoot.php");
 
 	$url = getRoot();
 
-	$usuario = redirectPost($url."WebService/postLogin");
-
-	if ($usuario != '0'){
+	$usuario = json_decode(redirectPost($url."WebService/postLogin"));
+            
+	if ($usuario->status === "success"){
 		session_start();
-                $usuario = json_decode($usuario);
-		$_SESSION['id_usuario'] = $usuario->id_usuario;
-                $_SESSION['foto'] = $usuario->perfil;
-                $_SESSION['name'] = $usuario->nm_usuario;
-                $_SESSION['grupo'] = $usuario->grupo;
-                $_SESSION['is_admin'] = $usuario->is_admin;
+                
+                $_SESSION['id_usuario'] = $usuario->id_usuario;
+                $_SESSION['token'] = $usuario->token;
+                
                 echo '1';
 	}else{
-            echo '0';
+            echo $usuario->msg;
         }
 	
 	

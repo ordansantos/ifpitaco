@@ -13,8 +13,17 @@ function fiscalizacaoPOST() {
         processData: false,
         data: formData,
         success: function (data) {
+            
+            data = $.parseJSON(data);
+            
+            if (data.status === "unauthorized"){
+                bootbox.alert("Faça login para continuar!", function () {
+                    location.reload();
+                });
+            }
+            
             POST.newPost();
-            console.log (data);
+    
         }, error: function (data) {
 
         }

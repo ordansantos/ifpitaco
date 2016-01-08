@@ -9,30 +9,30 @@ body{
 }
 
 img{
-	
-	height: 40px;
+
+    height: 40px;
 }
 
 p{
-	font-size: 24px;
-	color: white;
-	font-weight: 300;
-	font-family: Helvetica,Arial,sans-serif;
-	color: white;
-	padding: 10px;
+    font-size: 24px;
+    color: white;
+    font-weight: 300;
+    font-family: Helvetica,Arial,sans-serif;
+    color: white;
+    padding: 10px;
 }
 
 .box-info{
-	background-color: rgba(0, 0, 0, 0.3);
-	border-radius: 10px 10px 10px 10px;
-	-moz-border-radius: 10px 10px 10px 10px;
-	-webkit-border-radius: 10px 10px 10px 10px;
-	border: 0px solid #000000;
-	
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 10px 10px 10px 10px;
+    -moz-border-radius: 10px 10px 10px 10px;
+    -webkit-border-radius: 10px 10px 10px 10px;
+    border: 0px solid #000000;
+
 }
 
 #bar{
-	margin-bottom: 100px;
+    margin-bottom: 100px;
 }
 
 /* glyphicon glyphicon-user inside input */
@@ -43,9 +43,9 @@ p{
 
 /* style icon */
 .inner-addon .glyphicon {
-  position: absolute;
-  padding: 10px;
-  pointer-events: none;
+    position: absolute;
+    padding: 10px;
+    pointer-events: none;
 }
 
 /* align icon */
@@ -57,3 +57,39 @@ p{
 .right-addon input { padding-right: 30px; }
 /* glyphicon glyphicon-user inside input */
 
+
+
+
+// CADASTRO MODEL
+.modal-content{
+
+
+    color: black;
+}
+
+.modal-body, .modal-content{
+
+    padding: 0px;
+}
+
+h4{
+    color: #0066bf;
+}
+
+.btn{
+
+    border-radius: 0px;
+}
+
+.modal{
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
+.error_cadastro{
+    border-radius: 0px;
+}
+
+#error_cadastro{
+    margin: 0px;
+}

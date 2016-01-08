@@ -16,8 +16,8 @@
         <script src="bootstrap-3.3.5/js/bootstrap.min.js"></script>
 
 
-        <!-- Pace cool loading plugin -->
-        <script data-pace-options='{ "ajax": true }' src='js/pace/pace.js'></script>
+            <!-- Pace cool loading plugin -->
+            <script data-pace-options='{ "ajax": true }' src='js/pace/pace.js'></script>
 
         <!-- Bootbox -->
         <script src="js/bootbox/bootbox.min.js"></script>
@@ -33,11 +33,11 @@
         <script src="js/ifpitaco/cadastrarForm.js"></script>
 
         <!-- cadastrar Ajax -->
-        <script src="js/ifpitaco/services/cadastrarPOST.js"></script>
+        <script src="js/ifpitaco/services/completarPOST.js"></script>
 
         <!-- CSS -->
         <link rel="stylesheet" type="text/css"  href="css/login_border.css">
-        <link rel="stylesheet" type="text/css" href="css/cadastrar.css">
+        <link rel="stylesheet" type="text/css" href="css/completar.css">
         <link href="js/pace/themes/blue/pace-theme-barber-shop.css" rel="stylesheet" />
 
     </head>
@@ -56,25 +56,14 @@
         <div class="container">	
 
             <div class="col-md-5 col-md-offset-4" style="margin-top: 5%">
+                
+                <h1>Complete o cadastro para continuar</h1>
+                
                 <form class="form-signin" id="form">
 
-                    <div class="form-group">
-                        <label for="nm_usuario"><span class="glyphicon glyphicon glyphicon-user" aria-hidden="true"></span>Nome de Usuário</label>
-                        <input required="required"  type="text" class="form-control" id="nm_usuario" name="nm_usuario" placeholder="Digite seu nome">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email"><span class="glyphicon glyphicon glyphicon-envelope" aria-hidden="true"></span>Endereço de Email</label>
-                        <input required="required" type="email" class="form-control" id="email" name="email" placeholder="Digite seu Email">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="senha"><span class="glyphicon glyphicon glyphicon-lock" aria-hidden="true"></span>Senha</label>
-                        <input required="required" type="password" class="form-control" id="senha" name="senha" placeholder="Senha">
-                    </div>
                     
                     <label><span class="glyphicon glyphicon-education" aria-hidden="true"></span>Instituição de ensino</label>
-                    <select class="form-control" name="grupo">
+                    <select class="form-control" name="grupo" >
                         
                         <?php
                             require_once './services/redirect.php';
@@ -170,7 +159,7 @@
 
                     <br/>
 
-                    <button id="submit" class="btn btn-lg btn-primary btn-block" type="submit">Cadastrar</button>
+                    <button id="submit" class="btn btn-lg btn-primary btn-block" type="submit">Continuar</button>
 
 
                     <!-- Coordenadas da foto | Cropper  -->
@@ -211,3 +200,4 @@
     </body>
 
 </html>
+

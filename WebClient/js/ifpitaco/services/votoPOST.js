@@ -9,12 +9,14 @@ function votoPost(id) {
     data.push({name: 'enquete_id', value: id});
 
     $.post("services/postVoto.php", data, function (data) {
+        
+        data = $.parseJSON(data);
 
-        if (data.trim() == '0')
-            bootbox.alert("Faça login para votar!", function () {
-                window.location.assign("index.php");
+        if (data.status === "unauthorized") {
+            bootbox.alert("Faça login para continuar!", function () {
+                location.reload();
             });
-        else{
+        } else{
             ENQUETE.voted();
         }
 

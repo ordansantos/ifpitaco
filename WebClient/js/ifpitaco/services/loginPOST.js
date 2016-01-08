@@ -21,13 +21,17 @@
                 url: "services/login.php",
                 data: values,
                 success: function (data) {
-                    if ($.trim(data) != '0')
+                    if ($.trim(data) == '1')
                         window.location.assign("home.php");
-                    else
+                    else{
+                      
+                        $("#error").text(data);
                         errorAnimation();
+                        
+                    }
                 },
                 error: function (data) {
-                    console.log(data);
+                    console.log("erro fatal");
                 }
             });
 

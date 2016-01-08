@@ -16,10 +16,20 @@ function postDELETE(sender) {
                 className: "btn-primary btn-sm",
                 callback: function () {
 
-                    $('#' + id).remove();
                     $.param({post_id: id});
-                    var a = $.post("services/deletarPost.php", {post_id: id});
-                    console.log (a);
+                    $.post("services/deletarPost.php", {post_id: id}, function(data){
+                        
+                        data = $.parseJSON(data);
+                        
+                        if (data.status === "unauthorized") {
+                            bootbox.alert("Faça login para continuar!", function () {
+                                location.reload();
+                            });
+                        } else{
+                            $('#' + id).remove();
+                        }
+                    });
+                    
                 }
             }
 

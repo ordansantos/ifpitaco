@@ -27,12 +27,12 @@ class Enquete{
 	if ($stmt->execute()){
             $id_enquete = $conn->lastInsertId('id_enquete');
             if ($this->saveImage($id_enquete, $enquete->base64_string) === False){
-                return MsgEnum::ERRO; 
+                return MsgEnum::JSON_ERROR; 
             }
-            return $id_enquete;
+            return '{"status":"success", "id_enquete":"'.$id_enquete.'"}';
 	}
 	else{
-            return MsgEnum::ERRO;
+            return MsgEnum::JSON_ERROR;
         }
     }
     
@@ -69,10 +69,10 @@ class Enquete{
 	$stmt->bindParam ('voto', $voto->voto);
 	
 	if ($stmt->execute()){
-            return MsgEnum::SUCESSO;
+            return MsgEnum::JSON_SUCCESS;
         }
 	else{
-            return MsgEnum::ERRO;
+            return MsgEnum::JSON_UNAUTHORIZED;
         }
         
     }

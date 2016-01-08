@@ -1,6 +1,0 @@
-<?php
-
-$lines = file("lista-palavroes.txt", FILE_IGNORE_NEW_LINES);
-$q = 0;
-foreach ($lines as $l) echo $l . ' ' .$q++ . '\r\n';
-

@@ -23,11 +23,11 @@ class Proposta {
 
         if ($stmt->execute()) {
             
-            return MsgEnum::SUCESSO;
+            return MsgEnum::JSON_SUCCESS;
             
         } else{
             
-            return MsgEnum::ERRO;
+            return MsgEnum::JSON_ERROR;
             
         }
     }
