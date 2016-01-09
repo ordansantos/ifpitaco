@@ -161,7 +161,20 @@ class Usuario{
     // Image stored in system
     public function saveFotoPerfil($id, $foto){
 	$path = $this->getFotoPath($foto);
-        $this->addImagePerfilEntry($id, $path);
+        if ($foto->modify){
+            $this->updateImage ($id, $path);
+        } else{
+            $this->addImagePerfilEntry($id, $path);
+        }
+    }   
+    
+    public function updateImage($id, $path){
+        $sql = "UPDATE tb_imagem_usuario SET perfil = :perfil WHERE usuario_id = :id";
+	$conn = Database::getConn();
+	$stmt = $conn->prepare($sql);
+	$stmt->bindParam("id", $id);
+	$stmt->bindParam("perfil", $path);
+	$stmt->execute();
     }
     
     public function addImagePerfilEntry($id, $path){
@@ -175,7 +188,7 @@ class Usuario{
     
     private function getFotoPath ($foto){
         
-	if ($foto->base64_string != ''){
+	if ($foto->base64_string){
 
             return Image::saveThumbnail($foto->base64_string, $foto->x_percent, 
                     $foto->y_percent, $foto->w_percent, $foto->h_percent);                            
@@ -311,10 +324,29 @@ class Usuario{
         
 
         if ((new Usuario())->isCadastroCompleto($id) === false) {
-            return '{"status":"uncomplete"}';
+            if ($this->isFromFb($id)){
+                return '{"status":"fb_uncomplete"}';
+            } else{
+                return '{"status":"uncomplete"}';
+            }
         }
 
         return '{"status":"success", "data": ' . $this->getUsuarioById($id) . '}';
+    }
+    
+    private function isFromFb($id){
+        
+        $sql = "SELECT * FROM tb_login_fb WHERE id_usuario = :id_usuario";
+        $conn = Database::getConn();
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam("id_usuario", $id);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_OBJ);
+        if ($result){
+            return true;
+        } else{
+            return false;
+        }
     }
     
 }

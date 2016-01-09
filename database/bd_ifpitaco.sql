@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tempo de Geração: 19/08/2015 às 09:17
--- Versão do servidor: 5.5.44-0ubuntu0.14.04.1
--- Versão do PHP: 5.6.12-1+deb.sury.org~trusty+1
+-- Tempo de Geração: 09/01/2016 às 00:00
+-- Versão do servidor: 5.5.46-0ubuntu0.14.04.2
+-- Versão do PHP: 5.6.16-2+deb.sury.org~trusty+1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `tb_comentario_post` (
   `data_hora` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `comentario` varchar(1000) NOT NULL,
   PRIMARY KEY (`comentario_post_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=101 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `tb_enquete` (
   `data_hora` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `deletado` tinyint(4) NOT NULL,
   PRIMARY KEY (`id_enquete`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=89 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 -- --------------------------------------------------------
 
@@ -143,6 +143,31 @@ CREATE TABLE IF NOT EXISTS `tb_last_access` (
 -- --------------------------------------------------------
 
 --
+-- Estrutura para tabela `tb_login_fb`
+--
+
+CREATE TABLE IF NOT EXISTS `tb_login_fb` (
+  `id_usuario` int(11) NOT NULL,
+  `id_usuario_fb` bigint(20) NOT NULL,
+  PRIMARY KEY (`id_usuario_fb`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `tb_login_system`
+--
+
+CREATE TABLE IF NOT EXISTS `tb_login_system` (
+  `email` varchar(100) NOT NULL,
+  `senha` varchar(100) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  PRIMARY KEY (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura para tabela `tb_post`
 --
 
@@ -156,7 +181,7 @@ CREATE TABLE IF NOT EXISTS `tb_post` (
   `imagem` varchar(100) NOT NULL,
   `deletado` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`post_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=93 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
 
 -- --------------------------------------------------------
 
@@ -174,22 +199,32 @@ CREATE TABLE IF NOT EXISTS `tb_ramo` (
 -- --------------------------------------------------------
 
 --
+-- Estrutura para tabela `tb_token`
+--
+
+CREATE TABLE IF NOT EXISTS `tb_token` (
+  `id_usuario` int(11) NOT NULL,
+  `token` varchar(40) NOT NULL,
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_usuario`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura para tabela `tb_usuario`
 --
 
 CREATE TABLE IF NOT EXISTS `tb_usuario` (
   `id_usuario` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID do usuárioi',
   `nm_usuario` varchar(100) NOT NULL COMMENT 'Nome do Usuário',
-  `senha` varchar(100) NOT NULL COMMENT 'Senha do Usuário',
-  `email` varchar(100) NOT NULL COMMENT 'Email do usuário',
   `usuario_tipo` varchar(100) NOT NULL,
   `curso` varchar(100) NOT NULL,
   `ano_periodo` int(11) NOT NULL,
   `grau_academico` varchar(100) NOT NULL,
   `grupo` int(11) NOT NULL,
-  PRIMARY KEY (`id_usuario`,`email`),
-  UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=86 ;
+  PRIMARY KEY (`id_usuario`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=27 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

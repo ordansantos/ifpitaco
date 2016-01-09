@@ -6,7 +6,10 @@
 function propostaPOST() {
 
     var values = $('#form_proposta').serialize();
-
+    
+    if (document.getElementById("comentariop").value === "")
+        return;
+    
     $.ajax({
         url: "services/propor.php",
         type: "post",

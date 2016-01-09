@@ -43,7 +43,10 @@ if ($_SESSION['token'] == '') {
         <!-- CSS -->
         <link rel="stylesheet" type="text/css"  href="css/login_border.css">
         <link rel="stylesheet" type="text/css" href="css/completar.css">
-
+        
+        <!-- LOAD ANIMATION -->
+        <link href="js/pace/themes/green/pace-theme-flash.css" rel="stylesheet" />
+        <script data-pace-options='{ "ajax": true }' src='js/pace/pace.js'></script>
     </head>
 
 
@@ -152,19 +155,23 @@ if ($_SESSION['token'] == '') {
                             <option value="Outro">Outro</option>
                         </select>
                     </div>
+                    <?php
+                    if (!isset($_GET['from']) || $_GET['from'] != 'fb') {
+                        echo '
+                            <div class="form-group">
 
-                    <div class="form-group">
+                                <label for="foto"><span class="glyphicon glyphicon glyphicon-camera" aria-hidden="true"></span>Imagem de Perfil</label>
+                                <input accept="image/x-png, image/gif, image/jpeg"type="file" id="image_input" name="foto" class="button">
+                                <p class="help-block">Escolha uma imagem para usar no seu perfil</p>
 
-                        <label for="foto"><span class="glyphicon glyphicon glyphicon-camera" aria-hidden="true"></span>Imagem de Perfil</label>
-                        <input accept="image/x-png, image/gif, image/jpeg"type="file" id="image_input" name="foto" class="button">
-                        <p class="help-block">Escolha uma imagem para usar no seu perfil</p>
+                            </div>
 
-                    </div>
-
-                    <br/>
-
+                            <br/>
+                    ';
+                    }
+                    ?>
                     <button id="submit" class="btn btn-lg btn-primary btn-block" type="submit">Continuar</button>
-
+                    
 
                     <!-- Coordenadas da foto | Cropper  -->
                     <input type="hidden" id="crop_x" name="x" value="1"/>

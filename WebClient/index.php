@@ -38,6 +38,10 @@ if ($_SESSION['token'] != '') {
         <link rel="stylesheet" href="css/font-awesome-4.5.0/css/font-awesome.css"/>
         <!-- facebook login -->
         <script type="text/javascript" src="js/ifpitaco/services/loginFb.js"></script>
+        
+        <!-- LOAD ANIMATION -->
+        <link href="js/pace/themes/green/pace-theme-flash.css" rel="stylesheet" />
+        <script data-pace-options='{ "ajax": true }' src='js/pace/pace.js'></script>
     </head>
 
 

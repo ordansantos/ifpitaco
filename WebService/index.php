@@ -182,7 +182,8 @@ function completarCadastro(){
     $foto->y_percent = filter_input(INPUT_POST, 'y');
     $foto->w_percent = filter_input(INPUT_POST, 'w');
     $foto->h_percent = filter_input(INPUT_POST, 'h');
- 
+    $foto->modify = filter_input(INPUT_POST, 'modify');
+            
     echo (new Usuario())->completar($usuario, $foto);
 }
 

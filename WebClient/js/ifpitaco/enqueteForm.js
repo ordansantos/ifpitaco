@@ -68,7 +68,7 @@ ENQUETEFORM = (function () {
     enqueteform.check = function () {
 
         if (document.getElementById('titulo').value == '') {
-            bootbox.alert("<h4><strong>Dê um título a sua enquete!</strong></h4>");
+            bootbox.alert("<h4><strong>Dê um título à sua enquete!</strong></h4>");
             return false;
         }
 

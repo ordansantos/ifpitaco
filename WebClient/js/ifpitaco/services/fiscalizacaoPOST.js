@@ -5,6 +5,9 @@
 
 function fiscalizacaoPOST() {
 
+    if (document.getElementById("comentariof").value === "")
+        return;
+    
     var formData = new FormData($("#form_fiscalizacao")[0]);
     $.ajax({
         type: "POST",

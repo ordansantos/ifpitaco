@@ -79,6 +79,9 @@ checkLogin();
         <script src="js/ifpitaco/searchController.js"></script>
         <script src="js/ifpitaco/curiarController.js"></script>
         
+        <!-- LOAD ANIMATION -->
+        <link href="js/pace/themes/green/pace-theme-flash.css" rel="stylesheet" />
+        <script data-pace-options='{ "ajax": true }' src='js/pace/pace.js'></script>
     </head>
 
     <body>

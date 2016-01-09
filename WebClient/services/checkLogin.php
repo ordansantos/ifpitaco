@@ -26,6 +26,10 @@ function checkLogin() {
         header("location: completar.php");
     }
     
+    if ($response->status == "fb_uncomplete") {
+        header("location: completar.php?from=fb");
+    }
+    
     $info = $response->data;
     $_SESSION['foto'] = $info->perfil;
     $_SESSION['name'] = $info->nm_usuario;
