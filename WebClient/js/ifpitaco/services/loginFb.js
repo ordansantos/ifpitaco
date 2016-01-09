@@ -1,7 +1,29 @@
 
+
+function loginFbPost(token){
+    
+    $.ajax({
+        type: "POST",
+        url: "services/loginFb.php",
+        data: {"token":token},
+        success: function (data) {
+            
+            if ($.trim(data) === '1')
+                window.location.assign("home.php");
+            else {
+            }
+        },
+        error: function (data) {
+            console.log("erro fatal");
+        }
+    });
+    
+}
+
 function statusChangeCallback(response) {
+    
     if (response.status === 'connected') {
-        window.location.replace("home.php");
+        loginFbPost(response.authResponse.accessToken)
     }
 }
 
@@ -19,11 +41,10 @@ window.fbAsyncInit = function () {
         xfbml: true, // parse social plugins on this page
         version: 'v2.2' // use version 2.2
     });
-
-    FB.getLoginStatus(function (response) {
-        statusChangeCallback(response);
-    });
-
+    
+    // Verifica se usuário está no facebook e autorizou acesso aos seus dados
+    //Auto login
+    //checkLoginState();
 };
 
 // Load the SDK asynchronously
@@ -40,24 +61,11 @@ window.fbAsyncInit = function () {
 
 function fb_login(){
     FB.login(function(response) {
-
         if (response.authResponse) {
-            console.log('Welcome!  Fetching your information.... ');
-            //console.log(response); // dump complete info
-            access_token = response.authResponse.accessToken; //get access token
-            user_id = response.authResponse.userID; //get FB UID
-
-            FB.api('/me', function(response) {
-                user_email = response.email; //get user email
-          // you can store this data into your database             
-            });
-
+            access_token = response.authResponse.accessToken;
+            loginFbPost(access_token);
         } else {
-            //user hit cancel button
-            console.log('User cancelled login or did not fully authorize.');
-
+            
         }
-    }, {
-        scope: 'email'
     });
 }

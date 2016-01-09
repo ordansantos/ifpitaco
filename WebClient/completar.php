@@ -1,4 +1,13 @@
 
+<?php
+
+session_start();
+
+if ($_SESSION['token'] == '') {
+    header("location: index.php");
+}
+
+?>
 <!DOCTYPE html>
 
 <html>
@@ -14,10 +23,6 @@
         <!-- Bootstrap -->
         <link href="bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet">
         <script src="bootstrap-3.3.5/js/bootstrap.min.js"></script>
-
-
-            <!-- Pace cool loading plugin -->
-            <script data-pace-options='{ "ajax": true }' src='js/pace/pace.js'></script>
 
         <!-- Bootbox -->
         <script src="js/bootbox/bootbox.min.js"></script>
@@ -38,7 +43,6 @@
         <!-- CSS -->
         <link rel="stylesheet" type="text/css"  href="css/login_border.css">
         <link rel="stylesheet" type="text/css" href="css/completar.css">
-        <link href="js/pace/themes/blue/pace-theme-barber-shop.css" rel="stylesheet" />
 
     </head>
 

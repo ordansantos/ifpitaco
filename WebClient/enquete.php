@@ -2,11 +2,9 @@
 <!-- TODO: Remover o id do usuário do javascript e deixar apenas no php -->
 
 <?php
-session_start();
+require_once 'services/checkLogin.php';
 
-if ($_SESSION['id_usuario'] == '') {
-    header("location: index.php");
-}
+checkLogin();
 
 ?>
 

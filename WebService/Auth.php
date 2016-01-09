@@ -11,7 +11,8 @@ class Auth{
     
     public function system_login($login){
 
-        $sql = "SELECT senha, id_usuario FROM tb_usuario WHERE email = :email";
+        $sql = "SELECT senha, id_usuario FROM tb_login_system
+                WHERE email = :email";
         
 	$conn = Database::getConn();
 	
@@ -24,7 +25,7 @@ class Auth{
         $usuario = $stmt->fetch(PDO::FETCH_OBJ);
 	
         if (!$usuario){
-            return '{"msg":"Email incorreto", "status":"error"}';
+            return '{"msg":"Email não cadastrado", "status":"error"}';
         }
            
         // Hashing the password with its hash as the salt returns the same hash
@@ -39,25 +40,32 @@ class Auth{
         
     }
     
-    public function getNewToken($id_usuario){
+    public function fb_login($token){
         
-        $this->updateTokenTime($id_usuario);
+        $graph_url = "https://graph.facebook.com/me?fields=id&access_token=" . $token;
         
-        $conn = Database::getConn();
-
-        $sql = "UPDATE tb_token SET token = :token WHERE id_usuario = :id_usuario";
-           
-        $stmt = $conn->prepare($sql);
-
-        $stmt->bindParam ('id_usuario', $id_usuario);
-        
-        $token = $this->generate();
-        
-        $stmt->bindParam ('token', $token);
-        
-        $stmt->execute();
-        
-        return $token;
+        $user_fb = json_decode(file_get_contents($graph_url));
+	
+	if(isset($user_fb->id) && $user_fb->id){
+            
+            $conn = Database::getConn();
+            $sql = "SELECT id_usuario FROM tb_login_fb WHERE id_usuario_fb = :id_usuario_fb";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam("id_usuario_fb", $user_fb->id);
+            $stmt->execute();
+	
+            $usuario = $stmt->fetch(PDO::FETCH_OBJ);
+            
+            if (!$usuario){
+                return (new Usuario())->cadastrarFb($token);
+            } else{
+                $system_token = $this->getNewToken($usuario->id_usuario);
+                return '{"status":"success", "token":"'.$system_token.'", "id_usuario":"'.$usuario->id_usuario.'"}';
+            }
+            
+	} else{
+            return '{"status":"error","msg":"Token inválido"}';
+        }
     }
     
     private function updateTokenTime($id_usuario){
@@ -66,10 +74,6 @@ class Auth{
         $stmt = $conn->prepare($sql);
         $stmt->bindParam ('id_usuario', $id_usuario);
         $stmt->execute();
-    }
-    
-    public function fb_login(){
-        
     }
     
     public function Authorization(){
@@ -103,8 +107,8 @@ class Auth{
         return ($now - $token_time) < self::$token_expire_time;
     }
     
-    public function createTokenEntry($id_usuario){
-        
+    public function getNewToken($id_usuario){
+        $this->expireSession($id_usuario);
         $conn = Database::getConn();
         $sql = 'INSERT INTO tb_token (id_usuario, token) VALUES (:id_usuario, :token)';
         $token = $this->generate();
@@ -133,6 +137,14 @@ class Auth{
         
         return $hash;
         
+    }
+    
+    public function expireSession ($id){
+        $conn = Database::getConn();
+        $sql = "DELETE FROM tb_token WHERE id_usuario = :id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam("id", $id);
+        $stmt->execute();
     }
     
 }

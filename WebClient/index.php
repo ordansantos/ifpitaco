@@ -2,9 +2,10 @@
 <?php
 session_start();
 
-if ($_SESSION['id_usuario'] != '') {
+if ($_SESSION['token'] != '') {
     header("location: home.php");
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -31,10 +32,12 @@ if ($_SESSION['id_usuario'] != '') {
         <!-- CSS -->
         <link rel="stylesheet" type="text/css"  href="css/index.css">
         <link rel="stylesheet" type="text/css"  href="css/login_border.css">
-        
-                <!-- Pace cool loading plugin -->
-        <script data-pace-options='{ "ajax": true }' src='js/pace/pace.js'></script>
 
+        <link rel="stylesheet" href="css/bootstrap-social.css"/>
+
+        <link rel="stylesheet" href="css/font-awesome-4.5.0/css/font-awesome.css"/>
+        <!-- facebook login -->
+        <script type="text/javascript" src="js/ifpitaco/services/loginFb.js"></script>
     </head>
 
 
@@ -62,7 +65,7 @@ if ($_SESSION['id_usuario'] != '') {
 
                     <div class="inner-addon left-addon">
                         <i class="glyphicon glyphicon-user"></i>
-                        <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus>
+                        <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus >
                     </div>
 
                     <br/>
@@ -76,15 +79,19 @@ if ($_SESSION['id_usuario'] != '') {
                     <br/>
                     <div class="row">
                         <div class="col-xs-6">
-                            <button class="btn btn-lg btn-primary btn-block" id="login" type="submit">Entrar</button>
+                            <button class="btn  btn-primary btn-block" id="login" type="submit">Entrar</button>
                         </div>
                         <div class="col-xs-6">
                             <button data-toggle="modal"
-                                    data-target="#cadastrarModal"  id="signup" class="btn btn-lg btn-success btn-block" type="button">Cadastrar</button>
+                                    data-target="#cadastrarModal"  id="signup" class="btn  btn-success btn-block" type="button">Cadastrar</button>
                         </div>
                         <!-- onClick="parent.location = 'cadastrar.php'" -->
                     </div>
 
+                    <a onclick="fb_login()" style="margin-top: 2px" class="btn btn-block  btn-facebook">
+                        <span class="fa fa-facebook"></span> Entrar com Facebook
+                    </a>
+                    
                 </form> 
                 <br/>
                 <div class="alert alert-danger" role="alert" id="error" style="display: none">Dados Inválidos</div>
@@ -144,14 +151,16 @@ if ($_SESSION['id_usuario'] != '') {
 
                                 <div class="row">
                                     <div class="col-xs-6">
-                                        <button   id="submit" class="btn btn-lg btn-success btn-block" type="submit">Cadastrar</button>
+                                        <button   id="submit" class="btn  btn-block btn-success btn-block" type="submit">Cadastrar</button>
                                     </div>
                                     <div class="col-xs-6">
-                                        <button class="btn btn-lg btn-primary btn-block" id="login" type="button">Logar com Facebook</button>
+                                        <button class="btn btn-block btn-social btn-facebook" id="login" type="button" onclick="fb_login()"><span class="fa fa-facebook"></span>Entrar com Facebook</button>
                                     </div>
 
                                     <!-- onClick="parent.location = 'cadastrar.php'" -->
                                 </div>
+                                
+                                
 
                             </div>
 

@@ -53,6 +53,10 @@ $app->post('/completarCadastro/', 'completarCadastro');
 
 $app->post('/getStatus/', 'getStatus');
 
+$app->post('/postFbLogin/', 'postFbLogin');
+
+$app->post('/logout/', 'logout');
+
 //Retorna os ramos
 $app->get('/getRamos/', 'getRamos');
 //Retorna o nome de usuário usando seu id
@@ -149,7 +153,7 @@ function systemCadastroPost(){
     $usuario->senha = filter_input(INPUT_POST, 'senha');
     $usuario->email = filter_input(INPUT_POST, 'email');
     
-    echo (new Usuario())->cadastrar($usuario);
+    echo (new Usuario())->cadastrarSystem($usuario);
 }
 
 function completarCadastro(){
@@ -189,6 +193,19 @@ function postLogin(){
     $login->senha = filter_input(INPUT_POST, 'senha');
     
     echo (new Auth())->system_login($login);
+}
+
+function postFbLogin(){
+    
+    $token = filter_input(INPUT_POST, 'token');
+    
+    if (!$token){
+        echo MsgEnum::JSON_ERROR;
+        return;
+    } else{
+        echo (new Auth)->fb_login($token);
+    }
+    
 }
 
 function getRamos(){
@@ -475,4 +492,15 @@ function getStatus(){
     
     echo (new Usuario())->getStatus($id);
     
+}
+
+function logout(){
+    
+    $id = (new Auth)->Authorization();
+ 
+    if ($id != false){
+    
+        (new Auth())->expireSession($id);
+
+    }
 }

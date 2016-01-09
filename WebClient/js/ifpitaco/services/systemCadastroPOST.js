@@ -30,7 +30,7 @@
                         });
                         window.scrollBy(0, 200);
                     } else
-                        window.location.assign("index.php");
+                        location.reload();
                 }, error: function (data) {
 
                     bootbox.alert(data, function () {

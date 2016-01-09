@@ -3,9 +3,6 @@
 
 <?php
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 require_once 'services/checkLogin.php';
 
 checkLogin();
@@ -81,6 +78,7 @@ checkLogin();
 
         <script src="js/ifpitaco/searchController.js"></script>
         <script src="js/ifpitaco/curiarController.js"></script>
+        
     </head>
 
     <body>

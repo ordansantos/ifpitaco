@@ -40,7 +40,17 @@ class Usuario{
         }
     }
     
-    public function cadastrar($usuario){
+    private function addUsuarioEntry($nm_usuario){
+        $conn = Database::getConn();
+        $sql = "INSERT INTO tb_usuario (nm_usuario)
+                VALUES (:nm_usuario)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam("nm_usuario", $nm_usuario);
+        $stmt->execute();
+        return $conn->lastInsertId();
+    }
+    
+    public function cadastrarSystem($usuario){
         $check = $this->check($usuario);
 
         if ($check !== true) {
@@ -48,32 +58,72 @@ class Usuario{
         }
         
 	$sql = "INSERT INTO 
-                tb_usuario (nm_usuario, senha, email) 
-                values (:nm_usuario, :senha, :email)";
+                tb_login_system (senha, email, id_usuario) 
+                values (:senha, :email, :id_usuario)";
 
 	$conn = Database::getConn();
 	
 	$stmt = $conn->prepare($sql);
+        
+        $id_usuario = $this->addUsuarioEntry($usuario->name);
 
-	$stmt->bindParam("nm_usuario", $usuario->name);
         $usuario->senha = (new Auth())->cryptographPass($usuario->senha);
 	$stmt->bindParam("senha", $usuario->senha);
 	$stmt->bindParam("email", $usuario->email);
+        $stmt->bindParam("id_usuario", $id_usuario);
         
 	if ($stmt->execute()) {
             
-            $id = $this->getIdByEmail($usuario->email);
+            $this->addUserToTbLastAccess($id_usuario);
             
-            $this->addUserToTbLastAccess($id);
+            $token = (new Auth())->getNewToken($id_usuario);
             
-            $token = (new Auth())->createTokenEntry($id);
-            
-            return '{"status":"success", "id_usuario":"'.$id.'", "token":"'.$token.'"}';
+            return '{"status":"success", "id_usuario":"'.$id_usuario.'", "token":"'.$token.'"}';
         } else {
             return '{"status":"error","msg":"erro"}';
         }
     }
+    
+    public function cadastrarFb($token){
 
+        $graph_url = "https://graph.facebook.com/me?fields=id,name&access_token=" . $token;
+        
+        $user_fb = json_decode(file_get_contents($graph_url));
+	
+	if( isset($user_fb->name) && $user_fb->name &&
+            isset($user_fb->id) && $user_fb->id){
+            
+            $id_usuario = $this->addUsuarioEntry($user_fb->name);
+            
+            $conn = Database::getConn();
+            
+            $sql = "INSERT INTO tb_login_fb (id_usuario, id_usuario_fb)
+                    VALUES (:id_usuario, :id_usuario_fb)";
+            
+            $stmt = $conn->prepare($sql);
+            
+            $stmt->bindParam("id_usuario", $id_usuario);
+            $stmt->bindParam("id_usuario_fb", $user_fb->id);
+            
+            if ($stmt->execute()){
+                
+                $this->addUserToTbLastAccess($id_usuario);
+                
+                $picture = "http://graph.facebook.com/".$user_fb->id."/picture?type=large";
+                
+                $this->addImagePerfilEntry($id_usuario, $picture);
+                
+                $token = (new Auth())->getNewToken($id_usuario);
+                
+                return '{"status":"success", "id_usuario":"'.$id_usuario.'", "token":"'.$token.'"}';
+            } else{
+                return '{"status":"error","msg":"erro"}';
+            }
+		
+	} else{
+            return '{"status":"Token inválido","msg":"erro"}';
+        }
+    }
     
     private function check ($usuario){
         
@@ -85,7 +135,7 @@ class Usuario{
             return MsgEnum::SENHA_INVALIDA;
 	}
         
-        if ($this->existente($usuario) === true){
+        if ($this->existenteSystem($usuario) === true){
            
             return MsgEnum::EMAIL_EXISTENTE;
         }
@@ -93,8 +143,8 @@ class Usuario{
         return true;
     }
     
-    private function existente($usuario){
-	$sql = "SELECT * FROM (tb_usuario) WHERE email = :email";
+    private function existenteSystem($usuario){
+	$sql = "SELECT * FROM (tb_login_system) WHERE email = :email";
 	$conn = Database::getConn();
 	$stmt = $conn->prepare ($sql);
 	$stmt->bindParam("email", $usuario->email);
@@ -108,16 +158,19 @@ class Usuario{
         }
     }
     
+    // Image stored in system
     public function saveFotoPerfil($id, $foto){
-        
 	$path = $this->getFotoPath($foto);
-	$sql = "INSERT INTO tb_imagem_usuario (usuario_id, perfil) values (:id, :perfil)";
+        $this->addImagePerfilEntry($id, $path);
+    }
+    
+    public function addImagePerfilEntry($id, $path){
+        $sql = "INSERT INTO tb_imagem_usuario (usuario_id, perfil) values (:id, :perfil)";
 	$conn = Database::getConn();
 	$stmt = $conn->prepare($sql);
 	$stmt->bindParam("id", $id);
 	$stmt->bindParam("perfil", $path);
 	$stmt->execute();
-        
     }
     
     private function getFotoPath ($foto){
@@ -129,21 +182,6 @@ class Usuario{
 	}
         
         return Image::getDefaultPath();
-    }
-    
-    private function getIdByEmail($email){
-        
-            $sql = "SELECT id_usuario FROM tb_usuario WHERE email=:email";
-            $conn = Database::getConn();
-            $stmt = $conn->prepare($sql);
-            $stmt->bindParam("email", $email);
-
-            $stmt->execute();
-
-            $result = $stmt->fetch();
-
-            return $result['id_usuario'];
-            
     }
     
     public function updateLastAccess($id){

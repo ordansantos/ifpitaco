@@ -1,9 +1,9 @@
 
 <?php
-session_start();
-if ($_SESSION['id_usuario'] == '') {
-    header("location: index.php");
-}
+
+require_once 'services/checkLogin.php';
+
+checkLogin();
 
 ?>
 
