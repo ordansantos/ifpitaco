@@ -5,8 +5,9 @@ Configurações:
 
 - Crie um banco de dados 'bd_ifpitaco' e importe o script bd.sql, tb_grupos.sql e tb_ramo.sql
 - Defina o usuário e senha do banco em WebService/Database.php
-- Necessário ter o curl instalado
+- É necessário ter o curl instalado
 - Configure ifpitaco/WebClient/services/getRoot
+- Modifique a permissão do 'Storage': chmod -R 777 storage
 
 Developed by Ordan Santos
 
