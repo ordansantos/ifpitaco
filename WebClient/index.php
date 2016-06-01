@@ -2,7 +2,7 @@
 <?php
 session_start();
 
-if ($_SESSION['token'] != '') {
+if (isset($_SESSION['token']) &&  $_SESSION['token'] != '') {
     header("location: home.php");
 }
 

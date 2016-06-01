@@ -6,9 +6,9 @@ class Database {
     
     public static $db_name = 'bd_ifpitaco';
     
-    private static $username = 'ifpitaco';
+    private static $username = 'root';
     
-    private static $password = 'ifpitacopass';
+    private static $password = 'ifpbinfo';
     
     public static function getConn() {
         
